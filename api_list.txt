@@ -1,0 +1,162 @@
+ HOST Info
+
+--------------------------------
+
+view images
+
+gather host resources
+    total memory
+    total hugepages memory
+    available memory 
+    available hugepages memory
+    Total cpus
+            Available cpus 
+    pci addresses (sr-iov)
+    linux bridges
+            network interface information
+    
+hard dataplane configuration (SR-IOV)
+    enable vfio driver  
+    view PFs
+            Check total VFs can be assigned
+    create VFs
+    remove VF's
+    Set PFs’ ip link up
+    Show service chain (vlans)
+    Set vf vlan
+    
+    
+hard dataplane configuration (DPDK)
+    View available driver
+    Probe driver
+    enable vfio driver
+    view available interfaces
+    bind interface to vfio
+           Unbind interface from vfio
+    
+    
+ovs
+    change ovs cpus
+    create dpdk port (physical)
+    create ovs port
+    create ovs-docker port
+    delete ovs port
+    delete ovs-docker port
+            Show service chaining (flows)
+            Create service chain (flow/in-port/out-port)
+    Delete service chain
+            add vlan for flow
+            Delete vlan for flow
+            Modify vlan for flow
+    view ovs port information
+    view ovs openflow information    
+
+view available vnc ports
+
+add additional vnc ports
+
+Delete vnc ports
+
+clear syslog
+
+view partitioning
+
+update partitions    
+
+push qcow2 image
+
+backup host
+
+restore host
+
+rollback configuration
+
+
+--------------------------------
+
+
+HOST Data Collection
+
+--------------------------------
+
+cpu usage
+
+memory usage
+
+syslog data
+
+disk io usage
+
+network statistics
+    specific flows
+    packets per second
+    throughput
+    
+
+
+--------------------------------
+
+LIBVIRT
+
+--------------------------------
+view vm xml configuration
+
+gather info
+    all vm status
+    specific vm status
+    
+create vm
+
+assign vm management ip (cloud init) 
+
+assign vm base config
+
+    
+change vm state
+
+backup vm
+           Save management ip
+    Save base config (inside vm)
+           Save xml configuration
+           Store base qcow2 image
+            
+restore vm
+           Retrieve saved xml
+       Re-create using saved xml and base qcow2
+            Assign saved management ip (cloud-init)
+          Configure saved base config
+
+rollback vm
+           Save snapshot of base config
+           Retrieve snapshot of base config
+           Re-configure using retrieved base config
+
+vnc to vm
+    
+Resize qcow2
+
+
+--------------------------------    
+
+Docker 
+
+--------------------------------
+
+gather container status
+    all container status
+    specific container status
+
+gather images
+
+commit container to image
+
+save image to tar
+
+create image from tar
+
+Pull image from repo to host 
+create container
+
+change container state
+
+console to container
