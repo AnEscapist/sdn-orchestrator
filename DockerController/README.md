@@ -21,7 +21,7 @@
     List containers.
     
     **Parameters**
-    *   dcli: Docker client just created.
+    *   dcli: Docker client created by **docker_client()**.
     *   all(*bool*): List all containers. It's True by default. If it is False, only running containers will be listed.
     
     **Returns**
@@ -29,4 +29,18 @@
     
     **Raises**
     *   **CONNECTION ERROR** - If no route to the host.
+
+* ## **all_Images()**
+
+    List all images.
+    
+    **Parameters**
+    *   dcli: Docker client created by **docker_client()**.
+    *   name(*str*): Only show images belonging to the repository name.
+    
+    **Returns**
+    *   list of **Images**
+    
+    **Raises**
+    *   **CONNECTION ERROR** -If no route to the host.
     
