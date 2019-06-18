@@ -13,8 +13,28 @@
     >>> dockerClient = dc.docker_Client(ip='10.10.81.100', port='2375')
     ```
     **Parameters**
-    *   ip: IP address of the docker server.
-    *   port: Port number of the docker server.
+    *   ip(*str*): IP address of the docker server.
+    *   port(*str*): Port number of the docker server.
+    
+* ## **open_sftp()**
+ 
+    Open an sftp session on the docker server.
+    
+    **Example**
+    ```python
+    >>>sftp = dc.open_sftp(ip='10.10.81.100', username='potato', password='potato')
+    ```
+    **Parameters**
+    *   ip(*str*): IP address of the docker server.
+    *   username(*str*): User name of the docker server.
+    *   password(*str*): Password if the docker server.
+    
+    **Returns**
+    *   a new **paramiko.sftp_client.SFTPClient** session object.
+    
+    **Raises**
+    * **Connection Error** - If no route to the server.
+    * **SSH Exception** - If no existing session.
     
 * ## **all_Containers()**
 
@@ -28,7 +48,7 @@
     *   list of **Containers**
     
     **Raises**
-    *   **CONNECTION ERROR** - If no route to the host.
+    *   **Connection Error** - If no route to the host.
 
 * ## **all_Images()**
 
@@ -42,5 +62,5 @@
     *   list of **Images**
     
     **Raises**
-    *   **CONNECTION ERROR** -If no route to the host.
+    *   **Connection Error** -If no route to the host.
     
