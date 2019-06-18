@@ -1,0 +1,106 @@
+<!-- modified to run locally on company pc -->
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm">
+<name>agent</name>
+<memory unit="G">4</memory>
+<vcpu placement="static">4</vcpu>
+<cputune/>
+<resource>
+<partition>/machine</partition>
+</resource>
+<os>
+<type arch="x86_64" machine="pc">hvm</type>
+<boot dev="hd"/>
+</os>
+<features>
+<acpi/>
+<apic/>
+<pae/>
+</features>
+<cpu mode='custom' match='exact'>
+</cpu>
+<on_poweroff>destroy</on_poweroff>
+<on_reboot>restart</on_reboot>
+<on_crash>restart</on_crash>
+<clock offset="utc"/>
+<devices>
+<!--
+<emulator>/usr/bin/kvm</emulator>
+-->
+<!--
+<interface type='bridge'>
+    <source bridge='mgmtbr'/>
+    <model type="virtio"/>
+</interface>
+-->
+<!--
+<interface type="bridge">
+<source bridge="br-2d21ea5dca18"/>
+<model type="virtio"/>
+<link state="up"/>
+</interface>
+<interface type="bridge">
+<source bridge="br-2d21ea5dca18"/>
+<model type="virtio"/>
+<link state="up"/>
+</interface>
+<interface type="vhostuser">
+<source mode="client" path="/usr/local/var/run/openvswitch/vsrx_eth0" type="unix"/>
+<guest dev="eth3"/>
+<model type="virtio"/>
+<alias name="net1"/>
+<link state="up"/>
+</interface>
+<interface type="vhostuser">
+<source mode="client" path="/usr/local/var/run/openvswitch/fortigate1" type="unix"/>
+<model type="virtio"/>
+<link state="up"/>
+</interface>
+<interface type="vhostuser">
+<source mode="client" path="/usr/local/var/run/openvswitch/fortigate2" type="unix"/>
+<model type="virtio"/>
+<link state="up"/>
+</interface>
+-->
+<disk device="disk" type="file">
+<driver name="qemu" type="qcow2"/>
+<source file="/home/attadmin/projects/agent-vm/ubuntu_16_1.qcow2"/>
+<backingStore/>
+<target bus="virtio" dev="vda"/>
+<alias name="virtio-disk0"/>
+</disk>
+<disk device="cdrom" type="file">
+<driver name="qemu" type="raw"/>
+<backingStore/>
+<readOnly/>
+<target bus="ide" dev="hdc"/>
+<alias name="ide0-1-0"/>
+</disk>
+<controller index="0" type="usb">
+<alias name="usb"/>
+</controller>
+<controller index="0" model="pci-root" type="pci">
+<alias name="pci.0"/>
+</controller>
+<controller index="0" type="ide">
+<alias name="ide"/>
+</controller>
+<serial type="pty">
+<source path="/dev/pts/6"/>
+<target port="0"/>
+<alias name="serial0"/>
+</serial>
+<console tty="/dev/pts/6" type="pty">
+<source path="/dev/pts/6"/>
+<target port="0" type="serial"/>
+<alias name="serial0"/>
+</console>
+<input tty="ps2" type="mouse"/>
+<input tty="ps2" type="keyboard"/>
+<graphics autoport="no" listen="0.0.0.0" port="5910" type="vnc"/>
+<video/>
+<memballoon model="none">
+<alias name="balloon0"/>
+</memballoon>
+</devices>
+</domain>
