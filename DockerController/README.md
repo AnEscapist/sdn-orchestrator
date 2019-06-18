@@ -9,8 +9,8 @@
     
     **Example:**
     ```python
-    >>> from DockerController import dockerController
-    >>> dockerClient = dockerController.docker_Client(ip='10.10.81.100', port='2375')
+    >>> from DockerController import dockerController as dc
+    >>> dockerClient = dc.docker_Client(ip='10.10.81.100', port='2375')
     ```
     **Parameters**
     *   ip: IP address of the docker server.
