@@ -1,4 +1,7 @@
 *.qcow2
 ucpe/libvirt/venv/
 venv/
+*/venv/
 .idea/
+__pycache__/
+*/__pycache__/

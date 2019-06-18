@@ -12,7 +12,11 @@ PATH = "system"
 EXTRAPARAMETERS = ""
 
 def connect(driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOSTNAME, port=PORT, path=PATH, extraparameters=EXTRAPARAMETERS, verbose=True):
-    """Connect to the libvirt daemon on the host (uCPE) specified by the parameters."""
+    """Connect to the libvirt daemon on the host (uCPE) specified by the inputted URI parameters.
+    Description of Parameters: https://libvirt.org/docs/libvirt-appdev-guide-python/en-US/html/libvirt_application_development_guide_using_python-Connections-Remote_URIs.html
+    driver is the only required parameter
+    """
+    #TODO: connect with authentication
     transport = "+" + transport if transport else ""
     username = username + "@" if username else ""
     hostname = hostname if hostname else ""
