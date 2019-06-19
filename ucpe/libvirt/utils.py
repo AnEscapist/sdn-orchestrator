@@ -11,7 +11,6 @@ PORT = ""  # defaults - ssh:22, tcp:16509, tls:16514 applied if no port specifie
 PATH = "system"
 EXTRAPARAMETERS = ""
 
-
 def connect(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOSTNAME, port=PORT, path=PATH,
             extraparameters=EXTRAPARAMETERS, verbose=True):
     """Connect to the libvirt daemon on the host (uCPE) specified by the inputted URI parameters.
