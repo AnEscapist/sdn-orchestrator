@@ -1,114 +1,102 @@
 from contextlib import contextmanager
 import ucpe.libvirt.utils as utils
-from enum import Enum, auto
+from enum import Enum
 import libvirt
 from libvirt import virDomain
+from ucpe.libvirt.errors import *
 
 class VirtualMachine():
     #todo: lazy parameter access for immutable values
-    def __init__(self, ucpe, xml, name):
+    def __init__(self, ucpe, def_xml, name):
         #todo: docstring
         self.ucpe = ucpe
-        self._xml = xml #xml contents
+        self.def_xml = def_xml #xml used to define vm
         #todo: parse name (and other data) from xml
         self.name = name
         self.save_path = None
         #todo: deal with outside mutations of these
 
-    def start(self):
+    def start(self, verbose=True):
         #todo: error handling
-        conn = utils.connect(self.ucpe)
-        domain = conn.lookupByName(self.name)
-        created_status = virDomain.create(domain) #bad
-        if created_status < 0:
-            print("Failed to start domain", self.name)
-        else:
-            print("Started domain", self.name)
-        conn.close()
+        with self._get_domain() as domain:
+            created_status = virDomain.create(domain)
+            if created_status < 0:
+                print("Failed to start domain", self.name)
+            elif verbose:
+                print("Started domain", self.name)
 
     @property
     def autostart(self):
-        conn = utils.connect(self.ucpe, verbose=False)
-        domain = conn.lookupByName(self.name)
-        autostart = domain.autostart()
-        conn.close()
-        return autostart
+        with self._get_domain() as domain:
+            if domain.autostart() == 1:
+                return True
+            return False
 
     @autostart.setter
     def autostart(self, autostart):
-        conn = utils.connect(self.ucpe, verbose=False)
-        domain = conn.lookupByName(self.name)
-        if autostart:
-            domain.setAutostart(1)
-        else:
-            domain.setAutostart(0)
-        conn.close()
+        with self._get_domain() as domain:
+            if autostart:
+                domain.setAutostart(1)
+            else:
+                domain.setAutostart(0)
 
     @property
     def xml(self):
         #todo: use this as a cache - determine if xml is current
         #todo: this might be bad if it's slow
-        conn = utils.connect(self.ucpe)
-        domain = conn.lookupByName(self.name)
-        xml = domain.XMLDesc(0)
-        conn.close()
-        return xml
+        with self._get_domain() as domain:
+            return domain.XMLDesc(0)
 
     def saveXML(self, path):
         #todo: think about whether to allow overwriting or not, possibly have some overwrite flag
+        #path is a path on the remote (not the uCPE)
         with open(path, 'w') as out:
             out.write(self.xml)
 
     @property
     def state(self):
-        # conn = utils.connect(self.ucpe)
-        # domain = conn.lookupByName(self.name)
-        # state = utils.state(domain) #this is possibly completely wrong
-        # conn.close()
-        # return state
         with self._get_domain() as domain:
-            return utils.state(domain) #this is possibly completely wrong
+            return utils.state(domain)
 
-    def suspend(self):
-        conn = utils.connect(self.ucpe)
-        domain = conn.lookupByName(self.name)
-        status = domain.suspend()
-        if status < 0:
-            print("Failed to suspend domain", self.name)
-            #todo: raise error
-        else:
-            print("Suspended domain", self.name)
-        conn.close()
+    @state.setter
+    def state(self, state):
+        raise ReadOnlyError
 
-    def resume(self):
-        conn = utils.connect(self.ucpe)
-        domain = conn.lookupByName(self.name)
-        status = domain.resume()
-        if status < 0:
-            print("Failed to resume domain", self.name)
-            #todo: raise error
-        else:
-            print("Resumed domain", self.name)
-        conn.close()
+    def suspend(self, verbose=True):
+        #todo: return value
+        with self._get_domain() as domain:
+            status = domain.suspend()
+            if status < 0:
+                print("Failed to suspend domain", self.name)
+                #todo: raise error
+            elif verbose:
+                print("Suspended domain", self.name)
 
-    def save(self, path):
+    def resume(self, verbose=True):
+        with self._get_domain() as domain:
+            status = domain.resume()
+            if status < 0:
+                print("Failed to resume domain", self.name)
+                #todo: raise error
+            elif verbose:
+                print("Resumed domain", self.name)
+
+    def save(self, path, verbose=True):
         """
         saves a persistent image of the vm to a specified path
         :param path: path on the uCPE to the desired save location
         todo: somehow enforce that a restore can happen only once from a given file
         """
-        conn = utils.connect(self.ucpe)
-        domain = conn.lookupByName(self.name)
-        status = domain.save(path)
-        if status < 0:
-            print("Failed to save domain", self.name, "to path", path)
-            #todo: raise error
-        else:
-            print("Saved domain", self.name, "to path", path)
-        self.save_path = path
-        conn.close()
+        with self._get_domain() as domain:
+            status = domain.save(path)
+            if status < 0:
+                print("Failed to save domain", self.name, "to path", path)
+                #todo: raise error
+            elif verbose:
+                print("Saved domain", self.name, "to path", path)
+            self.save_path = path
 
-    def restore(self):
+    def restore(self, verbose=True):
         if self.save_path is None:
             #todo: raise error
             print("Cannot restore without first saving.")
@@ -116,40 +104,45 @@ class VirtualMachine():
         status = conn.restore(self.save_path)
         if status < 0:
             print("Failed to restore domain from path", self.save_path)
-        else:
+        elif verbose:
             print("Restored domain", self.name, "from path", self.save_path)
         self.save_path = None
         conn.close()
+        conn.close()
 
-    def shutdown(self):
+    def shutdown(self, verbose=True):
         #todo: error handling
         #todo: bug - have to wait ~20 seconds after starting before stopping
-        conn = utils.connect(self.ucpe)
-        domain = conn.lookupByName(self.name)
-        domain.shutdown()
-        print("Shutting down domain", self.name)
-        conn.close()
+        with self._get_domain() as domain:
+            status = domain.shutdown()
+            if status < 0:
+                print("Failed to shut down domain", self.name)
+            elif verbose:
+                print("Shutting down domain", self.name)
 
-    def destroy(self):
-        conn = utils.connect(self.ucpe)
-        domain = conn.lookupByName(self.name)
-        domain.destroy()
-        print("Destroyed domain", self.name)
-        conn.close()
+    def destroy(self, verbose=True):
+        with self._get_domain() as domain:
+            status = domain.destroy()
+            if status < 0:
+                print("Failed to destroy domain", self.name)
+            elif verbose:
+                print("Destroyed domain", self.name)
 
-    def undefine(self):
+    def undefine(self, verbose=True):
         #todo: lock all activity after undefining
-        conn = utils.connect(self.ucpe)
-        domain = conn.lookupByName(self.name)
-        if domain.isActive():
-            print("Domain is running.  Stop it first before undefining.")
-            #todo: ask tyler if should be able to undefine while running
-        domain.undefine()
-        print("Undefined", self.name)
-        conn.close()
+        with self._get_domain() as domain:
+            if domain.isActive():
+                print("Domain is running.  Stop it first before undefining.")
+                #todo: ask tyler if should be able to undefine while running
+            status = domain.undefine()
+            if status < 0:
+                print("Failed to undefine domain", self.name)
+            elif verbose:
+                print("Undefined", self.name)
 
     @contextmanager
     def _get_domain(self, verbose=False):
+        conn = None
         try:
             conn = utils.connect(ucpe=self.ucpe, verbose=verbose)
             domain = conn.lookupByName(self.name)
