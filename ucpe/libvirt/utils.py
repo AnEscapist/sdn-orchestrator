@@ -44,10 +44,14 @@ def connect(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, ho
         raise ConnectionError
     elif verbose:
         print("Successfully connected to", uri)
+        print(
+            "Warning: you must close this connection yourself by calling the .close() method of the return value of this function.")
     return conn
 
+
 def state(domain):
-    return VM.VMState(domain.state[0])
+    return VM.VMState(domain.state()[0])
+
 
 def all_vm_states(ucpe):
     conn = connect(ucpe=ucpe)
@@ -55,10 +59,12 @@ def all_vm_states(ucpe):
     conn.close()
     return domain_states
 
+
 def vm_state(ucpe, vm_name):
     conn = connect(ucpe=ucpe)
     domain = conn.lookupByName(vm_name)
     return state(domain)
+
 
 def read(path):
     """return contents of file as a string"""

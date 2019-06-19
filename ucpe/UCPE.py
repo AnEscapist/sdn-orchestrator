@@ -1,6 +1,7 @@
 import ucpe.libvirt.utils as virtutils
 
 
+
 class UCPE():
     def __init__(self, username, hostname, libvirt_driver=virtutils.DRIVER, libvirt_transport=virtutils.TRANSPORT,
                  libvirt_port=virtutils.PORT, libvirt_path=virtutils.PATH, libvirt_extra_params = virtutils.EXTRAPARAMETERS, use_libvirt=False):
@@ -28,4 +29,6 @@ class UCPE():
         if libvirt_port or use_libvirt: self.libvirt_port = libvirt_port; use_libvirt = True
         if libvirt_path or use_libvirt: self.libvirt_path = libvirt_path; use_libvirt = True
         if libvirt_extra_params or use_libvirt: self.libvirt_extra_params = libvirt_extra_params; use_libvirt = True
+
+
 

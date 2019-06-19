@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 import ucpe.libvirt.utils as utils
 from enum import Enum, auto
 import libvirt
@@ -26,6 +27,24 @@ class VirtualMachine():
         conn.close()
 
     @property
+    def autostart(self):
+        conn = utils.connect(self.ucpe, verbose=False)
+        domain = conn.lookupByName(self.name)
+        autostart = domain.autostart()
+        conn.close()
+        return autostart
+
+    @autostart.setter
+    def autostart(self, autostart):
+        conn = utils.connect(self.ucpe, verbose=False)
+        domain = conn.lookupByName(self.name)
+        if autostart:
+            domain.setAutostart(1)
+        else:
+            domain.setAutostart(0)
+        conn.close()
+
+    @property
     def xml(self):
         #todo: use this as a cache - determine if xml is current
         #todo: this might be bad if it's slow
@@ -42,16 +61,13 @@ class VirtualMachine():
 
     @property
     def state(self):
-        conn = utils.connect(self.ucpe)
-        domain = conn.lookupByName(self.name)
-        state = utils.state(domain) #this is possibly completely wrong
-        conn.close()
-        return state
-
-    @property
-    def status(self):
-        #alias for state
-        return self.state
+        # conn = utils.connect(self.ucpe)
+        # domain = conn.lookupByName(self.name)
+        # state = utils.state(domain) #this is possibly completely wrong
+        # conn.close()
+        # return state
+        with self._get_domain() as domain:
+            return utils.state(domain) #this is possibly completely wrong
 
     def suspend(self):
         conn = utils.connect(self.ucpe)
@@ -79,15 +95,16 @@ class VirtualMachine():
         """
         saves a persistent image of the vm to a specified path
         :param path: path on the uCPE to the desired save location
+        todo: somehow enforce that a restore can happen only once from a given file
         """
         conn = utils.connect(self.ucpe)
         domain = conn.lookupByName(self.name)
         status = domain.save(path)
         if status < 0:
-            print("Failed to save domain", self.name, " to path", path)
+            print("Failed to save domain", self.name, "to path", path)
             #todo: raise error
         else:
-            print("Saved domain", self.name, " to path", path)
+            print("Saved domain", self.name, "to path", path)
         self.save_path = path
         conn.close()
 
@@ -100,13 +117,13 @@ class VirtualMachine():
         if status < 0:
             print("Failed to restore domain from path", self.save_path)
         else:
-            print("Restored domain", self.name, " from path", self.save_path)
+            print("Restored domain", self.name, "from path", self.save_path)
         self.save_path = None
         conn.close()
 
     def shutdown(self):
         #todo: error handling
-        #todo: bug - have to wait ~20 seconds before stopping
+        #todo: bug - have to wait ~20 seconds after starting before stopping
         conn = utils.connect(self.ucpe)
         domain = conn.lookupByName(self.name)
         domain.shutdown()
@@ -126,13 +143,22 @@ class VirtualMachine():
         domain = conn.lookupByName(self.name)
         if domain.isActive():
             print("Domain is running.  Stop it first before undefining.")
-            #todo: define some exception for this
+            #todo: ask tyler if should be able to undefine while running
         domain.undefine()
         print("Undefined", self.name)
         conn.close()
 
+    @contextmanager
+    def _get_domain(self, verbose=False):
+        try:
+            conn = utils.connect(ucpe=self.ucpe, verbose=verbose)
+            domain = conn.lookupByName(self.name)
+            yield domain
+        finally:
+            conn.close()
+
     @classmethod
-    def define(cls, ucpe, xml_path, verbose=True):
+    def define(cls, ucpe, xml_path, verbose=True, autostart=False):
         #todo: set a default value for the xml
         #todo: allow an xml string input
         """
@@ -148,6 +174,9 @@ class VirtualMachine():
             print("Failed to define a domain from XML", xml_path)
             #todo: define an error for this scenario
         print("Defined new domain", domain.name())
+        if(autostart):
+            domain.autostart(1)
+            print("Set domain", domain.name(), "to autostart")
         conn.close()
         return cls(ucpe, xml_contents, domain.name())
 
