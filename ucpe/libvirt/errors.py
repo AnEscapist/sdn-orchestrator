@@ -6,19 +6,12 @@ class ReadOnlyError(Error):
         Error.__init__(self, message)
 
 class DomainNotFoundError(Error):
-    def __init__(self, domain_name):
-        message = "Domain with name " + domain_name + " could not be found"
+    def __init__(self, name = "UNKNOWN_NAME"):
+        message = "Domain with name " + name + " could not be found"
         Error.__init__(self, message)
 
 class OperationFailedError(Error):
-    def __init__(self, operation_name):
-        message = "Operation " + operation_name + " failed"
+    def __init__(self, name = "UNKNOWN_NAME"):
+        message = "Operation " + name + " failed"
         Error.__init__(self, message)
-
-raise Error("blah")
-raise DomainNotFoundError("mydomain")
-
-
-
-
 

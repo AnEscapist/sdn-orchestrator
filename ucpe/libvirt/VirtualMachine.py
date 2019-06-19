@@ -22,7 +22,7 @@ class VirtualMachine():
             created_status = virDomain.create(domain)
             if created_status < 0:
                 print("Failed to start domain", self.name)
-                raise OperationFailedError("start")
+                raise OperationFailedError(name="start")
             elif verbose:
                 print("Started domain", self.name)
 
@@ -69,7 +69,7 @@ class VirtualMachine():
             status = domain.suspend()
             if status < 0:
                 print("Failed to suspend domain", self.name)
-                raise OperationFailedError("suspend")
+                raise OperationFailedError(name="suspend")
             elif verbose:
                 print("Suspended domain", self.name)
 
@@ -78,7 +78,7 @@ class VirtualMachine():
             status = domain.resume()
             if status < 0:
                 print("Failed to resume domain", self.name)
-                raise OperationFailedError("resume")
+                raise OperationFailedError(name="resume")
             elif verbose:
                 print("Resumed domain", self.name)
 
@@ -92,7 +92,7 @@ class VirtualMachine():
             status = domain.save(path)
             if status < 0:
                 print("Failed to save domain", self.name, "to path", path)
-                raise OperationFailedError("save")
+                raise OperationFailedError(name="save")
             elif verbose:
                 print("Saved domain", self.name, "to path", path)
                 print("Warning: you can only restore once from your save file.")
@@ -106,7 +106,7 @@ class VirtualMachine():
         status = conn.restore(self.save_path)
         if status < 0:
             print("Failed to restore domain from path", self.save_path)
-            raise OperationFailedError("restore")
+            raise OperationFailedError(name="restore")
         elif verbose:
             print("Restored domain", self.name, "from path", self.save_path)
         self.save_path = None
@@ -119,7 +119,7 @@ class VirtualMachine():
             status = domain.shutdown()
             if status < 0:
                 print("Failed to shut down domain", self.name)
-                raise OperationFailedError("shutdown")
+                raise OperationFailedError(name="shutdown")
             elif verbose:
                 print("Shutting down domain", self.name)
 
@@ -128,7 +128,7 @@ class VirtualMachine():
             status = domain.destroy()
             if status < 0:
                 print("Failed to destroy domain", self.name)
-                raise OperationFailedError("destroy")
+                raise OperationFailedError(name="destroy")
             elif verbose:
                 print("Destroyed domain", self.name)
 
@@ -141,7 +141,7 @@ class VirtualMachine():
             status = domain.undefine()
             if status < 0:
                 print("Failed to undefine domain", self.name)
-                raise OperationFailedError("undefine")
+                raise OperationFailedError(name="undefine")
             elif verbose:
                 print("Undefined", self.name)
 

@@ -37,7 +37,11 @@ def connect(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, ho
     extraparameters = "?" + extraparameters if extraparameters else ""
 
     uri = driver + transport + "://" + username + hostname + port + "/" + path + extraparameters
-    conn = libvirt.open(uri)
+    conn = None
+    try:
+        conn = libvirt.open(uri)
+    except libvirt.libvirtError as e:
+        print("sup", e.err)
     if conn is None:
         print("Failed to connect to", uri)
         raise ConnectionError
