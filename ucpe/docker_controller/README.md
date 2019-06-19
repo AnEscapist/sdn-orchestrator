@@ -1,4 +1,4 @@
-# Docker Controller
+# docker_controller
 
 ## Functions:
 
@@ -36,7 +36,7 @@
     * **Connection Error** - If no route to the server.
     * **SSH Exception** - If no existing session.
     
-* ## **all_Containers()**
+* ## **all_containers()**
 
     List containers.
     
@@ -50,7 +50,7 @@
     **Raises**
     *   **Connection Error** - If no route to the host.
 
-* ## **all_Images()**
+* ## **all_images()**
 
     List all images.
     
