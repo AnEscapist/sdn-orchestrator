@@ -3,6 +3,7 @@ import json
 import os
 import paramiko
 import requests
+from utilities.Error import testError
 
 
 def docker_client(ip, port):
@@ -21,13 +22,17 @@ def open_sftp(ip, username, password):
 
 
 def all_containers(dcli, all=True):
-    try:
-        if all == True:
-            return dcli.containers.list(all=all)
-        else:
-            return dcli.containers.list()
-    except OSError as ose:
-        print('Connection Error: ' + str(ose).split('(')[1].split(')')[0] + '.' + str(ose).split(':')[-2] + ':' + str(ose).split(']')[-1][:-4])
+    #try:
+    if all == True:
+        return dcli.containers.list(all=all)
+    else:
+        return dcli.containers.list()
+        #raise testError('testERror')
+    #except OSError as oe:
+
+
+        #raise testError()
+        #print('Connection Error: ' + str(ose).split('(')[1].split(')')[0] + '.' + str(ose).split(':')[-2] + ':' + str(ose).split(']')[-1][:-4])
 
 
 def all_images(dcli, name=None, all=True):
@@ -57,7 +62,7 @@ def get_container_status(dcli, all=False, id_name=None):
         json_file.write(json_str)
 
 
-def gether_containers(dcli, path='ContainerInfo.json'):
+def gather_containers(dcli, path='ContainerInfo.json'):
 
     containerInfo = {}
     containerInfo['Containers'] = []
@@ -76,7 +81,7 @@ def gether_containers(dcli, path='ContainerInfo.json'):
         else:
             json_file.write(json_str + ',\n')
 
-def gether_images(dcli, name=None, all=True, path='ImageInfo.json'):
+def gather_images(dcli, name=None, all=True, path='ImageInfo.json'):
     imageInfo = {}
     imageInfo['Images'] = []
 
@@ -204,9 +209,9 @@ if __name__ == '__main__':
         if func == '1':
             get_container_status(dockerClient, all=True)
         elif func == '2':
-            gether_containers(dockerClient)
+            gather_containers(dockerClient)
         elif func == '3':
-            gether_images(dockerClient)
+            gather_images(dockerClient)
         elif func == '4':
             commit_container_to_image(allContainers[0], 'abc', 'abc', 'this is a commit test')
         elif func == '5':
