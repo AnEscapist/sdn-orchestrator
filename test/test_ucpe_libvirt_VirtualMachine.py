@@ -1,5 +1,5 @@
-from ucpe.libvirt.VirtualMachine import *
-from ucpe.libvirt.testing_constants import *
+from ucpe.libvirt_controller.VirtualMachine import *
+from ucpe.libvirt_controller.testing_constants import *
 import time
 import pytest
 
@@ -25,12 +25,12 @@ import pytest
 #     assert vm.state == VMState.SHUTOFF
 #     vm.undefine()
 #     time.sleep(10)
-#     with pytest.raises(libvirt.libvirtError) as error_info:
+#     with pytest.raises(libvirt.libvirtError):
 #         vm.state #shouldn't be able to get state of undefined vm
 
-@pytest.mark.trylast
-def test_demonstrate_shutdown_bug():
-    #test defaults
-    vm = VirtualMachine.define(DEFAULT_UCPE, DEFAULT_XML_PATH)
-    vm.start()
-    vm.shutdown()
+# @pytest.mark.trylast
+# def test_demonstrate_shutdown_bug():
+#     #test defaults
+#     vm = VirtualMachine.define(DEFAULT_UCPE, DEFAULT_XML_PATH)
+#     vm.start()
+#     vm.shutdown()

@@ -1,9 +1,9 @@
 from contextlib import contextmanager
-import ucpe.libvirt.utils as utils
+import ucpe.libvirt_controller.utils as utils
 from enum import Enum
 import libvirt
 from libvirt import virDomain
-from ucpe.libvirt.errors import *
+from ucpe.libvirt_controller.errors import *
 
 class VirtualMachine():
     #todo: lazy parameter access for immutable values
@@ -61,7 +61,7 @@ class VirtualMachine():
 
     @state.setter
     def state(self, state):
-        raise ReadOnlyError
+        raise ReadOnlyError()
 
     def suspend(self, verbose=True):
         #todo: return value
@@ -110,7 +110,6 @@ class VirtualMachine():
         elif verbose:
             print("Restored domain", self.name, "from path", self.save_path)
         self.save_path = None
-        conn.close()
         conn.close()
 
     def shutdown(self, verbose=True):
