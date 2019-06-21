@@ -1,4 +1,5 @@
 import ucpe.libvirt_controller.VirtualMachine
+from enum import Enum
 import libvirt
 import ucpe.libvirt_controller.VirtualMachine as VM
 from contextlib import contextmanager
@@ -72,7 +73,7 @@ def get_domain(ucpe, vm_name, verbose=False):
 
 def state(libvirt_domain):
     #rn returns VMState.SHUTOFF.  consider making it return "SHUTOFF"
-    return VM.VMState(libvirt_domain.state()[0])
+    return VMState(libvirt_domain.state()[0])
 
 
 def read(path):
@@ -80,3 +81,13 @@ def read(path):
     with open(path) as f:
         contents = f.read()
     return contents
+
+class VMState(Enum):
+    NOSTATE = libvirt.VIR_DOMAIN_NOSTATE
+    RUNNING = libvirt.VIR_DOMAIN_RUNNING
+    BLOCKED = libvirt.VIR_DOMAIN_BLOCKED
+    PAUSED  = libvirt.VIR_DOMAIN_PAUSED
+    SHUTDOWN = libvirt.VIR_DOMAIN_SHUTDOWN
+    SHUTOFF = libvirt.VIR_DOMAIN_SHUTOFF
+    CRASHED = libvirt.VIR_DOMAIN_CRASHED
+    PMSUSPENDED = libvirt.VIR_DOMAIN_PMSUSPENDED

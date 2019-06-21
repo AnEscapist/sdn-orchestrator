@@ -1,8 +1,5 @@
-import ucpe.libvirt_controller.utils
 from contextlib import contextmanager
 import ucpe.libvirt_controller.utils as utils
-from enum import Enum
-import libvirt
 from libvirt import virDomain
 from ucpe.libvirt_controller.errors import *
 
@@ -178,12 +175,3 @@ class VirtualMachine():
         conn.close()
         return cls(ucpe, xml_contents, domain.name())
 
-class VMState(Enum):
-    NOSTATE = libvirt.VIR_DOMAIN_NOSTATE
-    RUNNING = libvirt.VIR_DOMAIN_RUNNING
-    BLOCKED = libvirt.VIR_DOMAIN_BLOCKED
-    PAUSED  = libvirt.VIR_DOMAIN_PAUSED
-    SHUTDOWN = libvirt.VIR_DOMAIN_SHUTDOWN
-    SHUTOFF = libvirt.VIR_DOMAIN_SHUTOFF
-    CRASHED = libvirt.VIR_DOMAIN_CRASHED
-    PMSUSPENDED = libvirt.VIR_DOMAIN_PMSUSPENDED
