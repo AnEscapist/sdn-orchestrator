@@ -1,7 +1,5 @@
-import ucpe.libvirt_controller.VirtualMachine
 from enum import Enum
 import libvirt
-import ucpe.libvirt_controller.VirtualMachine as VM
 from contextlib import contextmanager
 
 # URI Parameters, as documented here:
