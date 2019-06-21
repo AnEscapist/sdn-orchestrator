@@ -24,10 +24,12 @@
 <clock offset="utc"/>
 <devices>
 <emulator>/usr/bin/kvm</emulator>
+<!--
 <interface type='bridge'>
     <source bridge='mgmtbr'/>
     <model type="virtio"/>
 </interface>
+-->
 <!--
 <interface type="bridge">
 <source bridge="br-2d21ea5dca18"/>
