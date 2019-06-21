@@ -8,9 +8,7 @@ from libvirt import virConnect
 from ucpe.libvirt_controller.errors import *
 from ucpe.libvirt_controller.testing_constants import *
 from ucpe.UCPE import UCPE
-
 from ucpe.libvirt_controller.utils import get_domain, open_connection, state
-
 
 class LibvirtController():
 

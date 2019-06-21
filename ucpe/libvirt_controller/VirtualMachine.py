@@ -21,10 +21,10 @@ class VirtualMachine():
         with self._get_domain() as domain:
             created_status = virDomain.create(domain)
             if created_status < 0:
-                print("Failed to start domain", self.name)
+                print("Failed to start virtual machine", self.name)
                 raise OperationFailedError(name="start")
             elif verbose:
-                print("Started domain", self.name)
+                print("Started virtual machine", self.name)
 
     @property
     def autostart(self):
@@ -68,19 +68,19 @@ class VirtualMachine():
         with self._get_domain() as domain:
             status = domain.suspend()
             if status < 0:
-                print("Failed to suspend domain", self.name)
+                print("Failed to suspend virtual machine", self.name)
                 raise OperationFailedError(name="suspend")
             elif verbose:
-                print("Suspended domain", self.name)
+                print("Suspended virtual machine", self.name)
 
     def resume(self, verbose=True):
         with self._get_domain() as domain:
             status = domain.resume()
             if status < 0:
-                print("Failed to resume domain", self.name)
+                print("Failed to resume virtual machine", self.name)
                 raise OperationFailedError(name="resume")
             elif verbose:
-                print("Resumed domain", self.name)
+                print("Resumed virtual machine", self.name)
 
     def save(self, path, verbose=True):
         """
@@ -91,10 +91,10 @@ class VirtualMachine():
         with self._get_domain() as domain:
             status = domain.save(path)
             if status < 0:
-                print("Failed to save domain", self.name, "to path", path)
+                print("Failed to save virtual machine", self.name, "to path", path)
                 raise OperationFailedError(name="save")
             elif verbose:
-                print("Saved domain", self.name, "to path", path)
+                print("Saved virtual machine", self.name, "to path", path)
                 print("Warning: you can only restore once from your save file.")
             self.save_path = path
 
@@ -102,13 +102,13 @@ class VirtualMachine():
         if self.save_path is None:
             #todo: raise error
             print("Cannot restore without first saving.")
-        conn = utils.connect(self.ucpe)
+        conn = utils.connect(self.ucpe, verbose=False)
         status = conn.restore(self.save_path)
         if status < 0:
-            print("Failed to restore domain from path", self.save_path)
+            print("Failed to restore virtual machine from path", self.save_path)
             raise OperationFailedError(name="restore")
         elif verbose:
-            print("Restored domain", self.name, "from path", self.save_path)
+            print("Restored virtual machine", self.name, "from path", self.save_path)
         self.save_path = None
         conn.close()
 
@@ -117,29 +117,29 @@ class VirtualMachine():
         with self._get_domain() as domain:
             status = domain.shutdown()
             if status < 0:
-                print("Failed to shut down domain", self.name)
+                print("Failed to shut down virtual machine", self.name)
                 raise OperationFailedError(name="shutdown")
             elif verbose:
-                print("Shutting down domain", self.name)
+                print("Shutting down virtual machine", self.name)
 
     def destroy(self, verbose=True):
         with self._get_domain() as domain:
             status = domain.destroy()
             if status < 0:
-                print("Failed to destroy domain", self.name)
+                print("Failed to destroy virtual machine", self.name)
                 raise OperationFailedError(name="destroy")
             elif verbose:
-                print("Destroyed domain", self.name)
+                print("Destroyed virtual machine", self.name)
 
     def undefine(self, verbose=True):
         #todo: lock all activity after undefining
         with self._get_domain() as domain:
             if domain.isActive():
-                print("Domain is running.  Stop it first before undefining.")
+                print("Virtual machine is running.  Stop it first before undefining.")
                 #todo: ask tyler if should be able to undefine while running
             status = domain.undefine()
             if status < 0:
-                print("Failed to undefine domain", self.name)
+                print("Failed to undefine virtual machine", self.name)
                 raise OperationFailedError(name="undefine")
             elif verbose:
                 print("Undefined", self.name)
@@ -159,7 +159,7 @@ class VirtualMachine():
         #todo: set a default value for the xml
         #todo: allow an xml string input
         """
-        define and start a persistent domain based on an xml configuration
+        define and start a persistent virtual machine based on an xml configuration
         :param ucpe: UCPE object
         :param xml_path: path to xml
         :return: VirtualMachine instance representing created domain
@@ -168,12 +168,12 @@ class VirtualMachine():
         conn = utils.connect(ucpe)
         domain = conn.defineXML(xml_contents) #todo: make persistent
         if domain is None:
-            print("Failed to define a domain from XML", xml_path)
+            print("Failed to define a virtual machine from XML", xml_path)
             #todo: define an error for this scenario
-        print("Defined new domain", domain.name())
+        print("Defined new virtual machine", domain.name())
         if(autostart):
             domain.autostart(1)
-            print("Set domain", domain.name(), "to autostart")
+            print("Set virtual machine", domain.name(), "to autostart")
         conn.close()
         return cls(ucpe, xml_contents, domain.name())
 
