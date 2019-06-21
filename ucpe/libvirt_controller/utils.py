@@ -1,3 +1,4 @@
+import ucpe.libvirt_controller.VirtualMachine
 import libvirt
 import ucpe.libvirt_controller.VirtualMachine as VM
 from contextlib import contextmanager
