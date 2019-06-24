@@ -1,4 +1,4 @@
-from ucpe.libvirt_controller.VirtualMachine import *
+from ucpe.libvirt_controller.virtual_machine import *
 from ucpe.libvirt_controller.testing_constants import *
 import time
 import pytest

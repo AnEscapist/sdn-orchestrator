@@ -1,29 +1,27 @@
 from inspect import signature, Parameter
 from contextlib import contextmanager
-import ucpe.libvirt_controller.utils as utils
-from ucpe.libvirt_controller.VirtualMachine import VMState
-import libvirt
+from ucpe.libvirt_controller.utils import VMState
+from ucpe.libvirt_controller.testing_constants import *
 from libvirt import virDomain
 from libvirt import virConnect
 from ucpe.libvirt_controller.errors import *
-from ucpe.libvirt_controller.testing_constants import *
-from ucpe.UCPE import UCPE
+from ucpe.ucpe import UCPE
 from ucpe.libvirt_controller.utils import get_domain, open_connection, state
 
 class LibvirtController():
 
     @staticmethod
-    def libvirt_controller_define(**kwargs):
+    def libvirt_controller_define_vm(**kwargs):
         func = define_vm
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_undefine(**kwargs):
+    def libvirt_controller_undefine_vm(**kwargs):
         func = undefine_vm
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_get_state(**kwargs):
+    def libvirt_controller_get_vm_state(**kwargs):
         func = get_vm_state
         return _call_function(func, **kwargs)
 
@@ -33,7 +31,7 @@ class LibvirtController():
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_get_info(**kwargs):
+    def libvirt_controller_get_vm_info(**kwargs):
         func = get_vm_info
         return _call_function(func, **kwargs)
 
@@ -43,52 +41,52 @@ class LibvirtController():
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_start(**kwargs):
+    def libvirt_controller_start_vm(**kwargs):
         func = start_vm
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_shutdown(**kwargs):
+    def libvirt_controller_shutdown_vm(**kwargs):
         func = shutdown_vm
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_destroy(**kwargs):
+    def libvirt_controller_destroy_vm(**kwargs):
         func = destroy_vm
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_suspend(**kwargs):
+    def libvirt_controller_suspend_vm(**kwargs):
         func = suspend_vm
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_resume(**kwargs):
+    def libvirt_controller_resume_vm(**kwargs):
         func = resume_vm
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_save(**kwargs):
+    def libvirt_controller_save_vm(**kwargs):
         func = save_vm
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_restore(**kwargs):
+    def libvirt_controller_restore_vm(**kwargs):
         func = restore_vm
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_get_autostart(**kwargs):
+    def libvirt_controller_get_vm_autostart(**kwargs):
         func = get_vm_autostart
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_set_autostart(**kwargs):
+    def libvirt_controller_set_vm_autostart(**kwargs):
         func = set_vm_autostart
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def libvirt_controller_get_xml(**kwargs):
+    def libvirt_controller_get_vm_xml(**kwargs):
         func = get_vm_xml
         return _call_function(func, **kwargs)
 
@@ -206,41 +204,35 @@ def _libvirt_connection_call(libvirt_conn_func, ucpe, success_message, fail_mess
     # connfunc: connection --> domain
     operation_name = libvirt_conn_func.__name__ if operation_name is None else operation_name
     with open_connection(ucpe) as conn:
-        domain = libvirt_conn_func(conn)
-        if domain is None:
+        result = libvirt_conn_func(conn)
+        if result is None:
             print(fail_message)
             raise OperationFailedError(name=operation_name)
+        elif isinstance(result, virDomain) and verbose:
+            print(success_message + "\n" + "Virtual Machine Name: " + result.name())
         elif verbose:
-            print(success_message + "\n" + "Virtual Machine Name: " + domain.name())
+            print(success_message)
 
 def _construct_info_dict(domain):
     state, maxmem, mem, cpus, cpu_time = domain.info()
-    return {"state": VMState(state), "max_memory": maxmem, "memory": mem, "cpu_count": cpus, "cpu_time": cpu_time}
-
-@contextmanager
-def _extract_body(**kwargs):
-    try:
-        body_key = "body"
-        yield kwargs[body_key]
-    finally:
-        return
+    return {"state": VMState(state).name, "max_memory": maxmem, "memory": mem, "cpu_count": cpus, "cpu_time": cpu_time}
 
 def _call_function(func, **kwargs):
-    with _extract_body(**kwargs) as body:
-        ucpe = UCPE.from_kwargs(**body)
-        params = signature(func).parameters #get the function arguments
-        relevant_kwargs = {"ucpe": ucpe} #todo: this is REALLY bad
-        for param in params:
-            if param == "ucpe":
-                continue
-            if params[param].default == Parameter.empty:
-                try:
-                    relevant_kwargs[param] = body[param]
-                except KeyError:
-                    raise KeyError("missing argument " + param + " in call to " + func.__name__)
-            else: #todo: this is REALLY bad - depends on the arg name, but so does the request/response
-                relevant_kwargs[param] = body.get(param, params[param].default)
-        return func(**relevant_kwargs)
+    body = kwargs["body"] #todo: bad
+    ucpe = UCPE.from_kwargs(**body)
+    params = signature(func).parameters #get the function arguments
+    relevant_kwargs = {"ucpe": ucpe} #todo: this is REALLY bad
+    for param in params:
+        if param == "ucpe":
+            continue
+        if params[param].default == Parameter.empty:
+            try:
+                relevant_kwargs[param] = body[param]
+            except KeyError:
+                raise KeyError("missing argument " + param + " in call to " + func.__name__)
+        else: #todo: this is REALLY bad - depends on the arg name, but so does the request/response
+            relevant_kwargs[param] = body.get(param, params[param].default)
+    return func(**relevant_kwargs)
 
 # test:
 # define_vm(DEFAULT_UCPE, DEFAULT_XML)
@@ -257,9 +249,17 @@ def _call_function(func, **kwargs):
 # print(get_vm_info(DEFAULT_UCPE, "test"))
 # print(get_all_vm_states(DEFAULT_UCPE))
 
-# LibvirtController.libvirt_controller_start(**DEFAULT_KWARGS)
-# LibvirtController.libvirt_controller_shutdown(**DEFAULT_KWARGS)
-# print(LibvirtController.libvirt_controller_get_state(**DEFAULT_KWARGS))
-# print(LibvirtController.libvirt_controller_get_xml(**DEFAULT_KWARGS))
-
-
+# LibvirtController.libvirt_controller_define_vm(**DEFAULT_KWARGS)
+# LibvirtController.libvirt_controller_start_vm(**DEFAULT_KWARGS)
+# LibvirtController.libvirt_controller_shutdown_vm(**DEFAULT_KWARGS)
+# print(LibvirtController.libvirt_controller_get_vm_state(**DEFAULT_KWARGS))
+# print(LibvirtController.libvirt_controller_get_vm_xml(**DEFAULT_KWARGS))
+# print(LibvirtController.libvirt_controller_get_vm_autostart(**DEFAULT_KWARGS))
+# LibvirtController.libvirt_controller_set_vm_autostart(**DEFAULT_KWARGS)
+# LibvirtController.libvirt_controller_suspend_vm(**DEFAULT_KWARGS)
+# LibvirtController.libvirt_controller_resume_vm(**DEFAULT_KWARGS)
+# LibvirtController.libvirt_controller_save_vm(**DEFAULT_KWARGS)
+# LibvirtController.libvirt_controller_restore_vm(**DEFAULT_KWARGS)
+# print(LibvirtController.libvirt_controller_get_vm_info(**DEFAULT_KWARGS))
+# LibvirtController.libvirt_controller_destroy_vm(**DEFAULT_KWARGS)
+# LibvirtController.libvirt_controller_undefine_vm(**DEFAULT_KWARGS)

@@ -15,7 +15,6 @@ class VirtualMachine():
         #todo: deal with outside mutations of these
 
     def start(self, verbose=True):
-        #todo: error handling
         with self._get_domain() as domain:
             created_status = virDomain.create(domain)
             if created_status < 0:
@@ -96,7 +95,9 @@ class VirtualMachine():
                 print("Warning: you can only restore once from your save file.")
             self.save_path = path
 
-    def restore(self, verbose=True):
+    def restore(self, save_path = None, verbose=True):
+        if save_path:
+            self.save_path = save_path
         if self.save_path is None:
             #todo: raise error
             print("Cannot restore without first saving.")
