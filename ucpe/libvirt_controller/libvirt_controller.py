@@ -7,12 +7,13 @@ from libvirt import virConnect
 from ucpe.libvirt_controller.errors import *
 from ucpe.ucpe import UCPE
 from ucpe.libvirt_controller.utils import get_domain, open_connection, state
+import xml.etree.cElementTree as ET
 
 class LibvirtController():
 
     @staticmethod
     def libvirt_controller_define_vm(**kwargs):
-        func = define_vm
+        func = define_vm_from_xml
         return _call_function(func, **kwargs)
 
     @staticmethod
@@ -110,11 +111,35 @@ def get_all_vm_info(ucpe):
     func = _construct_info_dict
     return _libvirt_domain_observer(func, ucpe)
 
-def define_vm(ucpe, xml, verbose=True):
+def _construct_info_dict(domain):
+    state, maxmem, mem, cpus, cpu_time = domain.info()
+    memory_stats = domain.memoryStats()
+    info_dict = {"state": VMState(state).name, "max_memory": maxmem, "memory": mem, "cpu_count": cpus, "cpu_time": cpu_time}
+    info_dict.update(memory_stats)
+    return info_dict
+
+def get_vm_vnc_port(ucpe, vm_name):
+    func = _vnc_port_from_domain
+    return _libvirt_domain_observer(func, ucpe, vm_name)
+
+def _vnc_port_from_domain(domain):
+    xml = domain.XMLDesc(0)
+    root = ET.fromstring(xml)
+    # get the VNC port
+    graphics = root.find('./devices/graphics')
+    port = graphics.get('port')
+    return port
+
+def define_vm_from_xml(ucpe, xml, verbose=True):
     func = lambda conn: virConnect.defineXML(conn, xml)
     success_message = "Defined new virtual machine"
     fail_message = "Failed to define new virtual machine"
     _libvirt_connection_call(func, ucpe, success_message, fail_message, verbose=verbose)
+
+def define_vm_from_params(ucpe, vm_name, vm_memory, vm_vcpu_count, image_path,  verbose=True):
+    #todo: remember to set hugepages memory the same
+    #todo: figure out how to allocate the ports
+    pass
 
 def undefine_vm(ucpe, vm_name, verbose=True):
     func = virDomain.undefine
@@ -213,10 +238,6 @@ def _libvirt_connection_call(libvirt_conn_func, ucpe, success_message, fail_mess
         elif verbose:
             print(success_message)
 
-def _construct_info_dict(domain):
-    state, maxmem, mem, cpus, cpu_time = domain.info()
-    return {"state": VMState(state).name, "max_memory": maxmem, "memory": mem, "cpu_count": cpus, "cpu_time": cpu_time}
-
 def _call_function(func, **kwargs):
     body = kwargs["body"] #todo: bad
     ucpe = UCPE.from_kwargs(**body)
@@ -248,6 +269,7 @@ def _call_function(func, **kwargs):
 # print(get_vm_state(DEFAULT_UCPE, "test"))
 # print(get_vm_info(DEFAULT_UCPE, "test"))
 # print(get_all_vm_states(DEFAULT_UCPE))
+print(get_vm_vnc_port(DEFAULT_UCPE, "test"))
 
 # LibvirtController.libvirt_controller_define_vm(**DEFAULT_KWARGS)
 # LibvirtController.libvirt_controller_start_vm(**DEFAULT_KWARGS)
@@ -263,3 +285,4 @@ def _call_function(func, **kwargs):
 # print(LibvirtController.libvirt_controller_get_vm_info(**DEFAULT_KWARGS))
 # LibvirtController.libvirt_controller_destroy_vm(**DEFAULT_KWARGS)
 # LibvirtController.libvirt_controller_undefine_vm(**DEFAULT_KWARGS)
+
