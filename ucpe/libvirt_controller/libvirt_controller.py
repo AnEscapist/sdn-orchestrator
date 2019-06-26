@@ -344,9 +344,9 @@ def _call_function(func, **kwargs):
     return func(**relevant_kwargs)
 
 # test:
-UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
+# UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
 # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH)
-define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
+# define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
 # start_vm(DEFAULT_UCPE, "test")
 # shutdown_vm(DEFAULT_UCPE, "test")
 # destroy_vm(DEFAULT_UCPE, "test")

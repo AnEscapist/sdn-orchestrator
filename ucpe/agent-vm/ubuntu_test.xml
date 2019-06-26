@@ -61,7 +61,7 @@
 -->
 <disk device="disk" type="file">
 <driver name="qemu" type="qcow2"/>
-<source file="/var/third-party/ubuntu_16_1_test.qcow2"/>
+<source file="/var/third-party/ubuntu_16_roger_clean.qcow2"/>
 <backingStore/>
 <target bus="virtio" dev="vda"/>
 <alias name="virtio-disk0"/>
