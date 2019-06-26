@@ -83,6 +83,7 @@
 <input tty="ps2" type="mouse"/>
 <input tty="ps2" type="keyboard"/>
 <graphics autoport="no" listen="0.0.0.0" port="{{ 5903 }}" type="vnc"/>
+<graphics autoport="no" listen="0.0.0.0" port="{{ 5903 }}" type="spice"/>
 <video/>
 <memballoon model="none">
 <alias name="balloon0"/>

@@ -1,9 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+        version="1.0">
+ <xsl:output omit-xml-declaration="yes" indent="yes"/>
+ <xsl:strip-space elements="*"/>
+<!--6-26-19: do not set the hugepages_memory variable here.  it will be overwritten. -->
+ <xsl:variable name="hugepages_memory">HUGEPAGES_MEMORY</xsl:variable>
+ <xsl:template match="/">
 <domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm">
-<name>test</name>
-<memory unit="G">4</memory>
-<vcpu placement="static">4</vcpu>
-<cputune/>
+<name>NAME</name>
+<memory unit="G">MEMORY</memory>
+<vcpu placement="static">VCPU_COUNT</vcpu>
+<!-- for cpu pinning
+<cputune>
+<vcpupin vcpu="0" cpuset="9"/>
+<vcpupin vcpu="1" cpuset="10"/>
+<vcpupin vcpu="2" cpuset="11"/>
+</cputune>
+-->
 <resource>
 <partition>/machine</partition>
 </resource>
@@ -16,7 +28,9 @@
 <apic/>
 <pae/>
 </features>
-<cpu mode='custom' match='exact'>
+<cpu mode="host-model">
+<model fallback="allow"/>
+<feature policy='require' name='vmx'/>
 </cpu>
 <on_poweroff>destroy</on_poweroff>
 <on_reboot>restart</on_reboot>
@@ -24,63 +38,43 @@
 <clock offset="utc"/>
 <devices>
 <emulator>/usr/bin/kvm</emulator>
-<!--
-<interface type='bridge'>
-    <source bridge='roger'/>
-    <model type="virtio"/>
+<!-- for linux bridge interfaces 
+<interface type="bridge">
+<source bridge="mgmtbr"/>
+<target dev="vnet5"/>
+<model type="virtio"/>
+<alias name="net0"/>
+<link state="up"/>
 </interface>
 -->
-<!--
-<interface type="bridge">
-<source bridge="br-2d21ea5dca18"/>
-<model type="virtio"/>
-<link state="up"/>
-</interface>
-<interface type="bridge">
-<source bridge="br-2d21ea5dca18"/>
-<model type="virtio"/>
-<link state="up"/>
-</interface>
+<!-- for dpdk vhostuser interfaces
 <interface type="vhostuser">
-<source mode="client" path="/usr/local/var/run/openvswitch/vsrx_eth0" type="unix"/>
+<source mode="client" path="/usr/local/var/run/openvswitch/vyatta_eth0" type="unix"/>
 <guest dev="eth3"/>
 <model type="virtio"/>
 <alias name="net1"/>
 <link state="up"/>
 </interface>
-<interface type="vhostuser">
-<source mode="client" path="/usr/local/var/run/openvswitch/fortigate1" type="unix"/>
-<model type="virtio"/>
-<link state="up"/>
-</interface>
-<interface type="vhostuser">
-<source mode="client" path="/usr/local/var/run/openvswitch/fortigate2" type="unix"/>
-<model type="virtio"/>
-<link state="up"/>
+-->
+<!--
+<interface type='hostdev' managed='yes'>
+  <source>
+    <address type='pci' domain='0' bus='11' slot='16' function='0'/>
+  </source>
 </interface>
 -->
 <disk device="disk" type="file">
 <driver name="qemu" type="qcow2"/>
-<source file="/var/third-party/ubuntu_16_1_test.qcow2"/>
+<source file="/var/third-party/BASE_IMAGE"/>
 <backingStore/>
 <target bus="virtio" dev="vda"/>
 <alias name="virtio-disk0"/>
-</disk>
-<disk device="cdrom" type="file">
-<driver name="qemu" type="raw"/>
-<backingStore/>
-<readOnly/>
-<target bus="ide" dev="hdc"/>
-<alias name="ide0-1-0"/>
 </disk>
 <controller index="0" type="usb">
 <alias name="usb"/>
 </controller>
 <controller index="0" model="pci-root" type="pci">
 <alias name="pci.0"/>
-</controller>
-<controller index="0" type="ide">
-<alias name="ide"/>
 </controller>
 <serial type="pty">
 <source path="/dev/pts/6"/>
@@ -100,4 +94,13 @@
 <alias name="balloon0"/>
 </memballoon>
 </devices>
+<qemu:commandline>
+<qemu:arg value="-object"/>
+<qemu:arg value="memory-backend-file,id=mem,size={$hugepages_memory},mem-path=/dev/hugepages,share=on"/>
+<qemu:arg value="-numa"/>
+<qemu:arg value="node,memdev=mem"/>
+<qemu:arg value="-mem-prealloc"/>
+</qemu:commandline>
 </domain>
+</xsl:template>
+</xsl:stylesheet>

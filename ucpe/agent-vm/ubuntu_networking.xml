@@ -48,23 +48,22 @@
 <alias name="net1"/>
 <link state="up"/>
 </interface>
+-->
 <interface type="vhostuser">
 <source mode="client" path="/usr/local/var/run/openvswitch/fortigate1" type="unix"/>
 <model type="virtio"/>
 <link state="up"/>
 </interface>
-<interface type="vhostuser">
-<source mode="client" path="/usr/local/var/run/openvswitch/fortigate2" type="unix"/>
-<model type="virtio"/>
-<link state="up"/>
-</interface>
--->
 <disk device="disk" type="file">
 <driver name="qemu" type="qcow2"/>
-<source file="/var/third-party/ubuntu_16_1_test.qcow2"/>
+<source file="/var/third-party/ubuntu_16_roger.qcow2"/>
 <backingStore/>
 <target bus="virtio" dev="vda"/>
 <alias name="virtio-disk0"/>
+</disk>
+<disk type='file' device='disk'>
+    <source file='/var/lib/libvirt/images/roger-user-data.img'/>
+    <target dev='vdb' bus='virtio'/>
 </disk>
 <disk device="cdrom" type="file">
 <driver name="qemu" type="raw"/>
