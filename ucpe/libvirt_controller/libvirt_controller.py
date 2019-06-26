@@ -15,8 +15,13 @@ import os
 class LibvirtController():
 
     @staticmethod
-    def libvirt_controller_define_vm(**kwargs):
+    def libvirt_controller_define_vm_from_xml(**kwargs):
         func = define_vm_from_xml
+        return _call_function(func, **kwargs)
+
+    @staticmethod
+    def libvirt_controller_define_vm_from_params(**kwargs):
+        func = define_vm_from_params
         return _call_function(func, **kwargs)
 
     @staticmethod
