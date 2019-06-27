@@ -16,6 +16,7 @@ def pub_response(d, mess):
     topic = "test-sn"
     message = mess.decode('ASCII')
     response = JSONRPCResponseManager.handle(message, d)
+    print(response.data)
     socket_pub.send_string(topic, zmq.SNDMORE)
     socket_pub.send_string(json.dumps(response.data))
 

@@ -31,7 +31,7 @@ def sub_response():
 def get_data(messagedata): 
     messagedata = json.dumps(messagedata)
     topic = "test-id"
-    #messagedata = {"method": "libvirt_controller_get_vm_state", "params": {"body":{"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1, "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    #messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10.10.81.100', 'port':'2375'}}, "jsonrpc": "2.0", "id": 0}
     #messagedata = json.dumps(messagedata)
     print("%s %s" % (topic, messagedata))
     socket_pub.send_string(topic, zmq.SNDMORE)
@@ -41,6 +41,7 @@ def get_data(messagedata):
 
 port_pub = "5559"
 port_sub = "5570"
+
 
 port_socketio = "5000"
 host = socket.gethostbyname(socket.gethostname())
@@ -63,30 +64,25 @@ t1.start()
 
 socketio.run(app, host=host, port=port_socketio) 
 
-"""
-
 time.sleep(1)
 
-print("%s %s" % (topic, messagedata))
-socket_pub.send_string(topic, zmq.SNDMORE)
-socket_pub.send_string(messagedata)
-print("%s %s" % (topic, messagedata))
-socket_pub.send_string(topic, zmq.SNDMORE)
-socket_pub.send_string(messagedata)
-print("%s %s" % (topic, messagedata))
-socket_pub.send_string(topic, zmq.SNDMORE)
-socket_pub.send_string(messagedata)
-print("%s %s" % (topic, messagedata))
-socket_pub.send_string(topic, zmq.SNDMORE)
-socket_pub.send_string(messagedata)
-print("%s %s" % (topic, messagedata))
-socket_pub.send_string(topic, zmq.SNDMORE)
-socket_pub.send_string(messagedata)
-
 """
-
-
-
+print("%s %s" % (topic, messagedata))
+socket_pub.send_string(topic, zmq.SNDMORE)
+socket_pub.send_string(messagedata)
+print("%s %s" % (topic, messagedata))
+socket_pub.send_string(topic, zmq.SNDMORE)
+socket_pub.send_string(messagedata)
+print("%s %s" % (topic, messagedata))
+socket_pub.send_string(topic, zmq.SNDMORE)
+socket_pub.send_string(messagedata)
+print("%s %s" % (topic, messagedata))
+socket_pub.send_string(topic, zmq.SNDMORE)
+socket_pub.send_string(messagedata)
+print("%s %s" % (topic, messagedata))
+socket_pub.send_string(topic, zmq.SNDMORE)
+socket_pub.send_string(messagedata)
+"""
 
 
 
