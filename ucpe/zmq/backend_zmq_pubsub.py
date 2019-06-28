@@ -32,32 +32,6 @@ socket_pub = context_pub.socket(zmq.PUB)
 socket_pub.connect("tcp://localhost:%s" % port_pub)
 
 
-"""
-class test1:
-
-    @staticmethod
-    def test1_1(*args, **kwargs):
-        return "test1_1"	
-
-    @staticmethod		
-    def test1_2(*args, **kwargs):
-        return "test1_2"
-		
-class test2:
-
-    @staticmethod    
-    def test2_1(*args, **kwargs):
-        return "test2_1"	
-    
-    @staticmethod	
-    def test2_2(*args, **kwargs):
-        return "test2_2"
-
-    @staticmethod
-    def test2_3(*args, **kwargs):
-        return "test2_3"
-"""
-
 def server_routine():
     d = Dispatcher()
     d.build_method_map(LibvirtController)

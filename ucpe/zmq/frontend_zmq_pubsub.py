@@ -26,7 +26,8 @@ def sub_response():
 			
 def get_data(messagedata): 
     topic = "test-id"
-    messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10.10.81.100', 'port':'2375'}}, "jsonrpc": "2.0", "id": 0}
+    #messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10.10.81.100', 'port':'2375'}}, "jsonrpc": "2.0", "id": 0}
+    messagedata = {"method": "libvirt_controller_get_vm_state", "params": {"body":{"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1, "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     messagedata = json.dumps(messagedata)
     print("%s %s" % (topic, messagedata))
     socket_pub.send_string(topic, zmq.SNDMORE)
@@ -51,30 +52,9 @@ t1 = threading.Thread(target=sub_response)
 # starting thread 1 
 t1.start() 
 
-time.sleep(1)
+time.sleep(3)
 
 get_data("")
 
-"""
-print("%s %s" % (topic, messagedata))
-socket_pub.send_string(topic, zmq.SNDMORE)
-socket_pub.send_string(messagedata)
-print("%s %s" % (topic, messagedata))
-socket_pub.send_string(topic, zmq.SNDMORE)
-socket_pub.send_string(messagedata)
-print("%s %s" % (topic, messagedata))
-socket_pub.send_string(topic, zmq.SNDMORE)
-socket_pub.send_string(messagedata)
-print("%s %s" % (topic, messagedata))
-socket_pub.send_string(topic, zmq.SNDMORE)
-socket_pub.send_string(messagedata)
-print("%s %s" % (topic, messagedata))
-socket_pub.send_string(topic, zmq.SNDMORE)
-socket_pub.send_string(messagedata)
-"""
-
-
-
-  
 # wait until thread 1 is completely executed 
 t1.join() 
