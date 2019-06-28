@@ -4,6 +4,8 @@ import sys
 import time
 import threading
 import json
+from flask import Flask, render_template 
+from flask_socketio import SocketIO, emit 
 
 
 import signal
@@ -23,11 +25,14 @@ def sub_response():
         if socket_sub.get(zmq.RCVMORE) and topic == topicfilter:
             messagedata = socket_sub.recv()
             print(messagedata)
+            socketio.emit('vm_state', {'vm_state': messagedata})
 			
+@socketio.on('get_vm_state') 
 def get_data(messagedata): 
-    topic = "test-id"
-    messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10.10.81.100', 'port':'2375'}}, "jsonrpc": "2.0", "id": 0}
     messagedata = json.dumps(messagedata)
+    topic = "test-id"
+    #messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10.10.81.100', 'port':'2375'}}, "jsonrpc": "2.0", "id": 0}
+    #messagedata = json.dumps(messagedata)
     print("%s %s" % (topic, messagedata))
     socket_pub.send_string(topic, zmq.SNDMORE)
     socket_pub.send_string(messagedata)
@@ -37,6 +42,12 @@ def get_data(messagedata):
 port_pub = "5559"
 port_sub = "5570"
 
+
+port_socketio = "5000"
+host = socket.gethostbyname(socket.gethostname())
+
+app = Flask(__name__) 
+socketio = SocketIO(app) 
 
 
 # Socket to publish requests
@@ -51,9 +62,9 @@ t1 = threading.Thread(target=sub_response)
 # starting thread 1 
 t1.start() 
 
-time.sleep(1)
+socketio.run(app, host=host, port=port_socketio) 
 
-get_data("")
+time.sleep(1)
 
 """
 print("%s %s" % (topic, messagedata))
