@@ -1,5 +1,6 @@
 from enum import Enum
 import libvirt
+import paramiko
 from contextlib import contextmanager
 
 # URI Parameters, as documented here:
@@ -71,7 +72,7 @@ def get_domain(ucpe, vm_name, verbose=False):
 
 def state(libvirt_domain):
     #rn returns VMState.SHUTOFF.  consider making it return "SHUTOFF"
-    return VMState(libvirt_domain.state()[0]).name
+    return {"return": {VMState(libvirt_domain.state()[0]).name}}
 
 
 def read(path):
@@ -79,6 +80,8 @@ def read(path):
     with open(path) as f:
         contents = f.read()
     return contents
+
+# def copy_image(image_filename):
 
 class VMState(Enum):
     NOSTATE = libvirt.VIR_DOMAIN_NOSTATE
