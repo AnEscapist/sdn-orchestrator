@@ -155,9 +155,6 @@ def get_vm_interfaces(ucpe, vm_name):
         interfaces = domain.interfaceAddresses(libvirt.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT)
     return interfaces
 
-
-
-
 def define_vm_from_xml(ucpe, xml, verbose=True):
     func = lambda conn: virConnect.defineXML(conn, xml)
     success_message = "Defined new virtual machine"

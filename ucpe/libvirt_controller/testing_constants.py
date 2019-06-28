@@ -7,10 +7,6 @@ DEFAULT_XML = read("/home/attadmin/projects/sdn-orchestrator/ucpe/agent-vm/ubunt
 # DEFAULT_KWARGS = {"body":{"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "xml": DEFAULT_XML, "autostart": 1, "save_path": "/home/potato/save_path.test"}}
 DEFAULT_KWARGS = {"body":{"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1, "save_path": "/home/potato/save_path.test"}}
 
-
-
-
-
 def read1(path):
     file = None
     try:
