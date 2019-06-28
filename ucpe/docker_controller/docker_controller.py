@@ -4,25 +4,26 @@ import os
 import paramiko
 import requests
 from inspect import signature, Parameter
+from ucpe.docker_controller.docker_controller_message import *
 from utilities.Error import testError
 
 
-
 class DockerController(object):
-    def __init__(self, ip='10.10.81.100', username='potato', password='potato'):
+    def __init__(self, ip='10.10.81.100', port = '2375', username='potato', password='potato'):
         self.ip = ip
+        self.port = port
         self.username=username
         self.password = password
+        self.docker_client = docker.DockerClient(base_url=ip + ':' + port)
+        self.sftp = _open_sftp(ip=ip, username=username, password=password)
         #self.sftp = DockerController.docker_controller_open_sftp(self.ip, self.username, self.password)
-    @staticmethod
-    def docker_controller_create_client(**kwargs):
-        func = create_client
-        return _call_function(func, **kwargs)
 
+    '''
     @staticmethod
     def docker_controller_open_sftp(**kwargs):
         func = open_sftp
         return _call_function(func, **kwargs)
+        '''
 
     @staticmethod
     def docker_controller_client_info(**kwargs):
@@ -90,50 +91,62 @@ class DockerController(object):
         return _call_function(func, **kwargs)
 
 
-def create_client(ip, port):
-    return docker.DockerClient(base_url=ip + ':' + port)
 
-def open_sftp(ip, username, password):
-    try:
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(ip, username=username, password=password)
-        return ssh.open_sftp()
-    except paramiko.ssh_exception.NoValidConnectionsError as para_no_valid_error:
-        print('Connection Error:' + str(para_no_valid_error).split(']')[1])
-    except paramiko.ssh_exception.SSHException as para_ssh_exception:
-        print('SSH Exception: ' + str(para_ssh_exception))
+
+
 
 def client_info(dcli, path='ClientInfo.json'):
-
-    info = dcli.info()
+    func = DockerController.docker_controller_client_info
+    try:
+        info = dcli.info()
+    except OSError as ose:
+        return ose_error(ose, func)
     json_str = json.dumps(info, indent=4)
-    with open(path, 'w') as json_file:
-        json_file.write(json_str)
+    try:
+        with open(path, 'w') as json_file:
+            json_file.write(json_str)
+            return json_file_message(path, func)
+    except FileNotFoundError:
+        return fnf_erro(path, func)
+
+
+
 
 
 def list_containers(dcli, all=True):
+    func = DockerController.docker_controller_list_containers
     try:
         if all == True:
-            return dcli.containers.list(all=all)
+            container_list = dcli.containers.list(all=all)
         else:
-            return dcli.containers.list()
+            container_list = dcli.containers.list()
+        return container_list_message(list=container_list, all=all, func=func)
     except OSError as ose:
-        print('Connection Error: ' + str(ose).split('(')[1].split(')')[0] + '.' + str(ose).split(':')[-2] + ':' +
-              str(ose).split(']')[-1][:-4])
+        return ose_error(ose,func)
 
-def list_images(dcli, name=None, all=True):
+def list_images(dcli, image_name=None, all=True):
+    func = DockerController.docker_controller_list_images
     try:
-        return dcli.images.list(name=name, all=all)
+        image_list = dcli.images.list(name=image_name, all=all)
+        return image_list_message(list=image_list, name=image_name, all=all, func=func)
     except OSError as ose:
-        print('Connection Error: ' + str(ose).split('(')[1].split(')')[0] + '.' + str(ose).split(':')[-2] + ':' +
-              str(ose).split(']')[-1][:-4])
+        return ose_error(ose, func)
+
+#=============================================TODO=================
 
 def containers_status(dcli, path='ContainerStatus.json', all=False, id_name=None):
     status = {}
-    allContainers = list_containers(dcli, all=True)
+    try:
+        container_list = dcli.containers.list(all=all)
+    except OSError as ose:
+        message = {
+            'function': '<docker_controller_list_containers>',
+            'fail message': f'No route to host: ' + str(ose).split('(')[1].split(')')[0]
+        }
+        return message
+
     if all:
-        for container in allContainers:
+        for container in container_list:
             status['container:' + container.name + '(id: ' + container.short_id + ')'] = container.status
     else:
         try:
@@ -244,9 +257,22 @@ def change_status(container, changeTo):
             print('Status Wrong!')
 
 
-#=====================================call function======================#
+#=====================================private functions======================#
+
+def _open_sftp(ip, username, password):
+    try:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(ip, username=username, password=password)
+        return ssh.open_sftp()
+    except paramiko.ssh_exception.NoValidConnectionsError as para_no_valid_error:
+        print('Connection Error:' + str(para_no_valid_error).split(']')[1])
+    except paramiko.ssh_exception.SSHException as para_ssh_exception:
+        print('SSH Exception: ' + str(para_ssh_exception))
+
+
 def _call_function(func, **kwargs):
-    body = kwargs["body"]
+    body = kwargs['body']
     params = signature(func).parameters
     relevent_kwargs = {}
     for param in params:
@@ -256,6 +282,6 @@ def _call_function(func, **kwargs):
             except KeyError:
                 raise  KeyError('missing argument' + param + 'in call to ' + func.__name__)
         else:
-            relevent_kwargs[param] = body.get(param, param[param].default)
+            relevent_kwargs[param] = body.get(param, params[param].default)
     return func(**relevent_kwargs)
 
