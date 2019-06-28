@@ -1,12 +1,11 @@
 import zmq
-import zhelpers
 import time
 import threading
 import json
 import sys
 from jsonrpc import JSONRPCResponseManager, dispatcher, Dispatcher
-sys.path.append('C:\\Users\\tl970m\\Documents\\ATT\\2019 Intern Projects\\UCPE_CONTROLLER\\sdn-orchestrator\\ucpe\\libvirt_controller')
-from libvirt_controller import LibvirtController
+sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
+from ucpe.libvirt_controller.libvirt_controller import *
 
 
 import signal
@@ -17,6 +16,7 @@ def pub_response(d, mess):
     topic = "test-sn"
     message = mess.decode('ASCII')
     response = JSONRPCResponseManager.handle(message, d)
+    print(response.data)
     socket_pub.send_string(topic, zmq.SNDMORE)
     socket_pub.send_string(json.dumps(response.data))
 
