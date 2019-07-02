@@ -4,13 +4,14 @@ import threading
 import json
 import sys
 from jsonrpc import JSONRPCResponseManager, dispatcher, Dispatcher
+
 sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
 from ucpe.libvirt_controller.libvirt_controller import *
-
 
 import signal
 
 signal.signal(signal.SIGINT, signal.SIG_DFL);
+
 
 def pub_response(d, mess):
     topic = "test-sn"
@@ -19,6 +20,7 @@ def pub_response(d, mess):
     print(response.data)
     socket_pub.send_string(topic, zmq.SNDMORE)
     socket_pub.send_string(json.dumps(response.data))
+
 
 port_sub = "5560"
 port_pub = "5569"
@@ -35,23 +37,25 @@ socket_pub.connect("tcp://localhost:%s" % port_pub)
 def server_routine():
     d = Dispatcher()
     d.build_method_map(LibvirtController)
-	
+
     print("Collecting updates from server...")
-    socket_sub.connect ("tcp://localhost:%s" % port_sub)
+    socket_sub.connect("tcp://localhost:%s" % port_sub)
     topicfilter = "test-id"
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
     while True:
-        topic  = socket_sub.recv().decode('ASCII')
+        topic = socket_sub.recv().decode('ASCII')
         if socket_sub.get(zmq.RCVMORE) and topic == topicfilter:
             messagedata = socket_sub.recv()
             print(messagedata)
             pub_response(d, messagedata)
-    
+
+
 def main():
     server_routine()
     # Never reached?  Not unless we define a termination condition for 
     context_pub.term()
     context_sub.term()
+
 
 if __name__ == "__main__":
     main()

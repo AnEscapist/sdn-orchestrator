@@ -15,7 +15,7 @@ def read1(path):
     finally:
         file.close()
 
+
 def read2(path):
     with open(path) as file:
         return file.read()
-

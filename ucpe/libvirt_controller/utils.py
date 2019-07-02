@@ -16,6 +16,7 @@ PATH = "system"
 EXTRAPARAMETERS = ""
 TIMEOUT = 1 #seconds
 
+
 def connect(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOSTNAME, port=PORT, path=PATH,
             extraparameters=EXTRAPARAMETERS, verbose=True):
     """Connect to the libvirt_controller daemon on the host (uCPE) specified by the inputted URI parameters.
@@ -68,18 +69,20 @@ def valid_remote_socket(hostname, port):
     except socket.timeout:
         return False
 
-
 @contextmanager
-def open_connection(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOSTNAME, port=PORT, path=PATH,
-            extraparameters=EXTRAPARAMETERS, verbose=True):
+def open_connection(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOSTNAME, port=PORT,
+                    path=PATH,
+                    extraparameters=EXTRAPARAMETERS, verbose=True):
     conn = None
     try:
-        conn = connect(ucpe=ucpe, driver=driver, transport=transport, username=username, hostname=hostname, port=port, path=path,
-            extraparameters=extraparameters, verbose=verbose)
+        conn = connect(ucpe=ucpe, driver=driver, transport=transport, username=username, hostname=hostname, port=port,
+                       path=path,
+                       extraparameters=extraparameters, verbose=verbose)
         yield conn
     finally:
         if conn:
             conn.close()
+
 
 @contextmanager
 def get_domain(ucpe, vm_name, verbose=False):
@@ -95,11 +98,17 @@ def get_domain(ucpe, vm_name, verbose=False):
         if conn:
             conn.close()
 
+
 def state(libvirt_domain):
+<<<<<<< HEAD
     return VMState(libvirt_domain.state()[0]).name
 
 def get_caller_function_name():
     return sys._getframe().f_back.f_back.f_code.co_name
+=======
+    # rn returns VMState.SHUTOFF.  consider making it return "SHUTOFF"
+    return {"return": {VMState(libvirt_domain.state()[0]).name}}
+>>>>>>> bd81b0df08ff489a582cf0bc9e213a21121736b2
 
 
 def read(path):
@@ -108,13 +117,14 @@ def read(path):
         contents = f.read()
     return contents
 
+
 # def copy_image(image_filename):
 
 class VMState(Enum):
     NOSTATE = libvirt.VIR_DOMAIN_NOSTATE
     RUNNING = libvirt.VIR_DOMAIN_RUNNING
     BLOCKED = libvirt.VIR_DOMAIN_BLOCKED
-    PAUSED  = libvirt.VIR_DOMAIN_PAUSED
+    PAUSED = libvirt.VIR_DOMAIN_PAUSED
     SHUTDOWN = libvirt.VIR_DOMAIN_SHUTDOWN
     SHUTOFF = libvirt.VIR_DOMAIN_SHUTOFF
     CRASHED = libvirt.VIR_DOMAIN_CRASHED

@@ -15,6 +15,7 @@ from ucpe.ucpe import UCPE
 import traceback as tb
 
 
+
 class LibvirtController():
 
     @staticmethod
@@ -153,10 +154,12 @@ def _vnc_port_from_domain(domain):
     port = graphics.get('port')
     return port
 
+
 def get_vm_interfaces(ucpe, vm_name):
     with get_domain(ucpe, vm_name) as domain:
         interfaces = domain.interfaceAddresses(libvirt.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT)
     return interfaces
+
 
 def define_vm_from_xml(ucpe, xml, verbose=True):
     func = lambda conn: virConnect.defineXML(conn, xml)
@@ -164,13 +167,15 @@ def define_vm_from_xml(ucpe, xml, verbose=True):
     fail_message = "Failed to define new virtual machine"
     return _libvirt_connection_call(func, ucpe, success_message, fail_message, verbose=verbose)
 
+
 def define_vm_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_vcpu_count=1, verbose=True):
     xml = _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_vcpu_count=1, verbose=True)
     return define_vm_from_xml(ucpe, xml, verbose=verbose)
 
+
 def _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_vcpu_count=1, verbose=True):
     xsl = _get_modified_xsl(vm_name, image_path, vm_memory, vm_vcpu_count)
-    BLANK_XML = "<blank></blank>" #xsl contains the entire xml text
+    BLANK_XML = "<blank></blank>"  # xsl contains the entire xml text
     dom = LET.fromstring(BLANK_XML)
     xslt = LET.fromstring(xsl)
     transform = LET.XSLT(xslt)
@@ -178,16 +183,17 @@ def _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_vcpu_count=1
     xml = LET.tostring(newdom, pretty_print=True).decode("utf-8")
     return xml
 
+
 def _get_modified_xsl(vm_name, image_path, vm_memory, vm_vcpu_count):
     dirname = os.path.dirname(__file__)
-    xsl_path = os.path.join(dirname, "template.xsl") #todo: possibly stick this in a constant
+    xsl_path = os.path.join(dirname, "template.xsl")  # todo: possibly stick this in a constant
     namespaces = _register_all_namespaces(xsl_path)
     basepath = "xsl:template/domain/"
     tree = ET.parse(xsl_path)  # todo: consider storing the template in text
     root = tree.getroot()
 
     hugepages = root.find('xsl:variable[@name="hugepages_memory"]', namespaces)
-    hugepages.text = str(vm_memory) + "G" #todo: hardcoding the unit might be bad
+    hugepages.text = str(vm_memory) + "G"  # todo: hardcoding the unit might be bad
 
     name = root.find(basepath + 'name', namespaces)
     name.text = vm_name
@@ -203,6 +209,7 @@ def _get_modified_xsl(vm_name, image_path, vm_memory, vm_vcpu_count):
 
     xsl = ET.tostring(root).decode("utf-8")
     return xsl
+
 
 def _register_all_namespaces(filename):
     # https://stackoverflow.com/questions/54439309/how-to-preserve-namespaces-when-parsing-xml-via-elementtree-in-python
