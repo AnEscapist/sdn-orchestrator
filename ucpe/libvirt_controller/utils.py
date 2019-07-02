@@ -72,7 +72,7 @@ def get_domain(ucpe, vm_name, verbose=False):
 
 def state(libvirt_domain):
     #rn returns VMState.SHUTOFF.  consider making it return "SHUTOFF"
-    return {"return": {VMState(libvirt_domain.state()[0]).name}}
+    return {"return": {"state": VMState(libvirt_domain.state()[0]).name}}
 
 
 def read(path):
