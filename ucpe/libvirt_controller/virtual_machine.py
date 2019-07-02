@@ -3,16 +3,17 @@ import ucpe.libvirt_controller.utils as utils
 from libvirt import virDomain
 from ucpe.libvirt_controller.errors import *
 
+
 class VirtualMachine():
-    #todo: lazy parameter access for immutable values
+    # todo: lazy parameter access for immutable values
     def __init__(self, ucpe, def_xml, name):
-        #todo: docstring
+        # todo: docstring
         self.ucpe = ucpe
-        self.def_xml = def_xml #xml used to define vm
-        #todo: parse name (and other data) from xml
+        self.def_xml = def_xml  # xml used to define vm
+        # todo: parse name (and other data) from xml
         self.name = name
         self.save_path = None
-        #todo: deal with outside mutations of these
+        # todo: deal with outside mutations of these
 
     def start(self, verbose=True):
         with self._get_domain() as domain:
@@ -40,14 +41,14 @@ class VirtualMachine():
 
     @property
     def xml(self):
-        #todo: use this as a cache - determine if xml is current
-        #todo: this might be bad if it's slow
+        # todo: use this as a cache - determine if xml is current
+        # todo: this might be bad if it's slow
         with self._get_domain() as domain:
             return domain.XMLDesc(0)
 
     def saveXML(self, path):
-        #todo: think about whether to allow overwriting or not, possibly have some overwrite flag
-        #path is a path on the remote (not the uCPE)
+        # todo: think about whether to allow overwriting or not, possibly have some overwrite flag
+        # path is a path on the remote (not the uCPE)
         with open(path, 'w') as out:
             out.write(self.xml)
 
@@ -61,7 +62,7 @@ class VirtualMachine():
         raise ReadOnlyError()
 
     def suspend(self, verbose=True):
-        #todo: return value
+        # todo: return value
         with self._get_domain() as domain:
             status = domain.suspend()
             if status < 0:
@@ -95,11 +96,11 @@ class VirtualMachine():
                 print("Warning: you can only restore once from your save file.")
             self.save_path = path
 
-    def restore(self, save_path = None, verbose=True):
+    def restore(self, save_path=None, verbose=True):
         if save_path:
             self.save_path = save_path
         if self.save_path is None:
-            #todo: raise error
+            # todo: raise error
             print("Cannot restore without first saving.")
         conn = utils.connect(self.ucpe, verbose=False)
         status = conn.restore(self.save_path)
@@ -112,7 +113,7 @@ class VirtualMachine():
         conn.close()
 
     def shutdown(self, verbose=True):
-        #todo: bug - have to wait ~20 seconds after starting before stopping
+        # todo: bug - have to wait ~20 seconds after starting before stopping
         with self._get_domain() as domain:
             status = domain.shutdown()
             if status < 0:
@@ -131,11 +132,11 @@ class VirtualMachine():
                 print("Destroyed virtual machine", self.name)
 
     def undefine(self, verbose=True):
-        #todo: lock all activity after undefining
+        # todo: lock all activity after undefining
         with self._get_domain() as domain:
             if domain.isActive():
                 print("Virtual machine is running.  Stop it first before undefining.")
-                #todo: ask tyler if should be able to undefine while running
+                # todo: ask tyler if should be able to undefine while running
             status = domain.undefine()
             if status < 0:
                 print("Failed to undefine virtual machine", self.name)
@@ -155,8 +156,8 @@ class VirtualMachine():
 
     @classmethod
     def define(cls, ucpe, xml_path, verbose=True, autostart=False):
-        #todo: set a default value for the xml
-        #todo: allow an xml string input
+        # todo: set a default value for the xml
+        # todo: allow an xml string input
         """
         define and start a persistent virtual machine based on an xml configuration
         :param ucpe: UCPE object
@@ -165,14 +166,13 @@ class VirtualMachine():
         """
         xml_contents = utils.read(xml_path)
         conn = utils.connect(ucpe)
-        domain = conn.defineXML(xml_contents) #todo: make persistent
+        domain = conn.defineXML(xml_contents)  # todo: make persistent
         if domain is None:
             print("Failed to define a virtual machine from XML", xml_path)
-            #todo: define an error for this scenario
+            # todo: define an error for this scenario
         print("Defined new virtual machine", domain.name())
-        if(autostart):
+        if (autostart):
             domain.autostart(1)
             print("Set virtual machine", domain.name(), "to autostart")
         conn.close()
         return cls(ucpe, xml_contents, domain.name())
-

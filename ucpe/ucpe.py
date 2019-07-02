@@ -32,7 +32,7 @@ class UCPE():
 
     @classmethod
     def from_kwargs(cls, **kwargs):
-        #todo: consider if this is necessary
+        # todo: consider if this is necessary
         username = kwargs["username"]
         hostname = kwargs["hostname"]
         libvirt_driver = kwargs.get("libvirt_driver", virtutils.DRIVER)
@@ -42,5 +42,5 @@ class UCPE():
         libvirt_extra_params = kwargs.get("libvirt_extra_params", virtutils.EXTRAPARAMETERS)
         use_libvirt = kwargs.get("use_libvirt", True)
         return cls(username, hostname, libvirt_driver=libvirt_driver, libvirt_transport=libvirt_transport,
-                    libvirt_port=libvirt_port, libvirt_path=libvirt_path, libvirt_extra_params=libvirt_extra_params,
-                    use_libvirt=use_libvirt)
+                   libvirt_port=libvirt_port, libvirt_path=libvirt_path, libvirt_extra_params=libvirt_extra_params,
+                   use_libvirt=use_libvirt)
