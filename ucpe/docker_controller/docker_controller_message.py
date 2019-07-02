@@ -3,6 +3,20 @@ def json_str(message):
     return json.dumps(message, indent=4)
 
 #=========================Error================================#
+def api_error(ae, func):
+    err = {
+        'function': f'<{func.__name__}>',
+        'fail message': str(ae).split(':', 1)[1].lstrip()
+    }
+    return json_str(err)
+
+def nf_error(nfe, func):
+    err = {
+        'function': f'<{func.__name__}>',
+        'fail message': str(nfe).split(':', 1)[1].lstrip()
+    }
+    return json_str(err)
+
 def ose_error(ose, func):
     err = {
         'function': f'<{func.__name__}>',
@@ -150,7 +164,7 @@ def create_image_message(image_id, remote_path, func):
     message = {
         'function': f'<{func.__name__}>',
         'success message': f'Image: {image_id} created by using {remote_path}',
-        'reutnr': f'IMAGE: {image_id} ceated!'
+        'return': f'IMAGE: {image_id} ceated!'
     }
     return json_str(message)
 
@@ -158,7 +172,7 @@ def pull_image_message(repo, tag, func):
     message = {
         'function': f'<{func.__name__}>',
         'success message': f'Image: {repo}:{tag} pulled successfully!',
-        'reutrn': f'IMAGE: {repo}:{tag}'
+        'return': f'IMAGE: {repo}:{tag}'
     }
     return json_str(message)
 
@@ -166,7 +180,7 @@ def create_container_message(container_id, image_name, func):
     message = {
         'function': f'<{func.__name__}>',
         'success message': f'Container {container_id} created by using image {image_name}!',
-        'reutrn': f'CONTAINER: {container_id}'
+        'return': f'CONTAINER: {container_id}'
     }
     return json_str(message)
 
@@ -182,5 +196,27 @@ def inspect_container_message(id_name, inspection, func):
         'function': f'<{func.__name__}>',
         'success message': f'Container {id_name} inspected.',
         'return': inspection
+    }
+    return json_str(message)
+
+def create_network_message(net_id, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'A new network created!',
+        'return': f'NETWORK: {net_id}'
+    }
+    return json_str(message)
+
+def connect_container_message(id_name, net_id, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Container {id_name} connected to network {net_id}!',
+    }
+    return json_str(message)
+
+def disconnect_container_message(id_name, net_id, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Container {id_name} disconnected to network {net_id}!',
     }
     return json_str(message)

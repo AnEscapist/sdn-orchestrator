@@ -95,6 +95,20 @@ class DockerController(object):
         func = inspect_container
         return _call_function(func, **kwargs)
 
+    @staticmethod
+    def docker_controller_create_network(**kwargs):
+        func = create_network
+        return _call_function(func, **kwargs)
+
+    @staticmethod
+    def docker_controller_connect_container(**kwargs):
+        func = connect_container
+        return _call_function(func, **kwargs)
+
+    @staticmethod
+    def docker_controller_disconnect_container(**kwargs):
+        func = disconnect_container
+        return _call_function(func, **kwargs)
 
 # =====================================private functions======================#
 def _create_client(low_level = False):
@@ -381,6 +395,55 @@ def pull_image(repo, tag=None):
          return pull_error(re, func)
 
 #=======================docker images end======================================
+
+
+#=======================docker network===============================
+
+def create_network(network_name, driver='bridge', subnet=None, gateway=None, enable_ipv6=False):
+    func = DockerController.docker_controller_create_network
+    try:
+        if subnet and gateway:
+            ipam_pool = docker.types.IPAMPool(
+                subnet=subnet,
+                gateway=gateway
+            )
+            ipam_config = docker.types.IPAMConfig(
+                pool_configs=[ipam_pool]
+            )
+            network = dcli.networks.create(name=network_name, driver=driver,
+                                           ipam=ipam_config, enable_ipv6=enable_ipv6)
+        else:
+            network = dcli.networks.create(name=network_name, driver=driver)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+    return create_network_message(network.id, func)
+
+def connect_container(id_name, network_id):
+    func = DockerController.docker_controller_connect_container
+    try:
+        container = dcli.containers.get(id_name)
+        network = dcli.networks.get(network_id)
+    except docker.errors.NotFound as nf:
+        return nf_error(nf, func)
+    try:
+        network.connect(container)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+    return connect_container_message(id_name, network_id, func)
+
+def disconnect_container(id_name, network_id, force=False):
+    func = DockerController.docker_controller_disconnect_container
+    try:
+        container = dcli.containers.get(id_name)
+        network = dcli.networks.get(network_id)
+    except docker.errors.NotFound as nf:
+        return nf_error(nf, func)
+    try:
+        network.disconnect(container, force=force)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+    return disconnect_container_message(id_name, network_id, func)
+
 
 
 
