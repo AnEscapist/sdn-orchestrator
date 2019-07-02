@@ -54,3 +54,10 @@ def get_execute(controller, input_string, hostname, port):
     controller.params['body']['hostname'] = hostname
     controller.params['body']['port'] = port
     return data_client.run('get', controller.params['body'])
+
+
+def modify_execute(controller, input_string, hostname, port):
+    interpret_params(controller, input_string)
+    controller.params['body']['hostname'] = hostname
+    controller.params['body']['port'] = port
+    return data_client.run('modify', controller.params['body'])
