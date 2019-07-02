@@ -40,6 +40,38 @@ class gRPCDataController(object):
     def grpc_get_totalcpus(self, hostname=HOSTNAME, port=PORT):
         return get_execute(self, "cpu total", hostname, port)
 
+    @staticmethod
+    def grpc_get_network_interfaces(self, hostname=HOSTNAME, port=PORT):
+        return get_execute(self, "netifaces list", hostname, port)
+
+    @staticmethod
+    def grpc_get_linux_bridges_list(self, hostname=HOSTNAME, port=PORT):
+        return get_execute(self, "bridge list", hostname, port)
+
+    @staticmethod
+    def grpc_get_linux_bridges_all(self, hostname=HOSTNAME, port=PORT):
+        return get_execute(self, "bridge all", hostname, port)
+
+    @staticmethod
+    def grpc_get_linux_bridge_details(self, bridge, hostname=HOSTNAME, port=PORT):
+        return get_execute(self, f"bridge details {bridge}", hostname, port)
+
+    @staticmethod
+    def grpc_get_dpdk_devices(self, hostname=HOSTNAME, port=PORT):
+        return get_execute(self, "dpdk devices", hostname, port)
+
+    @staticmethod
+    def grpc_modify_dpdk_bind(self, device, driver, hostname=HOSTNAME, port=PORT):
+        return get_execute(self, f"dpdk bind {device} {driver}", hostname, port)
+
+    @staticmethod
+    def grpc_modify_dpdk_unbind(self, device, hostname=HOSTNAME, port=PORT):
+        return get_execute(self, f"dpdk unbind {device}", hostname, port)
+
+    @staticmethod
+    def grpc_modify_dpdk_enable(self, driver, hostname=HOSTNAME, port=PORT):
+        return get_execute(self, f"dpdk enable {driver}", hostname, port)
+
 
 # ==================== private functions ===============================
 def interpret_params(controller, input_string):
