@@ -175,7 +175,6 @@ def list_containers(all=True):
         return ose_error(ose, func)
 
 
-<<<<<<< HEAD
 def list_images(name=None, all=True):
     func = DockerController.docker_controller_list_images
     try:
@@ -185,8 +184,6 @@ def list_images(name=None, all=True):
         return ose_error(ose, func)
 
 
-=======
->>>>>>> a2487a5f31d65363bf188a4d7063996c80de477b
 def containers_status(path='ContainerStatus.json', all=False, id_name=None):
     func = DockerController.docker_controller_containers_status
     status = {}
@@ -418,29 +415,3 @@ def pull_image(repo, tag=None):
 
 
 #=======================docker images end======================================
-
-
-def change_status(id_name, change_to):
-    func = DockerController.docker_controller_change_status
-
-    # possible state: created, restarting, runing, paused, exited
-    try:
-        container = dcli.containers.get(id_name)
-    except requests.exceptions.HTTPError:
-        return cnf_error(id_name, func)
-    curStatus = container.status
-    if curStatus == change_to:
-        return change_status_warning(id_name, curStatus, func)
-    else:
-        if change_to == 'running':
-            container.start()
-        elif change_to == 'exited':
-            container.stop()
-        elif change_to == 'paused':
-            container.pause()
-        elif change_to == 'restart':
-            container.restart()
-        else:
-            return invalid_input_warning(input=change_to, func=func)
-    return change_status_message(id_name, change_to, func)
-
