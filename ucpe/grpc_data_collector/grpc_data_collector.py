@@ -36,6 +36,10 @@ class gRPCDataController(object):
     def grpc_get_availmem(self, hostname=HOSTNAME, port=PORT):
         return get_execute(self, "memory available", hostname, port)
 
+    @staticmethod
+    def grpc_get_totalcpus(self, hostname=HOSTNAME, port=PORT):
+        return get_execute(self, "cpu total", hostname, port)
+
 
 # ==================== private functions ===============================
 def interpret_params(controller, input_string):
@@ -65,4 +69,5 @@ def modify_execute(controller, input_string, hostname, port):
     interpret_params(controller, input_string)
     controller.params['body']['hostname'] = hostname
     controller.params['body']['port'] = port
-    return data_client.run('modify', controller.params['body'])
+    body = controller.params['body']
+    return data_client.run('modify', **body)
