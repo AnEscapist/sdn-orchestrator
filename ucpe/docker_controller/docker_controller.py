@@ -5,18 +5,18 @@ import paramiko
 import requests
 from inspect import signature, Parameter
 from ucpe.docker_controller.docker_controller_message import *
-from utilities.Error import testError
+from utilities.error import testError
 
 
 class DockerController(object):
-    def __init__(self, ip='10.10.81.100', port = '2375', username='potato', password='potato'):
+    def __init__(self, ip='10.10.81.100', port='2375', username='potato', password='potato'):
         self.ip = ip
         self.port = port
-        self.username=username
+        self.username = username
         self.password = password
-        #self.docker_client = docker.DockerClient(base_url=ip + ':' + port)
-        #self.sftp = _open_sftp(ip=ip, username=username, password=password)
-        #self.sftp = DockerController.docker_controller_open_sftp(self.ip, self.username, self.password)
+        # self.docker_client = docker.DockerClient(base_url=ip + ':' + port)
+        # self.sftp = _open_sftp(ip=ip, username=username, password=password)
+        # self.sftp = DockerController.docker_controller_open_sftp(self.ip, self.username, self.password)
 
     '''
     @staticmethod
@@ -127,10 +127,12 @@ def _call_function(func, **kwargs):
             relevent_kwargs[param] = body.get(param, params[param].default)
     return func(**relevent_kwargs)
 
-#===============================private functions end=======================================
+
+# ===============================private functions end=======================================
 
 dcli = _create_client()
 sftp = _open_sftp()
+
 
 def client_info(path='ClientInfo.json'):
     func = DockerController.docker_controller_client_info
@@ -156,7 +158,8 @@ def list_containers(all=True):
             container_list = dcli.containers.list()
         return container_list_message(list=container_list, all=all, func=func)
     except OSError as ose:
-        return ose_error(ose,func)
+        return ose_error(ose, func)
+
 
 def list_images(name=None, all=True):
     func = DockerController.docker_controller_list_images
@@ -165,7 +168,6 @@ def list_images(name=None, all=True):
         return image_list_message(list=image_list, name=name, all=all, func=func)
     except OSError as ose:
         return ose_error(ose, func)
-
 
 
 def containers_status(path='ContainerStatus.json', all=False, id_name=None):
@@ -270,12 +272,13 @@ def save_image(image_name, local_path, remote_path, local_save=False, chunk_size
         remote_file.write(chunk)
     remote_file.close()
     if local_save:
-        #sftp.get(remotePath, localPath)
+        # sftp.get(remotePath, localPath)
         os.system(f'rsync {DockerController().username}@{DockerController().ip}:{remote_path} {local_path}')
         return save_image_message(image_name, local_path, DockerController().username,
                                   DockerController().ip, remote_path, local_save, func)
 
-        #os.system('rsync potato@10.10.81.100:/tmp/remote-image.tar /tmp/local-image.tar')
+        # os.system('rsync potato@10.10.81.100:/tmp/remote-image.tar /tmp/local-image.tar')
+
 
 def export_container(id_name, local_path, remote_path, local_save=False):
     func = DockerController.docker_controller_export_container
@@ -292,8 +295,8 @@ def export_container(id_name, local_path, remote_path, local_save=False):
     if local_save:
         os.system(f'rsync {DockerController().username}@{DockerController().ip}:{remote_path} {local_path}')
         return export_container_message(id_name, local_path, DockerController().username,
-                                   DockerController().ip, remote_path, local_save, func)
-        #sftp.get(remotePath, localPath)  # =============== IOError, no such file.
+                                        DockerController().ip, remote_path, local_save, func)
+        # sftp.get(remotePath, localPath)  # =============== IOError, no such file.
     # sftp.put('/tmp/test-container.tar', '/tmp/test-container.tar')
 
 
@@ -315,10 +318,11 @@ def create_image(remote_path):
 def pull_image(repo, tag=None):
     func = DockerController.docker_controller_pull_image
     try:
-         dcli.images.pull(repository=repo, tag=tag)
-         return pull_image_message(repo, tag, func)
+        dcli.images.pull(repository=repo, tag=tag)
+        return pull_image_message(repo, tag, func)
     except requests.exceptions.HTTPError as re:
-         return pull_error(re, func)
+        return pull_error(re, func)
+
 
 def create_container(image_name, detach=True):
     func = DockerController.docker_controller_create_container
@@ -328,6 +332,7 @@ def create_container(image_name, detach=True):
     except requests.exceptions.HTTPError:
         return inf_erro(image_name, func)
     return create_container_message(container.id, image_name, func)
+
 
 def change_status(id_name, change_to):
     func = DockerController.docker_controller_change_status
@@ -346,10 +351,9 @@ def change_status(id_name, change_to):
         elif change_to == 'exited':
             container.stop()
         elif change_to == 'paused':
-                container.pause()
+            container.pause()
         elif change_to == 'restart':
             container.restart()
         else:
             return invalid_input_warning(input=change_to, func=func)
     return change_status_message(id_name, change_to, func)
-

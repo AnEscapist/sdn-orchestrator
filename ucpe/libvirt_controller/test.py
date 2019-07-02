@@ -4,7 +4,7 @@ from libvirt import *
 from enum import Enum
 import sys
 
-conn=libvirt.open("qemu+tcp://potato@10.10.81.100/system")
+conn = libvirt.open("qemu+tcp://potato@10.10.81.100/system")
 print(conn)
 
 domainIDs = conn.listAllDomains()
@@ -27,6 +27,3 @@ conn.close()
 # print(VIR_DOMAIN_SHUTOFF)
 # print(VIR_DOMAIN_CRASHED)
 # print(VIR_DOMAIN_PMSUSPENDED)
-
-
-

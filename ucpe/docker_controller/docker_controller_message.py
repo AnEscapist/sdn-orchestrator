@@ -1,10 +1,11 @@
-#=========================Error================================#
+# =========================Error================================#
 def ose_error(ose, func):
     err = {
         'function': f'<{func.__name__}>',
         'fail message': f'No route to host: ' + str(ose).split('(')[1].split(')')[0]
     }
     return err
+
 
 def fnf_error(path, func):
     err = {
@@ -13,12 +14,14 @@ def fnf_error(path, func):
     }
     return err
 
+
 def cnf_error(id, func):
     err = {
         'function': f'<{func.__name__}>',
         'fail message': f'Container: {id} not found!'
     }
     return err
+
 
 def inf_erro(image_name, func):
     err = {
@@ -27,12 +30,14 @@ def inf_erro(image_name, func):
     }
     return err
 
+
 def il_error(path, func):
     err = {
         'function': f'<{func.__name__}>',
         'fail message': f'Cannot load image from {path}!'
     }
     return err
+
 
 def pull_error(re, func):
     print(re)
@@ -48,13 +53,15 @@ def pull_error(re, func):
     return err
 
 
-#=========================Warning===============================#
+# =========================Warning===============================#
 def change_status_warning(id_name, status, func):
     warning = {
         'function': f'<{func.__name__}>',
         'waring message': f'Container {id_name} is already {status}!'
     }
     return warning
+
+
 def invalid_input_warning(input, func):
     warning = {
         'function': f'<{func.__name__}>',
@@ -62,7 +69,8 @@ def invalid_input_warning(input, func):
     }
     return warning
 
-#=========================Message================================#
+
+# =========================Message================================#
 def json_file_message(path, func):
     message = {
         'function': f'<{func.__name__}>',
@@ -70,6 +78,7 @@ def json_file_message(path, func):
         'return': f'JSON FILE: {path} created and saved.'
     }
     return message
+
 
 def container_list_message(list, all, func):
     if all:
@@ -87,6 +96,7 @@ def container_list_message(list, all, func):
     print('type of message:', type(message['return']))
     return message
 
+
 def image_list_message(list, name, all, func):
     if name:
         message = {
@@ -102,6 +112,7 @@ def image_list_message(list, name, all, func):
         }
     return message
 
+
 def commit_message(id_name, repo, tag, author, func):
     if not author:
         author = 'Unknown'
@@ -111,6 +122,7 @@ def commit_message(id_name, repo, tag, author, func):
         'return': f'IMAGE: {repo}:{tag}'
     }
     return message
+
 
 def save_image_message(image_name, local_path, username, ip, remote_path, local_save, func):
     if local_save:
@@ -127,6 +139,7 @@ def save_image_message(image_name, local_path, username, ip, remote_path, local_
         }
     return message
 
+
 def export_container_message(id_name, local_path, username, ip, remote_path, local_save, func):
     if local_save:
         message = {
@@ -142,6 +155,7 @@ def export_container_message(id_name, local_path, username, ip, remote_path, loc
         }
     return message
 
+
 def create_image_message(image_id, remote_path, func):
     message = {
         'function': f'<{func.__name__}>',
@@ -149,6 +163,7 @@ def create_image_message(image_id, remote_path, func):
         'reutnr': f'IMAGE: {image_id} ceated!'
     }
     return message
+
 
 def pull_image_message(repo, tag, func):
     message = {
@@ -158,6 +173,7 @@ def pull_image_message(repo, tag, func):
     }
     return message
 
+
 def create_container_message(container_id, image_name, func):
     message = {
         'function': f'<{func.__name__}>',
@@ -165,6 +181,7 @@ def create_container_message(container_id, image_name, func):
         'reutrn': f'CONTAINER: {container_id}'
     }
     return message
+
 
 def change_status_message(id_name, change_to, func):
     message = {

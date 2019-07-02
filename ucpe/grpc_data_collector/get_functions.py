@@ -33,11 +33,11 @@ hugepages_free = meminfo['HugePages_Free']
 total_cpus = psutil.cpu_count()
 
 
-def get_hugepage_totalmem_kB():
+def get_hugepages_totalmem_kB():
     return hugepagesize_in_kb * hugepages_total
 
 
-def get_hugepage_freemem_kB():
+def get_hugepages_freemem_kB():
     return hugepagesize_in_kb * hugepages_free
 
 
