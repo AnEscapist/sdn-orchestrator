@@ -1,6 +1,8 @@
 from enum import Enum
+import sys
 import libvirt
 import paramiko
+import socket
 from contextlib import contextmanager
 
 # URI Parameters, as documented here:
@@ -9,9 +11,10 @@ DRIVER = "qemu"
 TRANSPORT = "TCP"
 USERNAME = "potato"
 HOSTNAME = "10.10.81.100"
-PORT = ""  # defaults - ssh:22, tcp:16509, tls:16514 applied if no port specified
+PORT = "16509" #assumes TCP
 PATH = "system"
 EXTRAPARAMETERS = ""
+TIMEOUT = 1 #seconds
 
 def connect(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOSTNAME, port=PORT, path=PATH,
             extraparameters=EXTRAPARAMETERS, verbose=True):
@@ -22,7 +25,6 @@ def connect(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, ho
      :return: output of libvirt_controller.open(uri)
      :raise: ConnectionError if unable to connect
      """
-
     if ucpe:
         transport = ucpe.libvirt_transport
         username = ucpe.username
@@ -31,23 +33,41 @@ def connect(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, ho
         path = ucpe.libvirt_path
         extraparameters = ucpe.libvirt_extra_params
 
+    if not valid_remote_socket(hostname, port):
+        raise ConnectionRefusedError(f"Could not connect to \"{hostname}:{port}\". Ensure that your hostname and port are correct.")
+    uri = get_uri(driver=driver, transport=transport, username=username, hostname=hostname, port=port, path=path,
+            extraparameters=extraparameters, verbose=True)
+    conn = libvirt.open(uri)
+    if conn is None:
+        raise ConnectionError(f"Failed to connect to {uri}")
+    elif verbose:
+        print("Successfully connected to", uri)
+        print(
+            "Warning: you must close this connection yourself by calling the .close() method of the return value of this function.")
+    return conn
+
+def get_uri(driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOSTNAME, port=PORT, path=PATH,
+                extraparameters=EXTRAPARAMETERS, verbose=True):
     transport = "+" + transport if transport else ""
     username = username + "@" if username else ""
     hostname = hostname if hostname else ""
     port = ":" + port if port else ""
     path = path if path else ""
     extraparameters = "?" + extraparameters if extraparameters else ""
-
     uri = driver + transport + "://" + username + hostname + port + "/" + path + extraparameters
-    conn = libvirt.open(uri)
-    if conn is None:
-        print("Failed to connect to", uri)
-        raise ConnectionError
-    elif verbose:
-        print("Successfully connected to", uri)
-        print(
-            "Warning: you must close this connection yourself by calling the .close() method of the return value of this function.")
-    return conn
+    return uri
+
+def valid_remote_socket(hostname, port):
+    if isinstance(port, str):
+        port = int(port)
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(TIMEOUT)
+        sock.connect((hostname, port))
+        return True
+    except socket.timeout:
+        return False
+
 
 @contextmanager
 def open_connection(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOSTNAME, port=PORT, path=PATH,
@@ -58,7 +78,8 @@ def open_connection(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USER
             extraparameters=extraparameters, verbose=verbose)
         yield conn
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
 @contextmanager
 def get_domain(ucpe, vm_name, verbose=False):
@@ -66,13 +87,19 @@ def get_domain(ucpe, vm_name, verbose=False):
     try:
         conn = connect(ucpe=ucpe, verbose=verbose)
         domain = conn.lookupByName(vm_name)
+    except Exception as e:
+        raise e
+    else:
         yield domain
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
 def state(libvirt_domain):
-    #rn returns VMState.SHUTOFF.  consider making it return "SHUTOFF"
-    return {"return": {VMState(libvirt_domain.state()[0]).name}}
+    return VMState(libvirt_domain.state()[0]).name
+
+def get_caller_function_name():
+    return sys._getframe().f_back.f_back.f_code.co_name
 
 
 def read(path):
@@ -92,3 +119,12 @@ class VMState(Enum):
     SHUTOFF = libvirt.VIR_DOMAIN_SHUTOFF
     CRASHED = libvirt.VIR_DOMAIN_CRASHED
     PMSUSPENDED = libvirt.VIR_DOMAIN_PMSUSPENDED
+
+#test:
+# def caller():
+#     callee()
+#
+# def callee():
+#     print("i got called by:", get_caller_function_name())
+#
+# caller()

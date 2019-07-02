@@ -15,3 +15,7 @@ class OperationFailedError(Error):
         message = "Operation " + name + " failed"
         Error.__init__(self, message)
 
+def format_exception(e):
+    return f"{type(e).__name__}: {e}"
+
+
