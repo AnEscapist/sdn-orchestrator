@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package data;
+
+service UCPEData {
+    // test send data
+    // should handle: view/get images, memory, hugepages memory, cpus
+    rpc GetData (DataRequest) returns (DataResponse) {
+    }
+    rpc ModifyData (DataRequest) returns (DataChangeResponse) {
+    }
+
+}
+
+message DataRequest {
+    string command = 1;
+    string str_request = 2;
+    string str_param1 = 3;
+    string str_param2 = 4;
+}
+
+message DataResponse {
+    string header = 1;
+    string str_response = 2;
+    int32 int_response = 3;
+    float float_response = 4;
+}
+
+message DataChangeResponse {
+    string response = 1;
+    bool status = 2;
+}
