@@ -4,7 +4,7 @@ import json
 import os
 
 
-class gRPCDataController(object):
+class gRPCDataCollector(object):
     HOSTNAME = '10.10.81.100'
     PORT = '50051'
 
