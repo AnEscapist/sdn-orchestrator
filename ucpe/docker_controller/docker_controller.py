@@ -90,13 +90,19 @@ class DockerController(object):
         func = change_status
         return _call_function(func, **kwargs)
 
+    @staticmethod
+    def docker_controller_inspect_container(**kwargs):
+        func = inspect_container
+        return _call_function(func, **kwargs)
+
 
 # =====================================private functions======================#
-def _create_client():
+def _create_client(low_level = False):
     ip = DockerController().ip
     port = DockerController().port
-    return docker.DockerClient(base_url=ip + ':' + port)
-
+    if not low_level:
+        return docker.DockerClient(base_url=ip + ':' + port)
+    return docker.APIClient(base_url=ip + ':' + port)
 
 def _open_sftp():
     ip = DockerController().ip
@@ -130,7 +136,10 @@ def _call_function(func, **kwargs):
 
 # ===============================private functions end=======================================
 
-dcli = _create_client()
+#========================docker client===========================
+
+dcli = _create_client(low_level=False)
+api_cli = _create_client(low_level=True)
 sftp = _open_sftp()
 
 
@@ -147,6 +156,11 @@ def client_info(path='ClientInfo.json'):
             return json_file_message(path, func)
     except FileNotFoundError:
         return fnf_error(path, func)
+#===========================docker client end=========================
+
+
+
+#===========================docker containers========================
 
 
 def list_containers(all=True):
@@ -161,6 +175,7 @@ def list_containers(all=True):
         return ose_error(ose, func)
 
 
+<<<<<<< HEAD
 def list_images(name=None, all=True):
     func = DockerController.docker_controller_list_images
     try:
@@ -170,6 +185,8 @@ def list_images(name=None, all=True):
         return ose_error(ose, func)
 
 
+=======
+>>>>>>> a2487a5f31d65363bf188a4d7063996c80de477b
 def containers_status(path='ContainerStatus.json', all=False, id_name=None):
     func = DockerController.docker_controller_containers_status
     status = {}
@@ -224,6 +241,92 @@ def containers_info(path='ContainerInfo.json', all=True):
         return fnf_error(path, func)
     return json_file_message(path, func)
 
+def commit(id_name, repo=None, tag=None, message=None, author=None, changes=None):
+    func = DockerController.docker_controller_commit
+    try:
+        container = dcli.containers.get(id_name)
+    except docker.errors.NotFound:
+        return cnf_error(id_name, func)
+    container.commit(repository=repo, tag=tag, message=message, author=author, changes=changes)
+    return commit_message(id_name, repo, tag, author, func)
+
+def export_container(id_name, local_path, remote_path, local_save=False):
+    func = DockerController.docker_controller_export_container
+    try:
+        remote_file = sftp.open(remote_path, 'wb')  # ============== IOError, no such file.
+    except FileNotFoundError:
+        remote_path = f'{DockerController().username}@{DockerController().ip}:{remote_path}'
+        return fnf_error(remote_path, func)
+    container = dcli.containers.get(id_name)
+    generator = container.export()
+    for chunck in generator:
+        remote_file.write(chunck)
+    remote_file.close()
+    if local_save:
+        os.system(f'rsync {DockerController().username}@{DockerController().ip}:{remote_path} {local_path}')
+        return export_container_message(id_name, local_path, DockerController().username,
+                                   DockerController().ip, remote_path, local_save, func)
+        #sftp.get(remotePath, localPath)  # =============== IOError, no such file.
+    # sftp.put('/tmp/test-container.tar', '/tmp/test-container.tar')
+
+def create_container(image_name, detach=True):
+    func = DockerController.docker_controller_create_container
+    try:
+        image = dcli.images.get(image_name)
+        container = dcli.containers.run(image=image.id, detach=detach, stdin_open=True, tty=True)
+    except requests.exceptions.HTTPError:
+        return inf_erro(image_name, func)
+    return create_container_message(container.id, image_name, func)
+
+def change_status(id_name, change_to):
+    func = DockerController.docker_controller_change_status
+
+    # possible state: created, restarting, runing, paused, exited
+    try:
+        container = dcli.containers.get(id_name)
+    except requests.exceptions.HTTPError:
+        return cnf_error(id_name, func)
+    curStatus = container.status
+    if curStatus == change_to:
+        return change_status_warning(id_name, curStatus, func)
+    else:
+        if change_to == 'running':
+            container.start()
+        elif change_to == 'exited':
+            container.stop()
+        elif change_to == 'paused':
+                container.pause()
+        elif change_to == 'restart':
+            container.restart()
+        else:
+            return invalid_input_warning(input=change_to, func=func)
+    return change_status_message(id_name, change_to, func)
+
+def inspect_container(id_name):
+    func = DockerController.docker_controller_inspect_container
+    try:
+        inspection = api_cli.inspect_container(id_name)
+        '''
+        for key in inspection['NetworkSettings'].keys():
+            print(key)
+        print(inspection['NetworkSettings']['IPAddress'])
+        '''
+        return inspect_container_message(id_name, inspection, func)
+    except requests.exceptions.HTTPError:
+        return cnf_error(id_name, func)
+#======================docker container end============================
+
+
+#======================docker images==========================
+
+def list_images(name=None, all=True):
+    func = DockerController.docker_controller_list_images
+    try:
+        image_list = dcli.images.list(name=name, all=all)
+        return image_list_message(list=image_list, name=name, all=all, func=func)
+    except OSError as ose:
+        return ose_error(ose, func)
+
 
 def images_info(path='ImagesInfo.json', name=None, all=True):
     func = DockerController.docker_controller_images_info
@@ -247,16 +350,6 @@ def images_info(path='ImagesInfo.json', name=None, all=True):
     except FileNotFoundError:
         return fnf_error(path, func)
     return json_file_message(path, func)
-
-
-def commit(id_name, repo=None, tag=None, message=None, author=None, changes=None):
-    func = DockerController.docker_controller_commit
-    try:
-        container = dcli.containers.get(id_name)
-    except docker.errors.NotFound:
-        return cnf_error(id_name, func)
-    container.commit(repository=repo, tag=tag, message=message, author=author, changes=changes)
-    return commit_message(id_name, repo, tag, author, func)
 
 
 def save_image(image_name, local_path, remote_path, local_save=False, chunk_size=2097152):
@@ -324,14 +417,7 @@ def pull_image(repo, tag=None):
         return pull_error(re, func)
 
 
-def create_container(image_name, detach=True):
-    func = DockerController.docker_controller_create_container
-    try:
-        image = dcli.images.get(image_name)
-        container = dcli.containers.run(image=image.id, detach=detach, stdin_open=True, tty=True)
-    except requests.exceptions.HTTPError:
-        return inf_erro(image_name, func)
-    return create_container_message(container.id, image_name, func)
+#=======================docker images end======================================
 
 
 def change_status(id_name, change_to):
@@ -357,3 +443,4 @@ def change_status(id_name, change_to):
         else:
             return invalid_input_warning(input=change_to, func=func)
     return change_status_message(id_name, change_to, func)
+
