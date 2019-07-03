@@ -5,7 +5,7 @@ import paramiko
 import requests
 from inspect import signature, Parameter
 from ucpe.docker_controller.docker_controller_message import *
-from utilities.Error import testError
+
 
 
 class DockerController(object):

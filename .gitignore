@@ -6,3 +6,10 @@ venv/
 __pycache__/
 */__pycache__/
 *trash.py
+
+
+*.egg-info
+venv/
+build/
+dist/
+*~
