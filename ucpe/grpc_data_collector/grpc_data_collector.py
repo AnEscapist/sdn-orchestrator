@@ -100,7 +100,7 @@ def modify_execute(input_string, **kwargs):
 def main():
     kwargs = {'body': {}}
     tmp = gRPCDataCollector()
-    tmp.grpc_get_dpdk_devices(**kwargs)
+    print(tmp.grpc_get_dpdk_devices(**kwargs))
 
 
 if __name__ == '__main__':
