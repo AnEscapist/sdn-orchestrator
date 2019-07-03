@@ -98,9 +98,9 @@ def modify_execute(input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {}}
+    kwargs = {'body': {'str_param1': '0000:66:00.3', 'str_param2': 'vfio-pci'}}
     tmp = gRPCDataCollector()
-    print(tmp.grpc_get_dpdk_devices(**kwargs))
+    print(tmp.grpc_modify_dpdk_bind(**kwargs))
 
 
 if __name__ == '__main__':
