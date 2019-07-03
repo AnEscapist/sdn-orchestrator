@@ -100,15 +100,10 @@ def get_domain(ucpe, vm_name, verbose=False):
 
 
 def state(libvirt_domain):
-<<<<<<< HEAD
     return VMState(libvirt_domain.state()[0]).name
 
 def get_caller_function_name():
     return sys._getframe().f_back.f_back.f_code.co_name
-=======
-    # rn returns VMState.SHUTOFF.  consider making it return "SHUTOFF"
-    return {"return": {VMState(libvirt_domain.state()[0]).name}}
->>>>>>> bd81b0df08ff489a582cf0bc9e213a21121736b2
 
 
 def read(path):
