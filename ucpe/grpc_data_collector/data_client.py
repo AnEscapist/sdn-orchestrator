@@ -18,11 +18,13 @@ def run(request_type, hostname=HOSTNAME, port=PORT, str_param1=None, str_param2=
         str_param1 = kwargs['str_param1']
     if 'str_param2' in kwargs:
         str_param2 = kwargs['str_param2']
+    if 'str_param2' in kwargs:
+        str_param3 = kwargs['str_param3']
 
     channel = grpc.insecure_channel(f'{hostname}:{port}')
     stub = data_pb2_grpc.UCPEDataStub(channel)
     request = data_pb2.DataRequest(command=f'{command}', str_request=f'{str_request}', str_param1=f'{str_param1}',
-                                   str_param2=f'{str_param2}')
+                                   str_param2=f'{str_param2}', str_param3=f'{str_param3}')
     response = None
     if request_type == 'modify':
         response = stub.ModifyData(request)

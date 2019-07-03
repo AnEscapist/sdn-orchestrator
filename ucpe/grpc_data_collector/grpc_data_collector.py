@@ -6,8 +6,8 @@ import os
 HOSTNAME = '10.10.81.100'
 PORT = '50051'
 
-class gRPCDataCollector(object):
 
+class gRPCDataCollector(object):
 
     @staticmethod
     def grpc_get_hugepages_totalmem(**kwargs):
@@ -71,9 +71,11 @@ def interpret_params(input_string, **kwargs):
     kwargs['body']['command'] = tmp[0]
     kwargs['body']['str_request'] = tmp[1]
     if count > 2:
-        kwargs['body']['str_params1'] = tmp[2]
+        kwargs['body']['str_param1'] = tmp[2]
         if count > 3:
-            kwargs['body']['str_params2'] = tmp[3]
+            kwargs['body']['str_param2'] = tmp[3]
+            if count > 4:
+                kwargs['body']['str_param3'] = tmp[4]
     # print(str(**kwargs))
     return kwargs
 

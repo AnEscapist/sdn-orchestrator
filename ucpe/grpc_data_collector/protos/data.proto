@@ -17,6 +17,7 @@ message DataRequest {
     string str_request = 2;
     string str_param1 = 3;
     string str_param2 = 4;
+    string str_param3 = 5;
 }
 
 message DataResponse {

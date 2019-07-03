@@ -12,6 +12,8 @@ import dpdk
 import get_functions
 from distutils import spawn
 
+
+
 brctlexe = spawn.find_executable("brctl")
 ipexe = spawn.find_executable("ip")
 
@@ -34,3 +36,4 @@ def dpdk_enable(driver):
 def dpdk_add_port(bridge, port, devargs):
     proc = subprocess.Popen(['sudo', 'ovs-vsctl', 'add-port', bridge, port, '--set', 'Interface', port, 'type=dpdk',
                              f'options:dpdk-devargs={devargs}'])
+    return proc
