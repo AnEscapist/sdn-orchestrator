@@ -88,3 +88,13 @@ def get_execute(input_string, **kwargs):
 def modify_execute(input_string, **kwargs):
     controller = interpret_params(input_string, **kwargs)
     return data_client.run('modify', **controller)
+
+
+def main():
+    kwargs = {'body': {'hostname': '10.10.81.100' , 'port': '50051'}}
+    tmp = gRPCDataCollector()
+    tmp.grpc_get_dpdk_devices(**kwargs)
+
+
+if __name__ == '__main__':
+    main()
