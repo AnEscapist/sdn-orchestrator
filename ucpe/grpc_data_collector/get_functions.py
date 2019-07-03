@@ -69,7 +69,7 @@ def dpdk_get_devices():
 
     dpdk.check_modules()
     dpdk.clear_data()
-    dpdk.get_device_details(dpdk.network_devices)
+    # dpdk.get_device_details(dpdk.network_devices)
 
     drivers = dpdk.dpdk_drivers
     devices = dpdk.devices

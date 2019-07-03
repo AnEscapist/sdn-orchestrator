@@ -56,17 +56,17 @@ class gRPCDataCollector(object):
 
     @staticmethod
     def grpc_modify_dpdk_unbind(**kwargs):
-        return get_execute(f"dpdk unbind {kwargs['body']['str_param1']}", **kwargs)
+        return modify_execute(f"dpdk unbind {kwargs['body']['str_param1']}", **kwargs)
 
     @staticmethod
     def grpc_modify_dpdk_enable(**kwargs):
-        return get_execute(f"dpdk enable {kwargs['body']['str_param1']}", **kwargs)
+        return modify_execute(f"dpdk enable {kwargs['body']['str_param1']}", **kwargs)
 
-    # bridge port device
+    # bridge port br
     @staticmethod
-    def grpc_modify_dpdk_add_device(**kwargs):
-        return get_execute(f"dpdk add_device {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}"
-                           f" {kwargs['body']['str_param3']}")
+    def grpc_modify_dpdk_add_port(**kwargs):
+        return modify_execute(f"dpdk add_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}"
+                              f"{kwargs['body']['str_param3']}")
 
 
 # ==================== private functions ===============================

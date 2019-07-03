@@ -32,8 +32,8 @@ def dpdk_enable(driver):
     return proc
 
 
-def dpdk_add_device(bridge, port, device):
-    proc = subprocess.Popen(['sudo', 'ovs-vsctl', 'add-port', bridge, port, '--set', 'Interface', port, 'type=dpdk',
-                             f'options:dpdk-devargs={device}'])
+def dpdk_add_port(bridge, port_name, port):
+    proc = subprocess.Popen(['sudo', 'ovs-vsctl', 'add-port', bridge, port_name, '--', 'set', 'Interface', port_name,
+                             'type=dpdk', f'options:dpdk-devargs={port}'])
     return proc
 
