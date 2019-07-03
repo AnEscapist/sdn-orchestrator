@@ -3,54 +3,86 @@ import data_client
 import json
 import os
 
+HOSTNAME = '10.10.81.100'
+PORT = '50051'
 
-class gRPCDataController(object):
-    HOSTNAME = '10.10.81.100'
-    PORT = '50051'
+class gRPCDataCollector(object):
 
-    params = dict()
-
-    def __init__(self):
-        temp = dict()
-        temp['hostname'] = self.HOSTNAME
-        temp['port'] = self.PORT
-        temp['command'] = str()
-        temp['str_request'] = str()
-        temp['str_param1'] = None
-        temp['str_param2'] = None
-        self.params['body'] = temp
 
     @staticmethod
-    def grpc_get_hugepages_totalmem(self, hostname=HOSTNAME, port=PORT):
-        get_execute(self, "hugepages total", hostname, port)
+    def grpc_get_hugepages_totalmem(**kwargs):
+        return get_execute("hugepages total", **kwargs)
 
     @staticmethod
-    def grpc_get_hugepages_freemem(self, hostname=HOSTNAME, port=PORT):
-        get_execute(self, "hugepages free", hostname, port)
+    def grpc_get_hugepages_freemem(**kwargs):
+        return get_execute("hugepages free", **kwargs)
 
     @staticmethod
-    def grpc_get_totalmem(self, hostname=HOSTNAME, port=PORT):
-        get_execute(self, "memory total", hostname, port)
+    def grpc_get_totalmem(**kwargs):
+        return get_execute("memory total", **kwargs)
 
     @staticmethod
-    def grpc_get_availmem(self, hostname=HOSTNAME, port=PORT):
-        get_execute(self, "memory available", hostname, port)
+    def grpc_get_availmem(**kwargs):
+        return get_execute("memory available", **kwargs)
+
+    @staticmethod
+    def grpc_get_totalcpus(**kwargs):
+        return get_execute("cpu total", **kwargs)
+
+    @staticmethod
+    def grpc_get_network_interfaces(**kwargs):
+        return get_execute("netifaces list", **kwargs)
+
+    @staticmethod
+    def grpc_get_linux_bridges_list(**kwargs):
+        return get_execute("bridge list", **kwargs)
+
+    @staticmethod
+    def grpc_get_linux_bridges_all(**kwargs):
+        return get_execute("bridge all", **kwargs)
+
+    @staticmethod
+    def grpc_get_linux_bridge_details(**kwargs):
+        return get_execute(f"bridge details {kwargs['body']['str_param1']}", **kwargs)
+
+    @staticmethod
+    def grpc_get_dpdk_devices(**kwargs):
+        return get_execute("dpdk devices", **kwargs)
+
+    @staticmethod
+    def grpc_modify_dpdk_bind(**kwargs):
+        return get_execute(f"dpdk bind {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}", **kwargs)
+
+    @staticmethod
+    def grpc_modify_dpdk_unbind(**kwargs):
+        return get_execute(f"dpdk unbind {kwargs['body']['str_param1']}", **kwargs)
+
+    @staticmethod
+    def grpc_modify_dpdk_enable(**kwargs):
+        return get_execute(f"dpdk enable {kwargs['body']['str_param1']}", **kwargs)
 
 
 # ==================== private functions ===============================
-def interpret_params(controller, input_string):
+def interpret_params(input_string, **kwargs):
     tmp = input_string.split(" ")
     count = len(tmp)
-    controller.params['body']['command'] = tmp[0]
-    controller.params['body']['str_request'] = tmp[1]
+    # print(tmp[0])
+    # print(tmp[1])
+    kwargs['body']['command'] = tmp[0]
+    kwargs['body']['str_request'] = tmp[1]
     if count > 2:
-        controller.params['body']['str_params1'] = tmp[2]
+        kwargs['body']['str_params1'] = tmp[2]
         if count > 3:
-            controller.params['body']['str_params2'] = tmp[3]
+            kwargs['body']['str_params2'] = tmp[3]
+    # print(str(**kwargs))
+    return kwargs
 
 
-def get_execute(controller, input_string, hostname, port):
-    interpret_params(controller, input_string)
-    controller.params['body']['hostname'] = hostname
-    controller.params['body']['port'] = port
-    return data_client.run('get', controller.params['body'])
+def get_execute(input_string, **kwargs):
+    controller = interpret_params(input_string, **kwargs)
+    return data_client.run('get', **controller)
+
+
+def modify_execute(input_string, **kwargs):
+    controller = interpret_params(input_string, **kwargs)
+    return data_client.run('modify', **controller)

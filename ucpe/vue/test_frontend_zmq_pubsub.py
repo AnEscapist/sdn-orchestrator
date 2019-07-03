@@ -4,13 +4,22 @@ import sys
 import time
 import threading
 import json
-from flask import Flask, render_template
+from flask import Flask, render_template 
 from flask_socketio import SocketIO, emit
 
 import signal
 
 signal.signal(signal.SIGINT, signal.SIG_DFL);
 
+def get_data(messagedata):
+    print('here')
+    messagedata = json.dumps(messagedata)
+    topic = "test-id"
+    #messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10$
+    #messagedata = json.dumps(messagedata)
+    print("%s %s" % (topic, messagedata))
+    socket_pub.send_string(topic, zmq.SNDMORE)
+    socket_pub.send_string(messagedata)
 
 def sub_response():
     # Socket to subscribe to responses
@@ -27,23 +36,11 @@ def sub_response():
             print(messagedata)
             socketio.emit('vm_state', {'vm_state': messagedata})
 
-
-@socketio.on('get_vm_state')
-def get_data(messagedata):
-    messagedata = json.dumps(messagedata)
-    topic = "test-id"
-    # messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10.10.81.100', 'port':'2375'}}, "jsonrpc": "2.0", "id": 0}
-    # messagedata = json.dumps(messagedata)
-    print("%s %s" % (topic, messagedata))
-    socket_pub.send_string(topic, zmq.SNDMORE)
-    socket_pub.send_string(messagedata)
-
-
 port_pub = "5559"
 port_sub = "5570"
 
 port_socketio = "5000"
-host = socket.gethostbyname(socket.gethostname())
+host = '10.10.81.200'
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -53,12 +50,29 @@ context_pub = zmq.Context()
 socket_pub = context_pub.socket(zmq.PUB)
 socket_pub.connect("tcp://localhost:%s" % port_pub)
 
+app = Flask(__name__)
+socketio_socket = SocketIO(app, engineio_logger=True)
+
+socketio_socket.run(app, host=host, port=port_socketio)
+#socketio_socket.on_event('get_data', get_data)
+
+
+@socketio_socket.on('connect')
+def on_connect():
+    print('connected')
+
 # creating thread 
 t1 = threading.Thread(target=sub_response)
 
 # starting thread 1 
 t1.start()
 
+time.sleep(1)
+
+# wait until thread 1 is completely executed 
+t1.join() 
+
+=======
 socketio.run(app, host=host, port=port_socketio)
 
 time.sleep(1)

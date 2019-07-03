@@ -18,10 +18,10 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
         response = data_pb2.DataResponse()
         if request.command == 'hugepages':
             if request.str_request == 'total':
-                response.header = "Total hugepage memory in kB"
+                response.header = "Total hugepages memory in kB"
                 response.int_response = get_functions.get_hugepages_totalmem_kB()
             elif request.str_request == 'free':
-                response.header = "Total free hugepage memory in kB"
+                response.header = "Total free hugepages memory in kB"
                 response.int_response = get_functions.get_hugepages_freemem_kB()
         elif request.command == 'memory':
             if request.str_request == 'total':

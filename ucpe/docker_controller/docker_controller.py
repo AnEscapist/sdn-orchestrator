@@ -5,18 +5,18 @@ import paramiko
 import requests
 from inspect import signature, Parameter
 from ucpe.docker_controller.docker_controller_message import *
-from utilities.error import testError
+from utilities.Error import testError
 
 
 class DockerController(object):
-    def __init__(self, ip='10.10.81.100', port='2375', username='potato', password='potato'):
+    def __init__(self, ip='10.10.81.100', port = '2375', username='potato', password='potato'):
         self.ip = ip
         self.port = port
-        self.username = username
+        self.username=username
         self.password = password
-        # self.docker_client = docker.DockerClient(base_url=ip + ':' + port)
-        # self.sftp = _open_sftp(ip=ip, username=username, password=password)
-        # self.sftp = DockerController.docker_controller_open_sftp(self.ip, self.username, self.password)
+        #self.docker_client = docker.DockerClient(base_url=ip + ':' + port)
+        #self.sftp = _open_sftp(ip=ip, username=username, password=password)
+        #self.sftp = DockerController.docker_controller_open_sftp(self.ip, self.username, self.password)
 
     '''
     @staticmethod
@@ -95,6 +95,20 @@ class DockerController(object):
         func = inspect_container
         return _call_function(func, **kwargs)
 
+    @staticmethod
+    def docker_controller_create_network(**kwargs):
+        func = create_network
+        return _call_function(func, **kwargs)
+
+    @staticmethod
+    def docker_controller_connect_container(**kwargs):
+        func = connect_container
+        return _call_function(func, **kwargs)
+
+    @staticmethod
+    def docker_controller_disconnect_container(**kwargs):
+        func = disconnect_container
+        return _call_function(func, **kwargs)
 
 # =====================================private functions======================#
 def _create_client(low_level = False):
@@ -133,15 +147,13 @@ def _call_function(func, **kwargs):
             relevent_kwargs[param] = body.get(param, params[param].default)
     return func(**relevent_kwargs)
 
-
-# ===============================private functions end=======================================
+#===============================private functions end=======================================
 
 #========================docker client===========================
 
 dcli = _create_client(low_level=False)
 api_cli = _create_client(low_level=True)
 sftp = _open_sftp()
-
 
 def client_info(path='ClientInfo.json'):
     func = DockerController.docker_controller_client_info
@@ -172,21 +184,8 @@ def list_containers(all=True):
             container_list = dcli.containers.list()
         return container_list_message(list=container_list, all=all, func=func)
     except OSError as ose:
-        return ose_error(ose, func)
+        return ose_error(ose,func)
 
-
-<<<<<<< HEAD
-def list_images(name=None, all=True):
-    func = DockerController.docker_controller_list_images
-    try:
-        image_list = dcli.images.list(name=name, all=all)
-        return image_list_message(list=image_list, name=name, all=all, func=func)
-    except OSError as ose:
-        return ose_error(ose, func)
-
-
-=======
->>>>>>> a2487a5f31d65363bf188a4d7063996c80de477b
 def containers_status(path='ContainerStatus.json', all=False, id_name=None):
     func = DockerController.docker_controller_containers_status
     status = {}
@@ -365,32 +364,11 @@ def save_image(image_name, local_path, remote_path, local_save=False, chunk_size
         remote_file.write(chunk)
     remote_file.close()
     if local_save:
-        # sftp.get(remotePath, localPath)
+        #sftp.get(remotePath, localPath)
         os.system(f'rsync {DockerController().username}@{DockerController().ip}:{remote_path} {local_path}')
         return save_image_message(image_name, local_path, DockerController().username,
                                   DockerController().ip, remote_path, local_save, func)
-
-        # os.system('rsync potato@10.10.81.100:/tmp/remote-image.tar /tmp/local-image.tar')
-
-
-def export_container(id_name, local_path, remote_path, local_save=False):
-    func = DockerController.docker_controller_export_container
-    try:
-        remote_file = sftp.open(remote_path, 'wb')  # ============== IOError, no such file.
-    except FileNotFoundError:
-        remote_path = f'{DockerController().username}@{DockerController().ip}:{remote_path}'
-        return fnf_error(remote_path, func)
-    container = dcli.containers.get(id_name)
-    generator = container.export()
-    for chunck in generator:
-        remote_file.write(chunck)
-    remote_file.close()
-    if local_save:
-        os.system(f'rsync {DockerController().username}@{DockerController().ip}:{remote_path} {local_path}')
-        return export_container_message(id_name, local_path, DockerController().username,
-                                        DockerController().ip, remote_path, local_save, func)
-        # sftp.get(remotePath, localPath)  # =============== IOError, no such file.
-    # sftp.put('/tmp/test-container.tar', '/tmp/test-container.tar')
+        #os.system('rsync potato@10.10.81.100:/tmp/remote-image.tar /tmp/local-image.tar')
 
 
 def create_image(remote_path):
@@ -411,36 +389,61 @@ def create_image(remote_path):
 def pull_image(repo, tag=None):
     func = DockerController.docker_controller_pull_image
     try:
-        dcli.images.pull(repository=repo, tag=tag)
-        return pull_image_message(repo, tag, func)
+         dcli.images.pull(repository=repo, tag=tag)
+         return pull_image_message(repo, tag, func)
     except requests.exceptions.HTTPError as re:
-        return pull_error(re, func)
-
+         return pull_error(re, func)
 
 #=======================docker images end======================================
 
 
-def change_status(id_name, change_to):
-    func = DockerController.docker_controller_change_status
+#=======================docker network===============================
 
-    # possible state: created, restarting, runing, paused, exited
+def create_network(network_name, driver='bridge', subnet=None, gateway=None, enable_ipv6=False):
+    func = DockerController.docker_controller_create_network
+    try:
+        if subnet and gateway:
+            ipam_pool = docker.types.IPAMPool(
+                subnet=subnet,
+                gateway=gateway
+            )
+            ipam_config = docker.types.IPAMConfig(
+                pool_configs=[ipam_pool]
+            )
+            network = dcli.networks.create(name=network_name, driver=driver,
+                                           ipam=ipam_config, enable_ipv6=enable_ipv6)
+        else:
+            network = dcli.networks.create(name=network_name, driver=driver)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+    return create_network_message(network.id, func)
+
+def connect_container(id_name, network_id):
+    func = DockerController.docker_controller_connect_container
     try:
         container = dcli.containers.get(id_name)
-    except requests.exceptions.HTTPError:
-        return cnf_error(id_name, func)
-    curStatus = container.status
-    if curStatus == change_to:
-        return change_status_warning(id_name, curStatus, func)
-    else:
-        if change_to == 'running':
-            container.start()
-        elif change_to == 'exited':
-            container.stop()
-        elif change_to == 'paused':
-            container.pause()
-        elif change_to == 'restart':
-            container.restart()
-        else:
-            return invalid_input_warning(input=change_to, func=func)
-    return change_status_message(id_name, change_to, func)
+        network = dcli.networks.get(network_id)
+    except docker.errors.NotFound as nf:
+        return nf_error(nf, func)
+    try:
+        network.connect(container)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+    return connect_container_message(id_name, network_id, func)
+
+def disconnect_container(id_name, network_id, force=False):
+    func = DockerController.docker_controller_disconnect_container
+    try:
+        container = dcli.containers.get(id_name)
+        network = dcli.networks.get(network_id)
+    except docker.errors.NotFound as nf:
+        return nf_error(nf, func)
+    try:
+        network.disconnect(container, force=force)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+    return disconnect_container_message(id_name, network_id, func)
+
+
+
 

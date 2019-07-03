@@ -9,7 +9,7 @@ import netifaces
 import psutil
 
 import dpdk
-from bridge import Bridge
+import get_functions
 from distutils import spawn
 
 brctlexe = spawn.find_executable("brctl")
@@ -29,3 +29,8 @@ def dpdk_unbind(device, force=True):
 def dpdk_enable(driver):
     proc = subprocess.Popen(['sudo', '/sbin/modprobe', driver])
     return proc
+
+
+def dpdk_add_port(bridge, port, devargs):
+    proc = subprocess.Popen(['sudo', 'ovs-vsctl', 'add-port', bridge, port, '--set', 'Interface', port, 'type=dpdk',
+                             f'options:dpdk-devargs={devargs}'])
