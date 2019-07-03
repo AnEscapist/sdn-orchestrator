@@ -11,6 +11,15 @@ import signal
 
 signal.signal(signal.SIGINT, signal.SIG_DFL);
 
+def start_flask():
+    app = Flask(__name__)
+    port_socketio = "5000"
+    host = '10.10.81.200'
+
+    socketio_socket = SocketIO(app, engineio_logger=True)
+    socketio_socket.on_event('get_data', get_data)
+    socketio_socket.run(app, host=host, port=port_socketio)
+
 def get_data(messagedata):
     print('here')
     messagedata = json.dumps(messagedata)
@@ -39,41 +48,17 @@ def sub_response():
 port_pub = "5559"
 port_sub = "5570"
 
-port_socketio = "5000"
-host = '10.10.81.200'
-
-app = Flask(__name__)
-socketio = SocketIO(app)
-
 # Socket to publish requests
 context_pub = zmq.Context()
 socket_pub = context_pub.socket(zmq.PUB)
 socket_pub.connect("tcp://localhost:%s" % port_pub)
 
-app = Flask(__name__)
-socketio_socket = SocketIO(app, engineio_logger=True)
-
-socketio_socket.run(app, host=host, port=port_socketio)
-#socketio_socket.on_event('get_data', get_data)
-
-
-@socketio_socket.on('connect')
-def on_connect():
-    print('connected')
-
-# creating thread 
 t1 = threading.Thread(target=sub_response)
 
 # starting thread 1 
 t1.start()
 
-time.sleep(1)
-
-# wait until thread 1 is completely executed 
-t1.join() 
-
-=======
-socketio.run(app, host=host, port=port_socketio)
+start_flask()
 
 time.sleep(1)
 
@@ -96,4 +81,5 @@ socket_pub.send_string(messagedata)
 """
 
 # wait until thread 1 is completely executed 
-t1.join()
+#t1.join()
+#t2.join()
