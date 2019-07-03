@@ -98,7 +98,7 @@ def modify_execute(input_string, **kwargs):
 
 
 def main():
-    kwargs = {}
+    kwargs = {'body': {}}
     tmp = gRPCDataCollector()
     tmp.grpc_get_dpdk_devices(**kwargs)
 
