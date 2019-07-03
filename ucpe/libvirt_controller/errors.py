@@ -1,4 +1,4 @@
-from utilities.Error import Error
+from utilities.error import Error
 
 
 class ReadOnlyError(Error):
