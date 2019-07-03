@@ -76,6 +76,12 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                 response.status = True
                 return p
 
+            elif request.str_request == 'add_device':
+                response.response = f"Adding {request.str_param3} to port {request.str_param2}, please wait"
+                p = modify_functions.dpdk_add_device(request.str_param1, request.str_param2, request.str_param3)
+                response.status = True
+                return p
+
 
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 

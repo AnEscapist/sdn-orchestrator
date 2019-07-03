@@ -49,6 +49,7 @@ class gRPCDataCollector(object):
     def grpc_get_dpdk_devices(**kwargs):
         return get_execute("dpdk devices", **kwargs)
 
+    # device driver
     @staticmethod
     def grpc_modify_dpdk_bind(**kwargs):
         return get_execute(f"dpdk bind {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}", **kwargs)
@@ -60,6 +61,12 @@ class gRPCDataCollector(object):
     @staticmethod
     def grpc_modify_dpdk_enable(**kwargs):
         return get_execute(f"dpdk enable {kwargs['body']['str_param1']}", **kwargs)
+
+    # bridge port device
+    @staticmethod
+    def grpc_modify_dpdk_add_device(**kwargs):
+        return get_execute(f"dpdk add_device {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}"
+                           f" {kwargs['body']['str_param3']}")
 
 
 # ==================== private functions ===============================
@@ -91,7 +98,7 @@ def modify_execute(input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'hostname': '10.10.81.100' , 'port': '50051'}}
+    kwargs = {}
     tmp = gRPCDataCollector()
     tmp.grpc_get_dpdk_devices(**kwargs)
 
