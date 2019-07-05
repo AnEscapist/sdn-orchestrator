@@ -32,6 +32,6 @@ def dpdk_enable(driver):
 
 def dpdk_add_port(bridge, port_name, port):
     proc = subprocess.run(['sudo', 'ovs-vsctl', 'add-port', bridge, port_name, '--', 'set', 'Interface', port_name,
-                             'type=dpdk', f'options:dpdk-devargs={port}'])
+                           'type=dpdk', f'options:dpdk-devargs={port}'])
     return proc
 

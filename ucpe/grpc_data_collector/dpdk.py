@@ -422,7 +422,7 @@ def bind_one(dev_id, driver, force):
     # prevent disconnection of our ssh session
     if dev["Ssh_if"] and not force:
         print("Routing table indicates that interface %s is active. "
-              "Not modifying" % (dev_id))
+              "Not modifying" % dev_id)
         return
 
     # unbind any existing drivers we don't want
