@@ -1,0 +1,152 @@
+import docker
+import os
+import requests
+from ucpe.docker_controller.docker_global import dcli, api_cli, sftp, ip, username
+from ucpe.docker_controller.docker_controller_message import *
+
+#===========================docker containers========================
+
+
+def list_containers(all=True):
+    func = list_containers
+    try:
+        if all == True:
+            container_list = dcli.containers.list(all=all)
+        else:
+            container_list = dcli.containers.list()
+        return container_list_message(list=container_list, all=all, func=func)
+    except OSError as ose:
+        return ose_error(ose,func)
+
+def containers_status(path='ContainerStatus.json', all=False, id_name=None):
+    func = containers_status
+    status = {}
+    try:
+        container_list = dcli.containers.list(all=all)
+    except OSError as ose:
+        return ose_error(ose, func)
+
+    if all:
+        for container in container_list:
+            status['container:' + container.name + '(id: ' + container.short_id + ')'] = container.status
+    else:
+        try:
+            container = dcli.containers.get(id_name)
+            status['container:' + container.name + '(id: ' + container.short_id + ')'] = container.status
+        except docker.errors.NotFound:
+            return cnf_error(id_name, func)
+        except docker.errors.NullResource as nre:
+             return nr_error(nre, func)
+    json_str = json.dumps(status, indent=4)
+    try:
+        with open(path, 'w') as json_file:
+            json_file.write(json_str)
+    except FileNotFoundError:
+        return fnf_error(path, func)
+
+    return json_file_message(path, func)
+
+
+def containers_info(path='ContainerInfo.json', all=True):
+    func = containers_info
+    containerInfo = {}
+    containerInfo['Containers'] = []
+
+    try:
+        if all == True:
+            container_list = dcli.containers.list(all=all)
+        else:
+            container_list = dcli.containers.list()
+    except OSError as ose:
+        return ose_error(ose, func)
+    if os.path.exists(path):
+        os.remove(path)
+    for i in range(len(container_list)):
+        containerInfo['Containers'].append(container_list[i].attrs)
+
+    json_str = json.dumps(containerInfo, indent=4)
+    try:
+        with open(path, 'a') as json_file:
+            json_file.write(json_str)
+    except FileNotFoundError:
+        return fnf_error(path, func)
+    return json_file_message(path, func)
+
+def inspect_container(id_name):
+    func = inspect_container
+    try:
+        inspection = api_cli.inspect_container(id_name)
+        '''
+        for key in inspection['NetworkSettings'].keys():
+            print(key)
+        print(inspection['NetworkSettings']['IPAddress'])
+        '''
+        return inspect_container_message(id_name, inspection, func)
+    except requests.exceptions.HTTPError:
+        return cnf_error(id_name, func)
+
+def commit(id_name, repo=None, tag=None, message=None, author=None, changes=None):
+    func = commit
+    try:
+        container = dcli.containers.get(id_name)
+    except docker.errors.NotFound:
+        return cnf_error(id_name, func)
+    container.commit(repository=repo, tag=tag, message=message, author=author, changes=changes)
+    return commit_message(id_name, repo, tag, author, func)
+
+def export_container(id_name, local_path, remote_path, local_save=False):
+    func = export_container
+    try:
+        remote_file = sftp.open(remote_path, 'wb')  # ============== IOError, no such file.
+    except FileNotFoundError:
+        remote_path = f'{username}@{ip}:{remote_path}'
+        return fnf_error(remote_path, func)
+    container = dcli.containers.get(id_name)
+    generator = container.export()
+    for chunck in generator:
+        remote_file.write(chunck)
+    remote_file.close()
+    if local_save:
+        os.system(f'rsync {username}@{ip}:{remote_path} {local_path}')
+    return export_container_message(id_name, local_path, username,
+                                   ip, remote_path, local_save, func)
+        #sftp.get(remotePath, localPath)  # =============== IOError, no such file.
+    # sftp.put('/tmp/test-container.tar', '/tmp/test-container.tar')
+
+def create_container(image_name, detach=True):
+    func = create_container
+    try:
+        image = dcli.images.get(image_name)
+        container = dcli.containers.run(image=image.id, detach=detach, stdin_open=True, tty=True)
+    except requests.exceptions.HTTPError:
+        return inf_error(image_name, func)
+    except docker.erros.NullResource as nre:
+    	return nr_error(nre, func)
+    return create_container_message(container.id, image_name, func)
+
+def change_status(id_name, change_to):
+    func = change_status
+
+    # possible state: created, restarting, runing, paused, exited
+    try:
+        container = dcli.containers.get(id_name)
+    except requests.exceptions.HTTPError:
+        return cnf_error(id_name, func)
+    curStatus = container.status
+    if curStatus == change_to:
+        return change_status_warning(id_name, curStatus, func)
+    else:
+        if change_to == 'running':
+            container.start()
+        elif change_to == 'exited':
+            container.stop()
+        elif change_to == 'paused':
+                container.pause()
+        elif change_to == 'restart':
+            container.restart()
+        else:
+            return invalid_input_warning(input=change_to, func=func)
+    return change_status_message(id_name, change_to, func)
+
+
+#======================docker container end============================

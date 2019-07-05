@@ -3,6 +3,20 @@ def json_str(message):
     return json.dumps(message, indent=4)
 
 #=========================Error================================#
+def type_error(te, func):
+    err = {
+        'function': f'<{func.__name__}>',
+        'fail_message': str(te)
+    }
+    return json_str(err)
+
+def nr_error(nre, func):
+    err = {
+        'function': f'<{func.__name__}>',
+        'fail_message': str(nre)
+    }
+    return json_str(err)
+
 def api_error(ae, func):
     err = {
         'function': f'<{func.__name__}>',
@@ -38,7 +52,7 @@ def cnf_error(id, func):
     }
     return json_str(err)
 
-def inf_erro(image_name, func):
+def inf_error(image_name, func):
     err = {
         'function': f'<{func.__name__}>',
         'fail message': f'Image: {image_name} not found!'
@@ -53,12 +67,12 @@ def il_error(path, func):
     return json_str(err)
 
 def pull_error(re, func):
-    print(re)
-    fail_message = 'fail to pull error '
     if 'repo' in str(re):
         fail_message = f'Reqeust Error (repo): ' + str(re).split('(')[-1][:-1]
-    if 'tag' in str(re):
+    elif 'tag' in str(re):
         fail_message = 'Request Error (tag):' + str(re).split(':')[-1]
+    else:
+        fail_message = str(re).split(':', 1)[1]
     err = {
         'function': f'<{func.__name__}>',
         'fail message': fail_message
@@ -102,7 +116,6 @@ def container_list_message(list, all, func):
             'success message': 'All running containers are listed!',
             'return': f'LIST: {list}'
         }
-    print('type of message:', type(message['return']))
     return json_str(message)
 
 def image_list_message(list, name, all, func):
@@ -141,7 +154,7 @@ def save_image_message(image_name, local_path, username, ip, remote_path, local_
         message = {
             'function': f'<{func.__name__}>',
             'success message': f'Image: {image_name} saved remotely {username}@{ip}{remote_path}',
-            'return': f'FILES: {local_path} and {username}@{ip}{remote_path} created and saved!'
+            'return': f'FILES: {username}@{ip}{remote_path} created and saved!'
         }
     return json_str(message)
 
@@ -156,8 +169,16 @@ def export_container_message(id_name, local_path, username, ip, remote_path, loc
         message = {
             'function': f'<{func.__name__}>',
             'success message': f'Container: {id_name} saved remotely {username}@{ip}{remote_path}',
-            'return': f'FILES: {local_path} and {username}@{ip}{remote_path} created and saved!'
+            'return': f'FILES: {username}@{ip}{remote_path} created and saved!'
         }
+    return json_str(message)
+
+def create_container_message(container_id, image_name, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Container {container_id} created by using image {image_name}!',
+        'return': f'CONTAINER: {container_id}'
+    }
     return json_str(message)
 
 def create_image_message(image_id, remote_path, func):
@@ -176,13 +197,6 @@ def pull_image_message(repo, tag, func):
     }
     return json_str(message)
 
-def create_container_message(container_id, image_name, func):
-    message = {
-        'function': f'<{func.__name__}>',
-        'success message': f'Container {container_id} created by using image {image_name}!',
-        'return': f'CONTAINER: {container_id}'
-    }
-    return json_str(message)
 
 def change_status_message(id_name, change_to, func):
     message = {
@@ -218,5 +232,23 @@ def disconnect_container_message(id_name, net_id, func):
     message = {
         'function': f'<{func.__name__}>',
         'success message': f'Container {id_name} disconnected to network {net_id}!',
+    }
+    return json_str(message)
+
+
+def remove_network_message(net_id, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Network {net_id} removed!',
+    }
+    return json_str(message)
+
+
+#===========================docker volume===================
+def create_volume_message(name, func):
+    print('=======', func)
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Volume {name} created!',
     }
     return json_str(message)
