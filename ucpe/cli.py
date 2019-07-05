@@ -1,12 +1,14 @@
 import click
-import ucpe.docker_controller.docker_controller as d_con
-import ucpe.docker_commands.commands as d_commands
+import ucpe.docker_controller.docker_controller as dc_con
+import ucpe.docker_commands.commands as dc_com
 #from ucpe.docker.docker_controller import *
 
 @click.group()
 def start():
-    """this is start"""
+    '''
+    docker commands start here.
+    '''
 
 
-start.add_command(d_commands.docker)
+start.add_command(dc_com.docker)
 
