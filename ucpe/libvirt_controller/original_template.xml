@@ -50,10 +50,11 @@
         <link state="up"/>
         </interface>
         -->
-        <!--
+        <!-- sr-iov?
         <interface type='hostdev' managed='yes'>
           <source>
             <address type='pci' domain='0' bus='11' slot='16' function='0'/>
+		    bus:slot.function in lspci | grep Eth
           </source>
         </interface>
         -->
