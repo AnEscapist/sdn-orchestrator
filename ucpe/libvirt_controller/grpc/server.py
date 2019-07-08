@@ -1,6 +1,9 @@
 import grpc
 from concurrent import futures
 import time
+import sys
+sys.path.append('/home/potato/projects/sdn-orchestrator/')
+sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
 
 import ucpe.libvirt_controller.grpc.libvirt_pb2 as libvirt_pb2
 import ucpe.libvirt_controller.grpc.libvirt_pb2_grpc as libvirt_pb2_grpc
