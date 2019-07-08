@@ -8,3 +8,5 @@ class LibvirtServicer(libvirt_pb2_grpc.LibvirtServicer):
         response = libvirt_pb2.Response()
         blockpull(request.domain, request.path, request.base)
         response.success = "hi"
+        return response
+
