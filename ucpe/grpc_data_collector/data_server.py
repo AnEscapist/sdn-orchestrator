@@ -64,7 +64,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
         if request.command == 'dpdk':
             if request.str_request == 'bind':
                 response.response = f"Binding {request.str_param1} to {request.str_param2}, please wait"
-                p = modify_functions.dpdk_bind(request.str_param1, request.str_param2)
+                p = modify_functions.dpdk_bind(request.str_param1, request.str_param2, force=True)
                 response.status = True
                 return p
 
