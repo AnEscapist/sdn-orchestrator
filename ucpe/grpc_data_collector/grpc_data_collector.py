@@ -1,4 +1,4 @@
-import data_client
+import ucpe.grpc_data_collector.data_client as data_client
 
 import json
 import os

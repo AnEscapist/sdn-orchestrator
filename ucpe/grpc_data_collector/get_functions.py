@@ -8,8 +8,8 @@ import netifaces
 
 import psutil
 
-import dpdk
-from bridge import Bridge
+import ucpe.grpc_data_collector.dpdk as dpdk
+from ucpe.grpc_data_collector.bridge import Bridge
 from distutils import spawn
 
 brctlexe = spawn.find_executable("brctl")

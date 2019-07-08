@@ -9,6 +9,7 @@ sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
 from ucpe.libvirt_controller.libvirt_controller import *
 import ucpe.grpc_data_collector.grpc_data_collector as grpc
 
+
 import signal
 
 signal.signal(signal.SIGINT, signal.SIG_DFL);
