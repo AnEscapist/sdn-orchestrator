@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+message BlockPullRequest {
+    string domain = 1;
+    string path = 2;
+    string base = 3;
+}
+
+message Response{
+    bool success = 1;
+}
+
+service Libvirt{
+    rpc BlockPull(BlockPullRequest) returns (Response) {}
+}
