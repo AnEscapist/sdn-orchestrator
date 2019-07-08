@@ -98,7 +98,7 @@ def modify_execute(input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'str_param1': "0000:b7:00.2", 'str_param2': 'vfio-pci'}}
+    kwargs = {'body': {'str_param1': '0000:b7:00.3', 'str_param2': 'vfio-pci'}}
     tmp = gRPCDataCollector()
     tmp.grpc_modify_dpdk_bind(**kwargs)
 
