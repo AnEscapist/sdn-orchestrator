@@ -8,8 +8,9 @@ import netifaces
 
 import psutil
 
-import dpdk
-import get_functions
+import ucpe.grpc_data_collector.dpdk as dpdk
+from ucpe.grpc_data_collector.bridge import Bridge
+import ucpe.grpc_data_collector.get_functions as get_functions
 from distutils import spawn
 
 
