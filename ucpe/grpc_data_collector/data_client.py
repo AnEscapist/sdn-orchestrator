@@ -1,7 +1,7 @@
 import grpc
 
-import data_pb2
-import data_pb2_grpc
+import ucpe.grpc_data_collector.data_pb2 as data_pb2
+import ucpe.grpc_data_collector.data_pb2_grpc as data_pb2_grpc
 
 HOSTNAME = '10.10.81.100'
 PORT = '50051'
