@@ -52,7 +52,7 @@ class gRPCDataCollector(object):
     # device driver
     @staticmethod
     def grpc_modify_dpdk_bind(**kwargs):
-        return get_execute(f"dpdk bind {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}", **kwargs)
+        return modify_execute(f"dpdk bind {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}", **kwargs)
 
     @staticmethod
     def grpc_modify_dpdk_unbind(**kwargs):
@@ -98,9 +98,9 @@ def modify_execute(input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'str_param1': 'docker0'}}
+    kwargs = {'body': {'str_param1': '0000:b7:00.2', 'str_param2': 'vfio-pci'}}
     tmp = gRPCDataCollector()
-    print(tmp.grpc_get_linux_bridge_details(**kwargs))
+    tmp.grpc_modify_dpdk_bind(**kwargs)
 
 
 if __name__ == '__main__':

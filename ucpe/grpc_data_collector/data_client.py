@@ -23,14 +23,14 @@ def run(request_type, hostname=HOSTNAME, port=PORT, str_param1=None, str_param2=
 
     channel = grpc.insecure_channel(f'{hostname}:{port}')
     stub = data_pb2_grpc.UCPEDataStub(channel)
-    request = data_pb2.DataRequest(command=f'{command}', str_request=f'{str_request}', str_param1=f'{str_param1}',
-                                   str_param2=f'{str_param2}', str_param3=f'{str_param3}')
+    request2 = data_pb2.DataRequest(command=f'{command}', str_request=f'{str_request}', str_param1=f'{str_param1}',
+                                    str_param2=f'{str_param2}', str_param3=f'{str_param3}')
     # print(request)
     response = None
     if request_type == 'modify':
-        response = stub.ModifyData(request)
+        response = stub.ModifyData(request2)
     if request_type == 'get':
-        response = stub.GetData(request)
+        response = stub.GetData(request2)
 
     return response
 
