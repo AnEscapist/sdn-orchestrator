@@ -42,6 +42,6 @@ def main(response_type, **kwargs):
 
 if __name__ == "__main__":
     request = 'get'
-    kwargs = {'body': {'hostname': '10.10.81.100', 'port': '50051', 'command': 'bridge', 'str_request': 'details', 'str_param1': 'docker0'}}
+    kwargs = {'body': {'hostname': '10.10.81.100', 'port': '50051', 'command': 'dpdk', 'str_request': 'bind', 'str_param1': '0000:b7:00.3', 'str_param2': 'vfio-pci'}}
     # print(kwargs['body']['str_param1'])
     main(request, **kwargs)
