@@ -7,7 +7,7 @@ message BlockPullRequest {
 }
 
 message Response{
-    bool success = 1;
+    string success = 1;
 }
 
 service Libvirt{

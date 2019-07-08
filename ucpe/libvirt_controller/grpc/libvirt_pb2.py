@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\rlibvirt.proto\">\n\x10\x42lockPullRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\x12\x0c\n\x04\x62\x61se\x18\x03 \x01(\t\"\x1b\n\x08Response\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\x36\n\x07Libvirt\x12+\n\tBlockPull\x12\x11.BlockPullRequest\x1a\t.Response\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\rlibvirt.proto\">\n\x10\x42lockPullRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\x12\x0c\n\x04\x62\x61se\x18\x03 \x01(\t\"\x1b\n\x08Response\x12\x0f\n\x07success\x18\x01 \x01(\t26\n\x07Libvirt\x12+\n\tBlockPull\x12\x11.BlockPullRequest\x1a\t.Response\"\x00\x62\x06proto3')
 )
 
 
@@ -80,8 +80,8 @@ _RESPONSE = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='success', full_name='Response.success', index=0,
-      number=1, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
