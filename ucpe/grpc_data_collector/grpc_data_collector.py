@@ -89,12 +89,12 @@ def interpret_params(input_string, **kwargs):
 
 def get_execute(input_string, **kwargs):
     controller = interpret_params(input_string, **kwargs)
-    return data_client.run('get', **controller)
+    return str(data_client.run('get', **controller))
 
 
 def modify_execute(input_string, **kwargs):
     controller = interpret_params(input_string, **kwargs)
-    return data_client.run('modify', **controller)
+    return str(data_client.run('modify', **controller))
 
 
 def main():
