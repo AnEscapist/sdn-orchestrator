@@ -1,0 +1,9 @@
+<domainsnapshot>
+  <name>snap2</name>
+  <description>Snapshot of OS install and updates</description>
+  <disks>
+    <disk name='vda' snapshot="external">
+	    <source file='/home/potato/libvirt/backups/test-snap2.qcow2'/>
+    </disk>
+  </disks>
+</domainsnapshot>
