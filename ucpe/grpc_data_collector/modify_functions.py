@@ -19,20 +19,22 @@ ipexe = spawn.find_executable("ip")
 
 
 def dpdk_bind(device, driver, force=True):
-    return dpdk.bind_one(device, driver, force)
+    dpdk.bind_one(device, driver, force)
+    return True
 
 
 def dpdk_unbind(device, force=True):
-    return dpdk.unbind_one(device, force)
+    dpdk.unbind_one(device, force)
+    return True
 
 
 def dpdk_enable(driver):
     proc = subprocess.Popen(['sudo', '/sbin/modprobe', driver])
-    return proc
+    return True
 
 
 def dpdk_add_port(bridge, port_name, port):
     proc = subprocess.run(['sudo', 'ovs-vsctl', 'add-port', bridge, port_name, '--', 'set', 'Interface', port_name,
                            'type=dpdk', f'options:dpdk-devargs={port}'])
-    return proc
+    return True
 
