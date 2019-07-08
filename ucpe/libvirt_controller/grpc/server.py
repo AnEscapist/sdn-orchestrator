@@ -5,6 +5,8 @@ import time
 import ucpe.libvirt_controller.grpc.libvirt_pb2 as libvirt_pb2
 import ucpe.libvirt_controller.grpc.libvirt_pb2_grpc as libvirt_pb2_grpc
 from ucpe.libvirt_controller.grpc.services import LibvirtServicer
+import sys
+sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
 
 MAX_WORKERS = 10
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=MAX_WORKERS))
