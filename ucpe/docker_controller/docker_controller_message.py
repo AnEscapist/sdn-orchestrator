@@ -246,7 +246,6 @@ def remove_network_message(net_id, func):
 
 #===========================docker volume===================
 def create_volume_message(name, func):
-    print('=======', func)
     message = {
         'function': f'<{func.__name__}>',
         'success message': f'Volume {name} created!',

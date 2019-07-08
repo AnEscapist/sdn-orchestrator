@@ -1,8 +1,10 @@
 import docker
 import os
 import requests
+import ast
 from ucpe.docker_controller.docker_global import dcli, api_cli, sftp, ip, username
 from ucpe.docker_controller.docker_controller_message import *
+
 
 #===========================docker containers========================
 
@@ -113,14 +115,33 @@ def export_container(id_name, local_path, remote_path, local_save=False):
         #sftp.get(remotePath, localPath)  # =============== IOError, no such file.
     # sftp.put('/tmp/test-container.tar', '/tmp/test-container.tar')
 
-def create_container(image_name, detach=True):
+def create_container(image_name, ports=None, volumes=None, detach=True):
     func = create_container
+    bind=dict()
+    if ports:
+        container_port = ports.split(':')[0]
+        host_port = ports.split(':')[1]
+        if host_port == 'None':
+            bind[container_port] = None
+        elif host_port[0] == '(' and host_port[-1] == ')':
+            bind[container_port] = (host_port.split(',')[0][1:], host_port.split(',')[1].strip()[:-1])
+        elif host_port[0] == '[' and host_port[-1] == ']':
+            bind[container_port] = [host_port.split(',')[0][1:], host_port.split(',')[1].strip()[:-1]]
+        else:
+            bind[container_port] = host_port
+
+    if volumes:
+        mnt = dict()
+        mnt = ast.literal_eval(volumes)
+    #return type(mnt)
+
     try:
         image = dcli.images.get(image_name)
-        container = dcli.containers.run(image=image.id, detach=detach, stdin_open=True, tty=True)
-    except requests.exceptions.HTTPError:
-        return inf_error(image_name, func)
-    except docker.erros.NullResource as nre:
+        container = dcli.containers.run(image=image.id, ports=bind, volumes=mnt,
+                                        detach=detach, stdin_open=True, tty=True)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+    except docker.errors.NullResource as nre:
     	return nr_error(nre, func)
     return create_container_message(container.id, image_name, func)
 

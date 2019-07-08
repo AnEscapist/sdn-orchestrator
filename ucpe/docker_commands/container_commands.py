@@ -78,11 +78,26 @@ def export(i, l, r, s):
 
 @container.command()
 @click.option('-i', default=None, help='id or name of the image.')
-def create(i):
+@click.option('-p', default=None, help='ports to bind inside the container.' +
+                                    ' Valid format: "container:host"' +
+                                    ' e.g.: "2222/tcp:3333"'
+                                    ', "2222/tcp:None"' +
+                                    ', "1111/tcp:(127.0.0.1, 111)"' +
+                                    ' or "1111/tcp:[1234, 4567]" '
+                )
+@click.option('-v', default=None, help='configure volumes mounted inside the container.' + '\n' +
+                                        '{key1:{value1},key2:{value2}}' + '\n' +
+                                        'key: host path or a volume name' + '\n' +
+                                        'value: a dictionary with keys: ' + '\n' +
+                                        '   bind: path to mount the volume inside the container' + '\n' +
+                                        '   mode: "rw"-read/write, or "ro"-read only' + '\n' +
+                                        'e.g. "{"my-vol": {"bind": "/mnt/vol2", "mode": "rw"}}"'
+                                        )
+def create(i, p, v):
     '''
     create a container using an image and start it.
     '''
-    click.echo(dcc.create_container(image_name=i))
+    click.echo(dcc.create_container(image_name=i, ports=p, volumes=v))
 
 
 @container.command()
@@ -93,38 +108,3 @@ def change(i, c):
     change the status of a container
     '''
     click.echo(dcc.change_status(id_name=i, change_to=c))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

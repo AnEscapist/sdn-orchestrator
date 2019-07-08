@@ -6,7 +6,8 @@ class LibvirtServicer(libvirt_pb2_grpc.LibvirtServicer):
 
     def BlockPull(self, request, context):
         response = libvirt_pb2.Response()
-        blockpull(request.domain, request.path, request.base)
-        response.success = "hi"
+        out,err = blockpull(request.domain, request.path, request.base)
+        response.out = out
+        response.error = err
         return response
 
