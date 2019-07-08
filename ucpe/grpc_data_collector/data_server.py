@@ -1,14 +1,17 @@
 import grpc
 from concurrent import futures
 import time
+import sys
 
-import data_pb2
-import data_pb2_grpc
+sys.path.append('/home/potato/projects/sdn-orchestrator/')
 
-import get_functions
-import modify_functions
-import bridge
-import dpdk
+import ucpe.grpc_data_collector.data_pb2 as data_pb2
+import ucpe.grpc_data_collector.data_pb2_grpc as data_pb2_grpc
+
+import ucpe.grpc_data_collector.get_functions as get_functions
+import ucpe.grpc_data_collector.modify_functions as modify_functions
+# import bridge
+# import dpdk
 
 PORT = '50051'
 
