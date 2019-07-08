@@ -149,6 +149,8 @@ def get_linux_bridges_all():
 
 def get_linux_bridge_details(br):
     my_list = get_linux_bridges_all()
+    print(my_list)
     for item in my_list:
+        print(item['bridge_name'])
         if item['bridge_name'] == br:
             return item
