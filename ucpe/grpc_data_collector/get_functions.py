@@ -78,13 +78,17 @@ def dpdk_get_devices():
     for d in devices.keys():
         device_dict = dict()
         dd = devices[d]
+        device_dict['slot'] = dd["Slot"]
+        device_dict['device_name'] = dd["Device_str"]
+        device_dict['interface'] = dd["Interface"]
+        device_dict['driver'] = dd["Driver_str"]
+        device_dict['unused'] = dd["Module_str"]
         if dd["Driver_str"] in drivers:
-            device_dict['slot'] = dd["Slot"]
-            device_dict['device_name'] = dd["Device_str"]
-            device_dict['driver'] = dd["Driver_str"]
-            device_dict['unused'] = dd["Module_str"]
-            device_dict['device'] = dd["Device"]
-            device_list.append(device_dict)
+            device_dict['current_use'] = 'DPDK'
+        else:
+            device_dict['current_use'] = 'Kernel'
+
+        device_list.append(device_dict)
 
     return device_list
 

@@ -259,7 +259,10 @@ def get_pci_device_details(dev_id, probe_lspci):
 
 def clear_data():
     '''This function clears any old data'''
+    global devices
+    # print(devices)
     devices = {}
+    # print(devices)
 
 
 def get_device_details(devices_type):
@@ -419,7 +422,7 @@ def bind_one(dev_id, driver, force):
     # prevent disconnection of our ssh session
     if dev["Ssh_if"] and not force:
         print("Routing table indicates that interface %s is active. "
-              "Not modifying" % (dev_id))
+              "Not modifying" % dev_id)
         return
 
     # unbind any existing drivers we don't want
