@@ -14,6 +14,10 @@ from ucpe.ucpe import UCPE
 
 import traceback as tb
 
+import grpc
+import ucpe.libvirt_controller.grpc.libvirt_pb2 as libvirt_pb2
+import ucpe.libvirt_controller.grpc.libvirt_pb2_grpc as libvirt_pb2_grpc
+
 
 
 class LibvirtController():
@@ -295,6 +299,18 @@ def restore_vm(ucpe, save_path, verbose=True):
     return _libvirt_connection_call(func, ucpe, success_message, fail_message, verbose=verbose,
                              operation_name=operation_name)
 
+def snap_vm_from_xml(ucpe, vm_name, xml):
+    pass
+
+def _blockpull(ucpe, vm_name, save_path, base_path):
+    channel = grpc.insecure_channel(ucpe.hostname)
+    stub = libvirt_pb2_grpc.LibvirtStub(channel)
+    request = libvirt_pb2.BlockPullRequest(domain=vm_name, path=save_path,
+                                           base=base_path)
+    response = stub.BlockPull(request)
+    if response.error:
+        raise OperationFailedError(name="blockpull")
+    return response.out
 
 def _libvirt_domain_mutator(libvirt_domain_func, ucpe, vm_name, success_message, fail_message, verbose=True,
                             operation_name=None):
