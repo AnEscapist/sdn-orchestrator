@@ -5,8 +5,16 @@ import time
 import threading
 import json
 import queue
-
 import signal
+from flask import Flask, escape, request
+
+app = Flask(__name__)
+
+#example route
+@app.route('/api/containers')
+def get_containers():
+    messagedata = {"body": {"id": 5}}
+    call_ucpe_function(messagedata)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -22,7 +30,7 @@ ids = queue.Queue()
 max_id = 0
 max_id_lock = threading.Lock()
 
-def call_ucpe_function(messagedata, controller_id="test-id", ucpe_sn="test-sn"):
+def call_ucpe_function(messagedata, controller_id='test-id', ucpe_sn='test-sn'):
     if not ids.empty():
         print(ids.queue)
     request_id = get_request_id()
@@ -86,46 +94,21 @@ messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
     "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
              "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
 
-# call_ucpe_function(messagedata, controller_id, ucpe_sn)
-# call_ucpe_function(messagedata, controller_id, ucpe_sn)
-# call_ucpe_function(messagedata, controller_id, ucpe_sn)
-# call_ucpe_function(messagedata, controller_id, ucpe_sn)
-number_of_threads = 10000
-sleep_time = 0.01
-threads = []
-for i in range(number_of_threads):
-    thread = threading.Thread(target=call_ucpe_function, args=(messagedata, controller_id, ucpe_sn))
-    threads.append(thread)
-
-for thread in threads:
-    thread.start()
-    time.sleep(sleep_time)
-
-for thread in threads:
-    thread.join()
-
-print(list(ids.queue))
-assert len(set(ids.queue)) == len(list(ids.queue))
-
-# messagedata = json.dumps(messagedata)
-# print("%s %s" % (topic, messagedata))
-# socket_pub.send_string(topic, zmq.SNDMORE)
-# socket_pub.send_string(messagedata)
-# print("%s %s" % (topic, messagedata))
-# socket_pub.send_string(topic, zmq.SNDMORE)
-# socket_pub.send_string(messagedata)
-# print("%s %s" % (topic, messagedata))
-# socket_pub.send_string(topic, zmq.SNDMORE)
-# socket_pub.send_string(messagedata)
-# print("%s %s" % (topic, messagedata))
-# socket_pub.send_string(topic, zmq.SNDMORE)
-# socket_pub.send_string(messagedata)
-# print("%s %s" % (topic, messagedata))
-# socket_pub.send_string(topic, zmq.SNDMORE)
-# socket_pub.send_string(messagedata)
-# print("%s %s" % (topic, messagedata))
-# socket_pub.send_string(topic, zmq.SNDMORE)
-# socket_pub.send_string(messagedata)
-
-# wait until thread 1 is completely executed
-# t1.join()
+if __name__ == "__main__":
+    app.run(threaded=True)
+    # number_of_threads = 10000
+    # sleep_time = 0.001
+    # threads = []
+    # for i in range(number_of_threads):
+    #     thread = threading.Thread(target=call_ucpe_function, args=(messagedata, controller_id, ucpe_sn))
+    #     threads.append(thread)
+    #
+    # for thread in threads:
+    #     thread.start()
+    #     time.sleep(sleep_time)
+    #
+    # for thread in threads:
+    #     thread.join()
+    #
+    # print(list(ids.queue))
+    # assert len(set(ids.queue)) == len(list(ids.queue))

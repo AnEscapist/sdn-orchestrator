@@ -7,6 +7,9 @@ signal.signal(signal.SIGINT, signal.SIG_DFL);
 
 
 def request():
+    context = None
+    frontend_req = None
+    backend_req = None
     try:
         context = zmq.Context(1)
 
@@ -27,13 +30,15 @@ def request():
         print(e)
         print("bringing down zmq device")
     finally:
-        pass
-        frontend.close()
-        backend.close()
+        frontend_req.close()
+        backend_req.close()
         context.term()
 
 
 def response():
+    context = None
+    frontend_resp = None
+    backend_resp = None
     try:
         context = zmq.Context(1)
 
@@ -55,8 +60,8 @@ def response():
         print("bringing down zmq device")
     finally:
         pass
-        frontend.close()
-        backend.close()
+        frontend_resp.close()
+        backend_resp.close()
         context.term()
 
 
