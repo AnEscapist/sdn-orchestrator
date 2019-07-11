@@ -16,40 +16,36 @@ TIMEOUT = 1000 #todo: decide
 CONTROLLER_ID = "test-id"
 #todo: set topic to something reasonable, like request id or timestampidk
 
-context_pub = zmq.Context()
-socket_pub = context_pub.socket(zmq.PUB)
-socket_pub.connect("tcp://localhost:%s" % port_pub)
 
 def call_ucpe_function(messagedata, controller_id="test-id", ucpe_sn="test-sn"):
+    context_pub = zmq.Context()
+    socket_pub = context_pub.socket(zmq.PUB)
+    socket_pub.connect("tcp://localhost:%s" % port_pub)
     q = queue.Queue()
     response_thread = threading.Thread(target=sub_response, args=(q, ucpe_sn))
     response_thread.start() #todo: figure out how to configure timeout
     time.sleep(1) #todo: BAD
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    send_request(messagedata, controller_id)
-    print("1")
-    print("2")
-    print("3")
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
+    send_request(messagedata, controller_id, socket_pub)
     response = q.get(timeout=TIMEOUT)
-    print("4")
     print(response)
     return response
 
-def send_request(messagedata, controller_id):
+def send_request(messagedata, controller_id, socket_pub):
     # Socket to publish requests
     dump = json.dumps(messagedata)
     #messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10$
