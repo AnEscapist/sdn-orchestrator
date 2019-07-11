@@ -72,7 +72,7 @@ def server_routine():
     print("Collecting updates from server...")
     socket_sub.connect("tcp://localhost:%s" % port_sub)
     topicfilter = CONTROLLER_ID
-    socket_sub.setsockopt_string(zmq.SUBSCRIBE, option_value=topicfilter)
+    socket_sub.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
     while True:
         received = socket_sub.recv()
         pub_response(d, received)
