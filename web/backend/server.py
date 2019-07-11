@@ -45,6 +45,7 @@ def sub_response(queue, ucpe_sn):
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, ucpe_sn)
     while True: #does this block?
         received = socket_sub.recv().decode('ASCII')
+        print(received)
         message = received.split(" ", 2)[1]
         print(message)
         response = json.loads(message)
