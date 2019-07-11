@@ -46,6 +46,7 @@ def sub_response(queue, ucpe_sn):
     while True: #does this block?
         received = socket_sub.recv().decode('ASCII')
         message = received.split(" ", 2)[1]
+        print(message)
         response = json.loads(message)
         queue.put(response)
         return response
