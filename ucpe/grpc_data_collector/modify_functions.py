@@ -17,6 +17,9 @@ from distutils import spawn
 brctlexe = spawn.find_executable("brctl")
 ipexe = spawn.find_executable("ip")
 
+devices = dpdk.devices
+dpdk.get_device_details(dpdk.network_devices)
+
 
 def dpdk_bind(device, driver, force=True):
     dev_id = dpdk.dev_id_from_dev_name(device)
