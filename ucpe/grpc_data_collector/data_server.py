@@ -67,21 +67,28 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
             if request.str_request == 'bind':
                 # print('trying to bind')
                 response.str_response = f'Binding {request.str_param1} to {request.str_param2}, please wait'
-                # print(response.str_response)
+                print(response.str_response)
                 response.func_status = modify_functions.dpdk_bind(request.str_param1, request.str_param2, force=True)
-                print('still doing ok')
+                print('Bind successful')
 
             elif request.str_request == 'unbind':
                 response.str_response = f'Unbinding {request.str_param1}, please wait'
+                print(response.str_response)
                 response.func_status = modify_functions.dpdk_unbind(request.str_param1)
+                print('Unbind successful')
 
             elif request.str_request == 'enable':
                 response.str_response = f'Enabling {request.str_param1} driver, please wait'
+                print(response.str_response)
                 response.func_status = modify_functions.dpdk_enable(request.str_param1)
+                print('Driver enabled')
 
             elif request.str_request == 'add_port':
                 response.str_response = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
-                response.func_status = modify_functions.dpdk_add_port(request.str_param1, request.str_param2, request.str_param3)
+                print(response.str_response)
+                response.func_status = modify_functions.dpdk_add_port(request.str_param1, request.str_param2,
+                                                                      request.str_param3)
+                print('Port added')
 
         return response
 
