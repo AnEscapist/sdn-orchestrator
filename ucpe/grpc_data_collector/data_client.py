@@ -27,10 +27,11 @@ def run(request_type, hostname=HOSTNAME, port=PORT, str_param1=None, str_param2=
                                    str_param2=f'{str_param2}', str_param3=f'{str_param3}')
     # print(request)
     response = None
-    if request_type == 'modify':
-        response = stub.ModifyData(request)
-    elif request_type == 'get':
+
+    if request_type == 'get':
         response = stub.GetData(request)
+    elif request_type == 'modify':
+        response = stub.ModifyData(request)
 
     return response
 
@@ -44,4 +45,4 @@ if __name__ == "__main__":
     request = 'get'
     kwargs = {'body': {'hostname': '10.10.81.100', 'port': '50051', 'command': 'dpdk', 'str_request': 'bind', 'str_param1': '0000:b7:00.3', 'str_param2': 'vfio-pci'}}
     # print(kwargs['body']['str_param1'])
-    main(request, **kwargs)
+    # main(request, **kwargs)

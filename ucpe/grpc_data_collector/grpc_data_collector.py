@@ -100,6 +100,7 @@ def modify_execute(input_string, **kwargs):
 def main():
     kwargs = {'body': {'str_param1': '0000:b7:00.3', 'str_param2': 'vfio-pci'}}
     tmp = gRPCDataCollector()
+    # print(tmp.grpc_get_linux_bridge_details(**kwargs))
     tmp.grpc_modify_dpdk_bind(**kwargs)
 
 
