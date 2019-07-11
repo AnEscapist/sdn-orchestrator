@@ -19,6 +19,7 @@ def call_ucpe_function(messagedata, topic):
     send_request(messagedata, topic)
     q = queue.Queue()
     request_thread = threading.Thread(target=sub_response)
+    request_thread.start() #todo: figure out how to configure timeout
     response = q.get(timeout=TIMEOUT)
     return response
 
