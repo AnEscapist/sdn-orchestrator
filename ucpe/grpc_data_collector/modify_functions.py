@@ -20,13 +20,12 @@ ipexe = spawn.find_executable("ip")
 
 def dpdk_bind(device, driver, force=True):
     dev_id = dpdk.dev_id_from_dev_name(device)
-    dpdk.bind_one(dev_id, driver, force)
-    return True
+    return dpdk.bind_one(dev_id, driver, force)
 
 
 def dpdk_unbind(device, force=True):
-    dpdk.unbind_one(device, force)
-    return True
+    dev_id = dpdk.dev_id_from_dev_name(device)
+    return dpdk.unbind_one(dev_id, force)
 
 
 def dpdk_enable(driver):
