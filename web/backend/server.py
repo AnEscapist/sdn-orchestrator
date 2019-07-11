@@ -11,7 +11,8 @@ from flask import Flask, escape, request
 app = Flask(__name__)
 
 #example route
-@app.route('/api/containers')
+#/api/containers in frontend
+@app.route('/containers')
 def get_containers():
     # messagedata = {"body": {"id": 5}}
     messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
