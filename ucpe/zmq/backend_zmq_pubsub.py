@@ -38,8 +38,8 @@ socket_pub.connect("tcp://localhost:%s" % port_pub)
 
 def server_routine():
     d = Dispatcher()
-    # d.build_method_map(LibvirtController())
-    d.build_method_map(grpc.gRPCDataCollector())
+    d.build_method_map(LibvirtController())
+    # d.build_method_map(grpc.gRPCDataCollector())
 
     print("Collecting updates from server...")
     socket_sub.connect("tcp://localhost:%s" % port_sub)
