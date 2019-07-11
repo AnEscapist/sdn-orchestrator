@@ -159,6 +159,5 @@ def sriov_totalvfs(device):
     dpdk.get_device_details(dpdk.network_devices)
     dev_id = dpdk.dev_id_from_dev_name(device)
     value = subprocess.Popen(['cat', f'/sys/bus/pci/devices/{dev_id}/sriov_totalvfs'], stdout=subprocess.PIPE)
-    output, err = value.communicate()
     # print(value)
-    return output
+    return value.stdout.read().decode('utf-8')
