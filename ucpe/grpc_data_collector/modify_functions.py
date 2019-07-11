@@ -23,12 +23,14 @@ dpdk.get_device_details(dpdk.network_devices)
 
 def dpdk_bind(device, driver, force=True):
     dev_id = dpdk.dev_id_from_dev_name(device)
-    return dpdk.bind_one(dev_id, driver, force)
+    dpdk.bind_one(dev_id, driver, force)
+    return True
 
 
 def dpdk_unbind(device, force=True):
     dev_id = dpdk.dev_id_from_dev_name(device)
-    return dpdk.unbind_one(dev_id, force)
+    dpdk.unbind_one(dev_id, force)
+    return True
 
 
 def dpdk_enable(driver):
