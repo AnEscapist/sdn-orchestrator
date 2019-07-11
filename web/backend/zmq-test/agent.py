@@ -15,7 +15,6 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 CONTROLLER_ID = 'test-id'
 UCPE_SN = 'test-sn' #todo: get the ucpe serial number
 
-
 def pub_response(d, mess):
     message = mess.decode('ASCII')
     topic, request = message.split(" ", 1)
@@ -26,7 +25,7 @@ def pub_response(d, mess):
 
 def get_new_topic(old_topic):
     request_id = old_topic.rsplit("___")[1]
-    return f'{UCPE_SN}___{request_id}'
+    return f'{UCPE_SN}___{request_id}' #todo: factor out the ___ into a constant
 
 port_sub = "5560"
 port_pub = "5569"

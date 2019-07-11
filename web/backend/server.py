@@ -20,6 +20,7 @@ BROKER_IP = "10.10.81.200" #todo: make this not global
 
 ids = queue.Queue()
 max_id = 0
+max_id_lock = threading.Lock()
 
 def call_ucpe_function(messagedata, controller_id="test-id", ucpe_sn="test-sn"):
     request_id = get_request_id()
@@ -32,7 +33,7 @@ def call_ucpe_function(messagedata, controller_id="test-id", ucpe_sn="test-sn"):
     time.sleep(1) #todo: BAD
     send_request(messagedata, controller_id, request_id, socket_pub)
     response = q.get(timeout=TIMEOUT)
-    print(response)
+    ids.put(request_id)
     return response
 
 def get_topic(id, request_id):
@@ -40,10 +41,11 @@ def get_topic(id, request_id):
 
 def get_request_id():
     global max_id
-    if ids.empty():
-        max_id += 1 #todo: not threadsafe
-        return max_id
-    return ids.get()
+    with max_id_lock:
+        if ids.empty():
+            max_id += 1
+            return max_id
+        return ids.get()
 
 def send_request(messagedata, controller_id, request_id, socket_pub):
     # Socket to publish requests
