@@ -13,3 +13,4 @@ venv/
 build/
 dist/
 *~
+web/frontend/node_modules/
