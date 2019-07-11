@@ -68,6 +68,7 @@ def server_routine():
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
     while True:
         received = socket_sub.recv()
+        print(received)
         pub_response(d, received)
 
 
