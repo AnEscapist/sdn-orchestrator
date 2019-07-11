@@ -16,10 +16,10 @@ signal.signal(signal.SIGINT, signal.SIG_DFL);
 def pub_response(d, mess):
     message = mess.decode('ASCII')
     topic, request = message.split(" ", 1)
-    print(request)
+    print(topic, request)
     response = JSONRPCResponseManager.handle(request, d)
     print("resp", response)
-    socket_pub.send_string("%s %s" % (topic, json.dumps(response.data)))
+    socket_pub.send_string("%s %s" % ('test-sn', json.dumps(response.data)))
 
 
 port_sub = "5560"
