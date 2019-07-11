@@ -42,6 +42,7 @@ def send_request(messagedata, topic):
     print("5")
 
 def sub_response(topic, queue):
+    topic = "test-sn" #todo: figure this out
     # Socket to subscribe to responses
     context_sub = zmq.Context()
     socket_sub = context_sub.socket(zmq.SUB)
