@@ -2,7 +2,7 @@
     <div>
     <div class="dsidebar">
 
-        <font-awesome-icon :icon="['fab', 'docker']" size=5x color='white'/><br>
+        <font-awesome-icon :icon="['fab', 'docker']" size=5x color='white'/><br><br>
 
         <router-link to="/docker/dashboard">
             <button class="sidebar-item">
@@ -10,7 +10,7 @@
             </button>
         </router-link>
 
-        <router-link to="/docker/container">
+        <router-link to="/docker/dockercontainer">
             <button class="sidebar-item">
                 <strong>Container</strong><font-awesome-icon :icon="['fas', 'database']" size=lg pull='right' color="white"/>
             </button>
@@ -80,7 +80,7 @@ export default {
     float: left;
     /* border-radius: 20px; */
     width: 200px;
-    height: 800px;
+    height: 880px;
     background: rgb(62, 62, 62);
 }
 

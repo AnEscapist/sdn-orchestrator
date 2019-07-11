@@ -20,14 +20,5 @@
   color: #2c3e50;
   background: rgb(172, 172, 172)
 }
-#nav {
-  padding: 10px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: rgb(255, 255, 255);
-    }
-  }
-}
+
 </style>
