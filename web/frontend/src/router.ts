@@ -6,7 +6,8 @@ import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Docker from './views/Docker.vue';
 import Dashboard from './views/DockerDashboard.vue';
-import Container from './views/DockerContainer.vue';
+import DockerContainer from './views/DockerContainer.vue';
+import DockerHome from './views/DockerHome.vue'
 
 
 Vue.use(Router);
@@ -37,17 +38,23 @@ export default new Router({
         {
             path: '/docker',
             name: 'docker',
+            redirect: '/docker/dockerhome',
             component: Docker,
             children: [
+                {
+                    path: 'dockerhome',
+                    name: 'dockerhome',
+                    component: DockerHome,
+                },
                 {
                     path: 'dashboard',
                     name: 'dashboard',
                     component: Dashboard
                 },
                 {
-                    path: 'container',
-                    name: 'container',
-                    component: Container
+                    path: 'dockercontainer',
+                    name: 'dockercontainer',
+                    component: DockerContainer
                 },
                 // {
                 //     path: 'image',

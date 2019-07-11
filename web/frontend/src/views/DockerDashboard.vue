@@ -1,8 +1,17 @@
 <template>
   <div class="dashboard">
+      <div id="nav">
+        <!-- <router-link to="/">Home</router-link> |
+        <router-link to="/about">About</router-link> | -->
+
+        <router-link to="/login">Login</router-link> |
+        <router-link to="/docker">Docker</router-link>
+        <DSidebar></DSidebar>
+
+      </div>
 
       <div class="content">
-          
+
           <div class='header'>
              <strong>Endpoint info</strong><font-awesome-icon :icon="['fas', 'tachometer-alt']" size=lg pull='left' color="black"/>
           </div>
@@ -33,6 +42,7 @@ import DSidebar from '@/components/DSidebar.vue';
   },
 })
 export default class Dashboard extends Vue {
+    name: 'dashboard'
     data() {
         return {
             endpoint: '',
