@@ -22,6 +22,13 @@ def call_ucpe_function(messagedata, controller_id="test-id", ucpe_sn="test-sn"):
     response_thread.start() #todo: figure out how to configure timeout
     time.sleep(1) #todo: BAD
     send_request(messagedata, controller_id)
+    send_request(messagedata, controller_id)
+    send_request(messagedata, controller_id)
+    send_request(messagedata, controller_id)
+    send_request(messagedata, controller_id)
+    send_request(messagedata, controller_id)
+    send_request(messagedata, controller_id)
+    send_request(messagedata, controller_id)
     print("1")
     print("2")
     print("3")
