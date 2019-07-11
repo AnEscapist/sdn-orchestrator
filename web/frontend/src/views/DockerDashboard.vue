@@ -1,6 +1,8 @@
 <template>
   <div class="dashboard">
+
       <div class="content">
+          
           <div class='header'>
              <strong>Endpoint info</strong><font-awesome-icon :icon="['fas', 'tachometer-alt']" size=lg pull='left' color="black"/>
           </div>
@@ -17,6 +19,7 @@
             <strong>Content: </strong>{{content}} - get from remote api
         </div>
       </div>
+
   </div>
 </template>
 
@@ -51,6 +54,7 @@ export default class Dashboard extends Vue {
 <style lang="css" scoped>
 
 .header{
+    background: red;
     padding-left: 10px;
     padding-top: 12px;
     padding-bottom: 12px;
@@ -72,7 +76,7 @@ export default class Dashboard extends Vue {
 .content{
     border: 1px, solid rgb(0, 0, 0);
     height: auto;
-    background: white;
+    background: red;
     margin-left: 220px;
     margin-right: 20px;
 }
