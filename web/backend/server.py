@@ -17,12 +17,13 @@ CONTROLLER_ID = "test-id"
 #todo: set topic to something reasonable, like request id or timestampidk
 
 def call_ucpe_function(messagedata, controller_id="test-id", ucpe_sn="test-sn"):
+    response_thread = threading.Thread(target=sub_response, args=(q, ucpe_sn))
+    response_thread.start() #todo: figure out how to configure timeout
+    time.sleep(1) #todo: BAD
     send_request(messagedata, controller_id)
     q = queue.Queue()
     print("1")
-    request_thread = threading.Thread(target=sub_response, args=(q, ucpe_sn))
     print("2")
-    request_thread.start() #todo: figure out how to configure timeout
     print("3")
     response = q.get(timeout=TIMEOUT)
     print("4")
