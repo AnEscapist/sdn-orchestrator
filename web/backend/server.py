@@ -54,7 +54,7 @@ def sub_response(queue, ucpe_sn):
         print(received_topic)
         if socket_sub.get(zmq.RCVMORE) and received_topic == ucpe_sn: #todo: ask tyler why this and is necessary
             response = socket_sub.recv()
-            queue.put(response)
+            queue.put(response.decode('ASCII'))
             return
 
 # creating thread
