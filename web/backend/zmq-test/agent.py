@@ -10,17 +10,22 @@ from ucpe.libvirt_controller.libvirt_controller import *
 
 import signal
 
-signal.signal(signal.SIGINT, signal.SIG_DFL);
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+CONTROLLER_ID = 'test-id'
+UCPE_SN = 'test-sn' #todo: get the ucpe serial number
 
 
 def pub_response(d, mess):
     message = mess.decode('ASCII')
     topic, request = message.split(" ", 1)
-    print(topic, request)
+    new_topic = get_new_topic(topic)
     response = JSONRPCResponseManager.handle(request, d)
-    print("resp", response)
-    socket_pub.send_string("%s %s" % ('test-sn', json.dumps(response.data)))
+    socket_pub.send_string("%s %s" % (new_topic, json.dumps(response.data)))
 
+def get_new_topic(old_topic):
+    request_id = old_topic.rsplit("___")[1]
+    return f'{UCPE_SN}___{request_id}'
 
 port_sub = "5560"
 port_pub = "5569"
@@ -66,11 +71,10 @@ def server_routine():
 
     print("Collecting updates from server...")
     socket_sub.connect("tcp://localhost:%s" % port_sub)
-    topicfilter = "test-id"
-    socket_sub.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
+    topicfilter = CONTROLLER_ID
+    socket_sub.setsockopt_string(zmq.SUBSCRIBE, option=topicfilter)
     while True:
         received = socket_sub.recv()
-        print(received)
         pub_response(d, received)
 
 

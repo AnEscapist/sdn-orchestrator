@@ -15,7 +15,7 @@ def request():
         # Socket facing client
         frontend_req = context.socket(zmq.SUB)
         frontend_req.bind("tcp://*:5559")
-        frontend_req.setsockopt_string(zmq.SUBSCRIBE, "")
+        frontend_req.setsockopt_string(zmq.SUBSCRIBE, "") #TODO: don't sub to everything - just the controllers the broker is responsible for
 
         # Socket facing services
         backend_req = context.socket(zmq.PUB)
