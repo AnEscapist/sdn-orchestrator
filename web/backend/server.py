@@ -48,6 +48,7 @@ def get_request_id():
 def send_request(messagedata, controller_id, request_id, socket_pub):
     # Socket to publish requests
     topic = get_topic(controller_id, request_id)
+    print("send_topic", topic)
     dump = json.dumps(messagedata)
     socket_pub.send_string('%s %s' % (topic, dump))
 
@@ -61,9 +62,8 @@ def sub_response(queue, ucpe_sn, request_id):
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, topic)
     while True: #does this block?
         received = socket_sub.recv().decode('ASCII')
-        print(received)
-        message = received.split(" ", 1)[1]
-        print(message)
+        topic, message = received.split(" ", 1)
+        print(topic, message)
         response = json.loads(message)
         queue.put(response)
         return response
@@ -82,6 +82,9 @@ messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
     "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
              "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
 
+call_ucpe_function(messagedata, controller_id, ucpe_sn)
+call_ucpe_function(messagedata, controller_id, ucpe_sn)
+call_ucpe_function(messagedata, controller_id, ucpe_sn)
 call_ucpe_function(messagedata, controller_id, ucpe_sn)
 # messagedata = json.dumps(messagedata)
 # print("%s %s" % (topic, messagedata))

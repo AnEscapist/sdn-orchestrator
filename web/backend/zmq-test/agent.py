@@ -21,6 +21,7 @@ def pub_response(d, mess):
     topic, request = message.split(" ", 1)
     new_topic = get_new_topic(topic)
     response = JSONRPCResponseManager.handle(request, d)
+    print(topic, new_topic)
     socket_pub.send_string("%s %s" % (new_topic, json.dumps(response.data)))
 
 def get_new_topic(old_topic):
