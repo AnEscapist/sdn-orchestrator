@@ -20,6 +20,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
 
     def GetData(self, request, context):
         response = data_pb2.DataResponse()
+        print('hello')
         if request.command == 'hugepages':
             if request.str_request == 'total':
                 response.header = "Total hugepages memory in kB"
@@ -61,6 +62,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
 
     def ModifyData(self, request, context):
         response = data_pb2.DataChangeResponse()
+        print('hello2')
         if request.command == 'dpdk':
             if request.str_request == 'bind':
                 response.str_response = f'Binding {request.str_param1} to {request.str_param2}, please wait'
