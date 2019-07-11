@@ -13,7 +13,10 @@ app = Flask(__name__)
 #example route
 @app.route('/api/containers')
 def get_containers():
-    messagedata = {"body": {"id": 5}}
+    # messagedata = {"body": {"id": 5}}
+    messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
+        "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     call_ucpe_function(messagedata)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
