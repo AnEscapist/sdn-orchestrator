@@ -34,12 +34,7 @@ def call_ucpe_function(messagedata, controller_id="test-id", ucpe_sn="test-sn"):
 def send_request(messagedata, controller_id, socket_pub):
     # Socket to publish requests
     dump = json.dumps(messagedata)
-    #messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10$
-    #messagedata = json.dumps(messagedata)
-#    print("%s %s" % (topic, messagedata))
-    socket_pub.send_string(controller_id, zmq.SNDMORE)
-    socket_pub.send_string(dump)
-    print("5")
+    socket_pub.send_string('%s %s' % (controller_id,dump))
 
 def sub_response(queue, ucpe_sn):
     # Socket to subscribe to responses
@@ -49,13 +44,11 @@ def sub_response(queue, ucpe_sn):
     socket_sub.connect("tcp://%s:%s" % (BROKER_IP, port_sub))
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, ucpe_sn)
     while True: #does this block?
-        print("in while loop")
-        received_topic = socket_sub.recv().decode('ASCII')
-        print(received_topic)
-        if socket_sub.get(zmq.RCVMORE) and received_topic == ucpe_sn: #todo: ask tyler why this and is necessary
-            response = json.loads(socket_sub.recv().decode('ASCII'))
-            queue.put(response)
-            return
+        received = socket_sub.recv().decode('ASCII')
+        message = received.split(" ")[1]
+        response = json.loads(message)
+        queue.put(response)
+        return response
 
 # creating thread
 # t1 = threading.Thread(target=sub_response)
@@ -70,6 +63,7 @@ ucpe_sn = "test-sn"
 messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
     "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
              "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+
 call_ucpe_function(messagedata, controller_id, ucpe_sn)
 # messagedata = json.dumps(messagedata)
 # print("%s %s" % (topic, messagedata))

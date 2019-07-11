@@ -17,8 +17,7 @@ def pub_response(d, mess):
     topic = "test-sn"
     message = mess.decode('ASCII')
     response = JSONRPCResponseManager.handle(message, d)
-    socket_pub.send_string(topic, zmq.SNDMORE)
-    socket_pub.send_string(json.dumps(response.data))
+    socket_pub.send_string("%s %s" % (topic, json.dumps(response.data)))
 
 
 port_sub = "5560"
@@ -68,11 +67,8 @@ def server_routine():
     topicfilter = "test-id"
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
     while True:
-        topic = socket_sub.recv().decode('ASCII')
-        if socket_sub.get(zmq.RCVMORE) and topic == topicfilter:
-            messagedata = socket_sub.recv()
-            print(messagedata)
-            pub_response(d, messagedata)
+        response = socket_sub.recv().decode('ASCII')
+        pub_response(d, response)
 
 
 def main():
