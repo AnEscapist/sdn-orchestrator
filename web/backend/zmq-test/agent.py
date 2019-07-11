@@ -14,11 +14,10 @@ signal.signal(signal.SIGINT, signal.SIG_DFL);
 
 
 def pub_response(d, mess):
-    print('mess', mess)
     topic = "test-sn"
-    message = mess
+    message = mess.decode('ASCII')
     response = JSONRPCResponseManager.handle(message, d)
-    socket_pub.send_string("%s %s" % (topic, json.dumps(response.data)))
+    socket_pub.send_string((json.dumps(response.data)))
 
 
 port_sub = "5560"
@@ -68,9 +67,8 @@ def server_routine():
     topicfilter = "test-id"
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
     while True:
-        response = socket_sub.recv().decode('ASCII')
-        print('response', response)
-        pub_response(d, response)
+        received = socket_sub.recv()
+        pub_response(d, received)
 
 
 def main():
