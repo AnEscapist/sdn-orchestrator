@@ -60,7 +60,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
         elif request.command == 'sriov':
             if request.str_request == 'total_vfs':
                 response.header = f"Total vfs for {request.str_param1}"
-                response.str_response = str(get_functions.sriov_totalvfs())
+                response.str_response = str(get_functions.sriov_totalvfs(request.str_param1))
 
         return response
 
