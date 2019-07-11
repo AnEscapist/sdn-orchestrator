@@ -31,6 +31,8 @@ hugepages_total = meminfo['HugePages_Total']
 hugepages_free = meminfo['HugePages_Free']
 
 total_cpus = psutil.cpu_count()
+devices = dpdk.devices
+drivers = dpdk.dpdk_drivers
 
 
 def get_hugepages_totalmem_kB():
@@ -70,9 +72,6 @@ def dpdk_get_devices():
     dpdk.check_modules()
     dpdk.clear_data()
     dpdk.get_device_details(dpdk.network_devices)
-
-    drivers = dpdk.dpdk_drivers
-    devices = dpdk.devices
 
     device_list = []
     for d in devices.keys():
@@ -154,3 +153,11 @@ def get_linux_bridge_details(br):
         print(item['bridge_name'])
         if item['bridge_name'] == br:
             return item
+
+
+def sriov_totalvfs(device):
+    dpdk.get_device_details(dpdk.network_devices)
+    dev_id = dpdk.dev_id_from_dev_name(device)
+    value = subprocess.Popen(['cat', f'/sys/bus/pci/devices/{dev_id}/sriov_totalvfs'])
+    # print(value)
+    return value

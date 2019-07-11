@@ -57,13 +57,20 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
             if request.str_request == 'devices':
                 response.header = "List of network devices using DPDK-compatible drivers"
                 response.str_response = str(get_functions.dpdk_get_devices())
+        elif request.command == 'sriov':
+            if request.str_request == 'total_vfs':
+                response.header = f"Total vfs for {request.str_param1}"
+                response.str_response = str(get_functions.sriov_totalvfs())
 
         return response
 
     def ModifyData(self, request, context):
         response = data_pb2.DataChangeResponse()
         # print('hello2')
-        if request.command == 'dpdk':
+        if request.command == 'sriov':
+            None
+
+        elif request.command == 'dpdk':
             if request.str_request == 'bind':
                 # print('trying to bind')
                 response.str_response = f'Binding {request.str_param1} to {request.str_param2}, please wait'
@@ -82,13 +89,17 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                 print(response.str_response)
                 response.func_status = modify_functions.dpdk_enable(request.str_param1)
                 print('Driver enabled')
+        elif request.command == 'ovs':
+            if request.str_request == 'add_dpdk_port':
+                response.str_response = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
+                print(response.str_response)
+                response.func_status = modify_functions.ovs_add_dpdk_port(request.str_param1, request.str_param2,
+                                                                          request.str_param3)
+                print('Port added')
 
             elif request.str_request == 'add_port':
                 response.str_response = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
                 print(response.str_response)
-                response.func_status = modify_functions.dpdk_add_port(request.str_param1, request.str_param2,
-                                                                      request.str_param3)
-                print('Port added')
 
         return response
 
