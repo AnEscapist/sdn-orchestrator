@@ -16,7 +16,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL);
 def pub_response(d, mess):
     topic = "test-sn"
     message = mess.decode('ASCII')
-    request = message.split(" ", 2)
+    request = message.split(" ", 2)[1]
     print(request)
     response = JSONRPCResponseManager.handle(request, d)
     socket_pub.send_string((json.dumps(response.data)))
