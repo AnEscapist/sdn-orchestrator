@@ -16,6 +16,10 @@ TIMEOUT = 1000 #todo: decide
 CONTROLLER_ID = "test-id"
 #todo: set topic to something reasonable, like request id or timestampidk
 
+context_pub = zmq.Context()
+socket_pub = context_pub.socket(zmq.PUB)
+socket_pub.connect("tcp://localhost:%s" % port_pub)
+
 def call_ucpe_function(messagedata, controller_id="test-id", ucpe_sn="test-sn"):
     q = queue.Queue()
     response_thread = threading.Thread(target=sub_response, args=(q, ucpe_sn))
@@ -47,15 +51,12 @@ def call_ucpe_function(messagedata, controller_id="test-id", ucpe_sn="test-sn"):
 
 def send_request(messagedata, controller_id):
     # Socket to publish requests
-    context_pub = zmq.Context()
-    socket_pub = context_pub.socket(zmq.PUB)
-    socket_pub.connect("tcp://localhost:%s" % port_pub)
-    messagedata = json.dumps(messagedata)
+    dump = json.dumps(messagedata)
     #messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10$
     #messagedata = json.dumps(messagedata)
 #    print("%s %s" % (topic, messagedata))
     socket_pub.send_string(controller_id, zmq.SNDMORE)
-    socket_pub.send_string(messagedata)
+    socket_pub.send_string(dump)
     print("5")
 
 def sub_response(queue, ucpe_sn):
