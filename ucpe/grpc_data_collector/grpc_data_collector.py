@@ -49,6 +49,10 @@ class gRPCDataCollector(object):
     def grpc_get_dpdk_devices(**kwargs):
         return get_execute("dpdk devices", **kwargs)
 
+    @staticmethod
+    def grpc_get_sriov_totalvfs(**kwargs):
+        return get_execute(f"sriov total_vfs {kwargs['body']['str_param1']}", **kwargs)
+
     # device driver
     @staticmethod
     def grpc_modify_dpdk_bind(**kwargs):
@@ -64,8 +68,8 @@ class gRPCDataCollector(object):
 
     # bridge port br
     @staticmethod
-    def grpc_modify_dpdk_add_port(**kwargs):
-        return modify_execute(f"dpdk add_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}"
+    def grpc_modify_ovs_add_dpdk_port(**kwargs):
+        return modify_execute(f"ovs add_dpdk_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}"
                               f"{kwargs['body']['str_param3']}")
 
 
@@ -98,10 +102,10 @@ def modify_execute(input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'str_param1': 'b7:00.3', 'str_param2': 'i40e'}}
+    kwargs = {'body': {'str_param1': 'vfio', 'str_param2': 'i40e'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
-    tmp.grpc_modify_dpdk_bind(**kwargs)
+    print(tmp.grpc_modify_dpdk_enable(**kwargs))
 
 
 if __name__ == '__main__':
