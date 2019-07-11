@@ -28,6 +28,6 @@ message DataResponse {
 }
 
 message DataChangeResponse {
-    string response = 1;
-    bool status = 2;
+    string str_response = 1;
+    bool func_status = 2;
 }
