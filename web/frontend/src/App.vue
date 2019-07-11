@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/login">Login</router-link> |
-      <router-link to="/docker">Docker</router-link>
+    <div>
+      <!-- <router-link to="/">Home</router-link> | -->
+      <!-- <router-link to="/about">About</router-link> | -->
+      <!-- <router-link to="/login">Login</router-link> | -->
+      <!-- <router-link to="/docker">Docker</router-link> -->
 
     </div>
     <router-view/>
@@ -21,12 +21,12 @@
   background: rgb(172, 172, 172)
 }
 #nav {
-  padding: 30px;
+  padding: 10px;
   a {
     font-weight: bold;
     color: #2c3e50;
     &.router-link-exact-active {
-      color: #42b983;
+      color: rgb(255, 255, 255);
     }
   }
 }

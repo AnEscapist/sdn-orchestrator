@@ -1,7 +1,16 @@
 <template lang="html">
   <div class="docker">
+      <div id="nav">
+        <!-- <router-link to="/">Home</router-link> | -->
+        <!-- <router-link to="/about">About</router-link> | -->
+        <router-link to="/login">Login</router-link> |
+        <router-link to="/docker">Docker</router-link>
+
+      </div>
+      <router-view/>
       <DSidebar></DSidebar>
   </div>
+
 
 </template>
 
@@ -22,5 +31,6 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
+
 </style>

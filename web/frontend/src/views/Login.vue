@@ -23,7 +23,7 @@
 
         <br />
         <font-awesome-icon :icon="['fas', 'sing-in-alt']" size=sm />
-        <button type="button" class='btn btn-primary btn-lg'><font-awesome-icon :icon="['fas', 'sign-in-alt']" size=sm /> Login</button>
+        <button type="button" class='btn btn-primary btn-lg' @click='toDocker'><font-awesome-icon :icon="['fas', 'sign-in-alt']" size=sm /> Login</button>
         <br>
         <button type="button" class="btn btn-link btn-sm">Forget password</button> |
         <button type="button" class="btn btn-link btn-sm">Create account</button>
@@ -42,6 +42,11 @@ export default {
         }
     },
     methods: {
+        toDocker: function(){
+            this.$router.push({
+                path: "/docker"
+            })
+        }
 
     },
 
