@@ -14,6 +14,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL);
 
 
 def pub_response(d, mess):
+    print('mess', mess)
     topic = "test-sn"
     message = mess
     response = JSONRPCResponseManager.handle(message, d)
@@ -68,6 +69,7 @@ def server_routine():
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
     while True:
         response = socket_sub.recv().decode('ASCII')
+        print('response', response)
         pub_response(d, response)
 
 
