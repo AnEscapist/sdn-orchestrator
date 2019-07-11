@@ -87,7 +87,6 @@ ucpe_sn = "test-sn"
 messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
     "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
              "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
-messagedata = json.dumps(messagedata)
 call_ucpe_function(messagedata, controller_id, ucpe_sn)
 # messagedata = json.dumps(messagedata)
 # print("%s %s" % (topic, messagedata))
