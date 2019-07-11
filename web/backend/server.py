@@ -18,9 +18,14 @@ TIMEOUT = 1000 #todo: decide
 def call_ucpe_function(messagedata, topic):
     send_request(messagedata, topic)
     q = queue.Queue()
+    print("1")
     request_thread = threading.Thread(target=sub_response, args=(topic, q))
+    print("2")
     request_thread.start() #todo: figure out how to configure timeout
+    print("3")
     response = q.get(timeout=TIMEOUT)
+    print("4")
+    print(response)
     return response
 
 def send_request(messagedata, topic):
@@ -34,6 +39,7 @@ def send_request(messagedata, topic):
 #    print("%s %s" % (topic, messagedata))
     socket_pub.send_string(topic, zmq.SNDMORE)
     socket_pub.send_string(messagedata)
+    print("5")
 
 def sub_response(topic, queue):
     # Socket to subscribe to responses
@@ -43,10 +49,13 @@ def sub_response(topic, queue):
     socket_sub.connect("tcp://localhost:%s" % port_sub)
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, topic)
     while True: #does this block?
+        print("in while loop")
         received_topic = socket_sub.recv().decode('ASCII')
+        print(received_topic)
         if socket_sub.get(zmq.RCVMORE) and received_topic == topic: #todo: ask tyler why this and is necessary
             response = socket_sub.recv()
-            return response
+            queue.put(response)
+            return
 
 # creating thread
 # t1 = threading.Thread(target=sub_response)
