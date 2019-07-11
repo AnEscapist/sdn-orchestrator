@@ -13,17 +13,23 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 port_pub = "5559"
 port_sub = "5570"
 TIMEOUT = 1000 #todo: decide
+CONTROLLER_ID = "test-id"
 #todo: set topic to something reasonable, like request id or timestampidk
 
-def call_ucpe_function(messagedata, topic):
-    send_request(messagedata, topic)
+def call_ucpe_function(messagedata, controller_id="test-id", ucpe_sn="test-sn"):
+    send_request(messagedata, controller_id)
     q = queue.Queue()
-    request_thread = threading.Thread(target=sub_response, args=(topic, q))
+    print("1")
+    request_thread = threading.Thread(target=sub_response, args=(q, ucpe_sn))
+    print("2")
     request_thread.start() #todo: figure out how to configure timeout
+    print("3")
     response = q.get(timeout=TIMEOUT)
+    print("4")
+    print(response)
     return response
 
-def send_request(messagedata, topic):
+def send_request(messagedata, controller_id):
     # Socket to publish requests
     context_pub = zmq.Context()
     socket_pub = context_pub.socket(zmq.PUB)
@@ -32,21 +38,25 @@ def send_request(messagedata, topic):
     #messagedata = {"method": "docker_controller_create_client", "params": {"body":{'ip':'10$
     #messagedata = json.dumps(messagedata)
 #    print("%s %s" % (topic, messagedata))
-    socket_pub.send_string(topic, zmq.SNDMORE)
+    socket_pub.send_string(controller_id, zmq.SNDMORE)
     socket_pub.send_string(messagedata)
+    print("5")
 
-def sub_response(topic, queue):
+def sub_response(queue, ucpe_sn):
     # Socket to subscribe to responses
     context_sub = zmq.Context()
     socket_sub = context_sub.socket(zmq.SUB)
     print("Collecting updates from server...")
     socket_sub.connect("tcp://localhost:%s" % port_sub)
-    socket_sub.setsockopt_string(zmq.SUBSCRIBE, topic)
+    socket_sub.setsockopt_string(zmq.SUBSCRIBE, ucpe_sn)
     while True: #does this block?
+        print("in while loop")
         received_topic = socket_sub.recv().decode('ASCII')
-        if socket_sub.get(zmq.RCVMORE) and received_topic == topic: #todo: ask tyler why this and is necessary
+        print(received_topic)
+        if socket_sub.get(zmq.RCVMORE) and received_topic == ucpe_sn: #todo: ask tyler why this and is necessary
             response = socket_sub.recv()
-            return response
+            queue.put(response)
+            return
 
 # creating thread
 # t1 = threading.Thread(target=sub_response)
@@ -55,11 +65,14 @@ def sub_response(topic, queue):
 # t1.start()
 #
 # time.sleep(1)
-topic = "test-id"
+controller_id = "test-id"
+ucpe_sn = "test-sn"
+
 messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
     "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
              "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
-call_ucpe_function(messagedata, topic)
+messagedata = json.dumps(messagedata)
+call_ucpe_function(messagedata, controller_id, ucpe_sn)
 # messagedata = json.dumps(messagedata)
 # print("%s %s" % (topic, messagedata))
 # socket_pub.send_string(topic, zmq.SNDMORE)
