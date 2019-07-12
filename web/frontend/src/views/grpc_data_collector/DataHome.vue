@@ -16,7 +16,7 @@
           <br>
           <div class='info'>
               <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
-             <strong>Data Collector on uCPE (IP address) </strong>
+             <strong>Data Collector on uCPE (IP address) {{endpoint}}</strong>
              <span class="badge badge-success">Running</span>
              <hr>
 
@@ -58,6 +58,14 @@ export default class DataHome extends Vue {
             endpoint: '',
             content: ''
         };
+    }
+    mounted() {
+        this.axios.get("/api/data-collect/get_cpu_count").then(response => {
+            // console.log(typeof (response.data.result))
+            // var obj = JSON.parse(response.data.result)
+            // console.log('obj', obj['return'])
+            this.endpoint = response.data.result
+        });
     }
 
 }
