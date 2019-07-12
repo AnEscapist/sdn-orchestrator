@@ -6,6 +6,9 @@ import sys
 from jsonrpc import JSONRPCResponseManager, dispatcher, Dispatcher
 
 sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
+sys.path.append('/home/att-pc-7/Zhengi/Project/sdn-orchestrator/')
+sys.path.append('/home/att/projects/sdn-orchestrator/')
+
 from ucpe.libvirt_controller.libvirt_controller import *
 from ucpe.docker_controller.docker_controller import *
 from ucpe.grpc_data_collector.grpc_data_collector import *
@@ -45,19 +48,19 @@ class test1:
 
     @staticmethod
     def test1_1(*args, **kwargs):
-        return "test1_1"	
+        return "test1_1"
 
-    @staticmethod		
+    @staticmethod
     def test1_2(*args, **kwargs):
         return "test1_2"
 
 class test2:
 
-    @staticmethod    
+    @staticmethod
     def test2_1(*args, **kwargs):
-        return "test2_1"	
+        return "test2_1"
 
-    @staticmethod	
+    @staticmethod
     def test2_2(*args, **kwargs):
         return "test2_2"
 
@@ -70,8 +73,8 @@ class test2:
 def server_routine():
     d = Dispatcher()
     d.build_method_map(LibvirtController)
-    d.build_method_map(DockerController)
     d.build_method_map(gRPCDataCollector)
+    d.build_method_map(DockerController)
 
     print("Collecting updates from server...")
     socket_sub.connect("tcp://localhost:%s" % port_sub)
