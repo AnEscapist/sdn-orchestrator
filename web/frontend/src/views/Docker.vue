@@ -7,6 +7,8 @@
         <!-- <router-link to="/login">Login</router-link> |
         <router-link to="/docker">Docker</router-link>
         <DSidebar></DSidebar> -->
+        <DSidebar></DSidebar>
+        <NavBar></NavBar>
         <router-view></router-view>
       </div>
 
@@ -17,7 +19,8 @@
 </template>
 
 <script>
-import DSidebar from '@/components/DSidebar.vue'
+import DSidebar from '@/components/DSidebar.vue';
+import NavBar from '@/components/NavBar.vue'
 
 export default {
     name: 'docker',
@@ -28,7 +31,8 @@ export default {
 
     },
     components: {
-        DSidebar
+        DSidebar,
+        NavBar
     }
 }
 </script>

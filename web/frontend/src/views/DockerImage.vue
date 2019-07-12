@@ -1,6 +1,5 @@
 <template>
 <div class="dockerimage">
-    <NavBar></NavBar>
 
     <div class="content">
         <div class='header'>

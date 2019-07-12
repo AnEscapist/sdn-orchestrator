@@ -10,8 +10,6 @@
 
 <!--    </div>-->
 
-    <NavBar></NavBar>
-
     <div class="content">
         <div class='header'>
             <strong>Container</strong>
