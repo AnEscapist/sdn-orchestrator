@@ -65,13 +65,12 @@ def sub_response(queue, ucpe_sn, request_id):
     socket_sub.connect("tcp://%s:%s" % (BROKER_IP, port_sub))
     topic = get_topic(ucpe_sn, request_id)
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, topic)
-    while True: #does this block?
-        received = socket_sub.recv().decode('ASCII')
-        topic, message = received.split(" ", 1)
-        print(topic, message)
-        response = json.loads(message)
-        queue.put(response)
-        return response
+    received = socket_sub.recv().decode('ASCII')
+    topic, message = received.split(" ", 1)
+    print(topic, message)
+    response = json.loads(message)
+    queue.put(response)
+    return response
 
 # creating thread
 # t1 = threading.Thread(target=sub_response)
@@ -88,7 +87,7 @@ if __name__ == "__main__":
     messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
         "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
-    #print(call_ucpe_function(messagedata, controller_id, ucpe_sn))
+    print(call_ucpe_function(messagedata, controller_id, ucpe_sn))
     # number_of_threads = 1
     # sleep_time = 0.001
     # threads = []
