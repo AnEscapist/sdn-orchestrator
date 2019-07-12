@@ -47,12 +47,28 @@
                       </td>
                       <td>-</td>
                   </tr>
-                  {{endpoint}}
               </table>
          </div>
          <div class='info'>
-            <strong>Content: </strong>{{content}} - get from remote api
+             <table>
+                 <tr>
+                     <td width='200px'>
+                         <strong>Info: </strong>
+                         <font-awesome-icon :icon="['fas', 'info-circle']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                     </td>
+
+                     <td width='60px'>
+                         <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                         {{containers.length}}
+                     </td>
+                     <td>
+                         <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                         {{images}}
+                     </td>
+                 </tr>
+             </table>
         </div>
+
       </div>
 
   </div>
@@ -71,17 +87,23 @@ export default class Dashboard extends Vue {
     name: 'dashboard'
     data() {
         return {
-            endpoint: '',
+            containers: [],
+            images: [],
             content: ''
         };
     }
     mounted() {
-        this.axios.get("/api/docker/abcde").then(response => {
-
-            console.log(typeof(response.data.result))
-            var obj = JSON.parse(response.data.result)
-            console.log('obj', obj['return'])
-            this.endpoint = response.data.result
+        this.axios.get("/api/docker/list_containers").then(response => {
+            var res = JSON.parse(response.data.result)['return']
+            var containers = res.substring(res.indexOf('[')+1, res.indexOf(']')).split(',')
+            this.containers = containers
+        });
+        this.axios.get("/api/docker/list").then(response => {
+            console.log(response.data)
+            //var res = JSON.parse(response.data.result)['return']
+            //var images = res
+            //var images = res.substring(res.indexOf('[')+1, res.indexOf(']')).split(',')
+            this.images = response.data
         });
     }
 }

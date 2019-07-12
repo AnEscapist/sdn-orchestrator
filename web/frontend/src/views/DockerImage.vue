@@ -51,7 +51,7 @@
                 <br>
                 <p class="note">
                     <font-awesome-icon :icon="['fas', 'exclamation-triangle']" size=sm />
-                    Note: if you don't specify the tag in the image name,  <span class="badge badge-pill badge-info">latest</span> will be used.</p>
+                    Note: if you don't specify the tag of the image,  <span class="badge badge-pill badge-info">latest</span> will be used.</p>
             </div>
             <button type="button" class="btn btn-primary">
                 <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=lg />
