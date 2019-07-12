@@ -1,7 +1,6 @@
 <template>
 <div class="dockerdashboard">
 
-    <NavBar></NavBar>
     <div class="content">
 
         <div class='header'>

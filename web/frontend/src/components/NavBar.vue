@@ -4,7 +4,8 @@
         <router-link to="/about">About</router-link> | -->
         <router-link to="/docker">Docker</router-link> |
         <router-link to="/vms">Virtual Machines</router-link> |
-        <router-link to="/data-collect">Data Collection</router-link>
+        <router-link to="/data-collect">Data Collection</router-link> |
+        <router-link to="/login">Log out</router-link>
     </div>
 </template>
 
