@@ -7,6 +7,8 @@ from jsonrpc import JSONRPCResponseManager, dispatcher, Dispatcher
 
 sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
 from ucpe.libvirt_controller.libvirt_controller import *
+from ucpe.docker_controller.docker_controller import *
+from ucpe.grpc_data_collector.grpc_data_collector import *
 
 import signal
 
@@ -68,6 +70,8 @@ class test2:
 def server_routine():
     d = Dispatcher()
     d.build_method_map(LibvirtController)
+    d.build_method_map(DockerController)
+    d.build_method_map(gRPCDataCollector)
 
     print("Collecting updates from server...")
     socket_sub.connect("tcp://localhost:%s" % port_sub)
