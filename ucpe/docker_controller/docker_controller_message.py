@@ -103,6 +103,14 @@ def json_file_message(path, func):
     }
     return json_str(message)
 
+def client_info_message(info, path,func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Information retrieved successfully and json file {path} created!',
+        'return': f'{json.dumps(info)}.'
+    }
+    return json_str(message)
+
 def container_list_message(list, all, func):
     if all:
         message = {

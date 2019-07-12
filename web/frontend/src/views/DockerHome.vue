@@ -38,14 +38,7 @@
                     </td>
 
 
-                    <td width='60px'>
-                        <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                        {{containers.length}}
-                    </td>
-                    <td>
-                        <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                        {{images.length}}
-                    </td>
+
                 </tr>
             </table>
 
@@ -106,8 +99,8 @@ export default class DockerHome extends Vue {
             this.images = images
         });
         this.axios.get("/api/docker/client_info").then(response => {
-            console.log(response)
-            var res = JSON.parse(response.data.result)['return']
+            console.log(response.data.result)
+            var res = JSON.parse(response.data.result)
             var client = res
             this.client = client
         });
