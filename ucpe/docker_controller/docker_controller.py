@@ -162,8 +162,9 @@ def client_info(path='ClientInfo.json'):
     json_str = json.dumps(info, indent=4)
     try:
         with open(path, 'w') as json_file:
-            json_file.write(json_str)x
-            return client_info_message(info, path, func)
+            json_file.write(json_str)
+            #return json_file_message(path, func)
+            return client_info_message(json_str, path, func)
     except FileNotFoundError:
         return fnf_error(path, func)
 #===========================docker client end=========================
