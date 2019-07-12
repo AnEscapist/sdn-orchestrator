@@ -22,10 +22,6 @@ def list_containers():
         "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
 
-<<<<<<< HEAD
-=======
-    # return jsonify(name='ucpe', email='alkjdflk@gmail.com')
->>>>>>> 2400704f1cee0c5291fc186f441248fd9dcaa246
     return jsonify(call_ucpe_function(messagedata))
 
 @docker_routes.route('/docker/list')
