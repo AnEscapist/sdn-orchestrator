@@ -1,5 +1,5 @@
 <template>
-<div class="dashboard">
+<div class="dockerdashboard">
 
     <NavBar></NavBar>
     <div class="content">
@@ -82,8 +82,8 @@ import NavBar from '@/components/NavBar.vue'
         NavBar
     },
 })
-export default class Dashboard extends Vue {
-    name: 'dashboard'
+export default class DockerDashboard extends Vue {
+    name: 'dockerdashboard'
     data() {
         return {
             containers: [],
