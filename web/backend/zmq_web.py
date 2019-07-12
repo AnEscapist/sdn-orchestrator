@@ -1,21 +1,13 @@
 import sys
 sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
+sys.path.append('/home/att-pc-7/Zhengqi/Project/sdn-orchestrator/')
+sys.path.append('/home/att/projects/sdn-orchestrator/')
 import zmq
-import random
 import time
 import threading
 import json
 import queue
 import signal
-from flask import Flask, escape, request, jsonify
-from web.backend.libvirt.libvirt_routes import libvirt_routes
-from web.backend.docker.docker_routes import docker_routes
-from web.backend.grpc_data_collector.grpc_routes import grpc_routes
-
-app = Flask(__name__)
-app.register_blueprint(libvirt_routes)
-app.register_blueprint(docker_routes)
-app.register_blueprint(grpc_routes)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -88,15 +80,14 @@ def sub_response(queue, ucpe_sn, request_id):
 # t1.start()
 #
 # time.sleep(1)
-controller_id = "test-id"
-ucpe_sn = "test-sn"
-
-messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
-    "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
-             "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
 
 if __name__ == "__main__":
-    app.run(threaded=True)
+    controller_id = "test-id"
+    ucpe_sn = "test-sn"
+
+    messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
+        "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     #print(call_ucpe_function(messagedata, controller_id, ucpe_sn))
     # number_of_threads = 1
     # sleep_time = 0.001
