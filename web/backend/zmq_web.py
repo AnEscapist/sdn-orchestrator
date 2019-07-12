@@ -88,7 +88,7 @@ if __name__ == "__main__":
     #     "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
     #              "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     # print(call_ucpe_function(messagedata, controller_id, ucpe_sn))
-    # docker_md = {"method": "docker_controller_list_containers", "params": {
+    # docker_md = {"method": "docker_controller_list_images", "params": {
     #     "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
     #              "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     # docker_md = {"method": "docker_controller_list_containers", "params": {
