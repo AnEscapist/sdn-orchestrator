@@ -1,5 +1,5 @@
 import Libvirt from './views/libvirt/Docker.vue';
-import Dashboard from './views/libvirt/LibvirtDashboard.vue';
+import Dashboard from '../views/libvirt/LibvirtDashboard.vue';
 import LibvirtContainer from './views/libvirt/DockerContainer.vue';
 import LibvirtHome from './views/libvirt/DockerHome.vue'
 import LibvirtImage from './views/libvirt/DockerImage.vue'
