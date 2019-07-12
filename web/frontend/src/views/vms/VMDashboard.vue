@@ -67,8 +67,9 @@ import DSidebar from '@/components/DSidebar.vue';
       DSidebar,
   },
 })
+
 export default class Dashboard extends Vue {
-    name: 'dashboard'
+    name: 'vm-dashboard';
     data() {
         return {
             endpoint: '',

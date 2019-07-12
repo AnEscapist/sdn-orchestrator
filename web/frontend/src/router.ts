@@ -10,7 +10,8 @@ import DockerContainer from './views/DockerContainer.vue';
 import DockerHome from './views/DockerHome.vue'
 import DockerImage from './views/DockerImage.vue'
 import grpc_routes from './router/grpc_router'
-
+import vm_routes from "@/router/vm_routes";
+import docker_routes from '@/router/docker_routes'
 
 Vue.use(Router);
 
@@ -37,40 +38,9 @@ export default new Router({
             name: 'login',
             component: Login,
         },
-        {
-            path: '/docker',
-            name: 'docker',
-            redirect: '/docker/dockerhome',
-            component: Docker,
-            children: [
-                {
-                    path: 'dockerhome',
-                    name: 'dockerhome',
-                    component: DockerHome,
-                },
-                {
-                    path: 'dashboard',
-                    name: 'dashboard',
-                    component: Dashboard
-                },
-                {
-                    path: 'dockercontainer',
-                    name: 'dockercontainer',
-                    component: DockerContainer
-                },
-                {
-                    path: 'dockerimage',
-                    name: 'dockerimage',
-                    component: DockerImage
-                }
-                // {
-                //     path: 'image',
-                //     name: 'image',
-                //     component: Image
-                // }
-            ]
-        },
+        ...docker_routes,
         ...grpc_routes,
+        ...vm_routes
         // {
         //     path: '/dashboard',
         //     name: 'dashboard',

@@ -42,7 +42,7 @@ import NavBar from '@/components/NavBar.vue';
         NavBar
     },
 })
-export default class DockerContainer extends Vue {
+export default class VMContainer extends Vue {
     name: 'dashboard';
     data() {
         return {
