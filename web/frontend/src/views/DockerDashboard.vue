@@ -1,87 +1,86 @@
 <template>
-  <div class="dashboard">
-      <div id="nav">
-        <!-- <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link> | -->
+<div class="dashboard">
 
-        <router-link to="/login">Login</router-link> |
-        <router-link to="/docker">Docker</router-link>
-        <DSidebar></DSidebar>
+    <NavBar></NavBar>
+    <div class="content">
 
-      </div>
+        <div class='header'>
 
-      <div class="content">
+            <strong>Endpoint info</strong>
+            <font-awesome-icon :icon="['fas', 'tachometer-alt']" size=lg pull='left' color="black" />
+        </div>
+        <div class='info'>
+            <table>
+                <tr>
+                    <td width='200px'><strong>Endpoint</strong></td>
+                    <td>local
+                        <font-awesome-icon :icon="['fas', 'microchip']" size=sm color='rgb(111, 111, 111)' /> 8
+                        <font-awesome-icon :icon="['fas', 'memory']" size=sm color='rgb(111, 111, 111)' /> 16.7GB
+                        - Standalone 18.09.5
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class='info'>
+            <table>
+                <tr>
+                    <td width='200px'>
+                        <strong>URL </strong>
+                        <font-awesome-icon :icon="['fas', 'link']" size=sm color='rgb(111, 111, 111)' />
+                    </td>
+                    <td>/var/run/docker.sock</td>
+                </tr>
+            </table>
+        </div>
+        <div class='info'>
+            <table>
+                <tr>
+                    <td width='200px'>
+                        <strong>Tags </strong>
+                        <font-awesome-icon :icon="['fas', 'tags']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                    </td>
+                    <td>-</td>
+                </tr>
+            </table>
+        </div>
+        <div class='info'>
+            <table>
+                <tr>
+                    <td width='200px'>
+                        <strong>Info: </strong>
+                        <font-awesome-icon :icon="['fas', 'info-circle']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                    </td>
 
-          <div class='header'>
-
-             <strong>Endpoint info</strong><font-awesome-icon :icon="['fas', 'tachometer-alt']" size=lg pull='left' color="black"/>
-          </div>
-          <div class='info'>
-              <table>
-                  <tr>
-                      <td width='200px'><strong>Endpoint</strong></td>
-                      <td>local <font-awesome-icon :icon="['fas', 'microchip']" size=sm color='rgb(111, 111, 111)'/> 8
-                           <font-awesome-icon :icon="['fas', 'memory']" size=sm color='rgb(111, 111, 111)'/> 16.7GB
-                           - Standalone 18.09.5
-                      </td>
-                  </tr>
-              </table>
-         </div>
-          <div class='info'>
-              <table>
-                  <tr>
-                      <td width='200px'>
-                          <strong>URL </strong>
-                          <font-awesome-icon :icon="['fas', 'link']" size=sm color='rgb(111, 111, 111)'/>
-                      </td>
-                      <td>/var/run/docker.sock</td>
-                  </tr>
-              </table>
-         </div>
-          <div class='info'>
-              <table>
-                  <tr>
-                      <td width='200px'>
-                          <strong>Tags </strong>
-                          <font-awesome-icon :icon="['fas', 'tags']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                      </td>
-                      <td>-</td>
-                  </tr>
-              </table>
-         </div>
-         <div class='info'>
-             <table>
-                 <tr>
-                     <td width='200px'>
-                         <strong>Info: </strong>
-                         <font-awesome-icon :icon="['fas', 'info-circle']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                     </td>
-
-                     <td width='60px'>
-                         <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                         {{containers.length}}
-                     </td>
-                     <td>
-                         <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                         {{images.length}}
-                     </td>
-                 </tr>
-             </table>
+                    <td width='60px'>
+                        <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                        {{containers.length}}
+                    </td>
+                    <td>
+                        <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                        {{images.length}}
+                    </td>
+                </tr>
+            </table>
         </div>
 
-      </div>
+    </div>
 
-  </div>
+</div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import {
+    Component,
+    Vue
+} from 'vue-property-decorator';
 import DSidebar from '@/components/DSidebar.vue';
+import NavBar from '@/components/NavBar.vue'
 
 @Component({
-  components: {
-      DSidebar,
-  },
+    components: {
+        DSidebar,
+        NavBar
+    },
 })
 export default class Dashboard extends Vue {
     name: 'dashboard'
@@ -95,12 +94,12 @@ export default class Dashboard extends Vue {
     mounted() {
         this.axios.get("/api/docker/list_containers").then(response => {
             var res = JSON.parse(response.data.result)['return']
-            var containers = res.substring(res.indexOf('[')+1, res.indexOf(']')).split(',')
+            var containers = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
             this.containers = containers
         });
         this.axios.get("/api/docker/list_images").then(response => {
             var res = JSON.parse(response.data.result)['return']
-            var images = res.substring(res.indexOf('[')+1, res.indexOf(']')).split(',')
+            var images = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
             this.images = images
         });
     }
