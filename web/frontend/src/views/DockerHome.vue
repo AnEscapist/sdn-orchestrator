@@ -84,7 +84,7 @@ export default class DockerHome extends Vue {
         return {
             containers: [],
             images: [],
-            client: 'x'
+            client: ''
         };
     }
     mounted() {
@@ -99,9 +99,11 @@ export default class DockerHome extends Vue {
             this.images = images
         });
         this.axios.get("/api/docker/client_info").then(response => {
-            console.log(response.data.result)
             var res = JSON.parse(response.data.result)
-            var client = res
+
+            var client = res['return']
+            console.log(client)
+            // x = JSON.parse(client)
             this.client = client
         });
     }
