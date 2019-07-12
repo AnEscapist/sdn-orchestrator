@@ -76,14 +76,10 @@ export default class Dashboard extends Vue {
         };
     }
     mounted() {
-        this.axios.get("/api/docker/abcde").then(response => {
+        this.axios.get("/api/docker/hello").then(response => {
             console.log(response)
             this.endpoint = response.data
         });
-        this.axios.post("http://api.komavideo.com/news/list").then(response => {
-            console.log(response)
-            this.content = response.data[0].title;
-        })
     }
 }
 </script>
