@@ -6,7 +6,7 @@
 
         <router-link to="/login">Login</router-link> |
         <router-link to="/docker">Docker</router-link>
-        <router-link to="/data-collect">Data collector</router-link>
+        <router-link to="/data-collect/dashboard">Data collector</router-link>
         <DSidebar></DSidebar>
 
       </div>
@@ -72,17 +72,25 @@ export default class Dashboard extends Vue {
     name: 'data-dashboard'
     data() {
         return {
+            devices: [],
             endpoint: '',
             content: ''
         };
     }
     mounted() {
-        this.axios.get("/api/data-collect/dashboard").then(response => {
+        this.axios.get("/api/data-collect/get_cpu_count").then(response => {
 
             console.log(typeof(response.data.result))
             var obj = JSON.parse(response.data.result)
             console.log('obj', obj['return'])
             this.endpoint = response.data.result
+        });
+
+        this.axios.get("/api/data-collect/get_dpdk_devices").then(response => {
+
+            var res = JSON.parse(response.data.result)['return']
+            var containers = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
+            this.devices = containers
         });
     }
 }
