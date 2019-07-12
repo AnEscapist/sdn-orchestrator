@@ -1,5 +1,7 @@
 import sys
 sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
+sys.path.append('/home/att-pc-7/Zhengqi/Project/sdn-orchestrator/')
+sys.path.append('/home/att/projects/sdn-orchestrator/')
 import zmq
 import random
 import time
