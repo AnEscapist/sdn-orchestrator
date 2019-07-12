@@ -77,8 +77,11 @@ export default class Dashboard extends Vue {
     }
     mounted() {
         this.axios.get("/api/docker/abcde").then(response => {
-            console.log(response)
-            this.endpoint = response.data
+
+            console.log(typeof(response.data.result))
+            var obj = JSON.parse(response.data.result)
+            console.log('obj', obj['return'])
+            this.endpoint = response.data.result
         });
     }
 }
