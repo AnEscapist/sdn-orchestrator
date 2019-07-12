@@ -108,7 +108,7 @@ def container_list_message(list, all, func):
         message = {
             'function': f'<{func.__name__}>',
             'success message': 'All containers are listed!',
-            'return': f'{list}'
+            'return': f'LIST: {list}'
         }
     else:
         message = {
