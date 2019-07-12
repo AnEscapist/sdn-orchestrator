@@ -4,7 +4,7 @@ import LibvirtContainer from './views/libvirt/DockerContainer.vue';
 import LibvirtHome from './views/libvirt/DockerHome.vue'
 import LibvirtImage from './views/libvirt/DockerImage.vue'
 
-libvirt_routes =  [
+const libvirt_routes =  [
     {
         path: '/libvirt',
         name: 'libvirt',
