@@ -6,6 +6,7 @@
 
         <router-link to="/login">Login</router-link> |
         <router-link to="/docker">Docker</router-link>
+        <router-link to="/data-collect">Data collector</router-link>
         <DSidebar></DSidebar>
 
       </div>

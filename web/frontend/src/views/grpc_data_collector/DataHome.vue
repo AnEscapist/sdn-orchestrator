@@ -1,10 +1,11 @@
 <template>
-  <div class="dockerhome">
+  <div class="datahome">
 
       <div id="nav">
 
         <router-link to="/login">Login</router-link> |
-        <router-link to="/docker">Docker</router-link>
+        <router-link to="/docker">Docker</router-link> |
+        <router-link to="/data-collect">Data collector</router-link>
         <DSidebar></DSidebar>
 
       </div>
@@ -15,7 +16,7 @@
           <br>
           <div class='info'>
               <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
-             <strong>Docker on uCPE (IP address) </strong>
+             <strong>Data Collector on uCPE (IP address) </strong>
              <span class="badge badge-success">Running</span>
              <hr>
 
@@ -23,7 +24,7 @@
          <br>
          <div class='info'>
              <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
-            <strong>Docker on uCPE (IP address) </strong>
+            <strong>Data Collector on uCPE (IP address) </strong>
             <span class="badge badge-danger">Exited</span>
             <hr>
 
@@ -31,7 +32,7 @@
         <br>
         <div class='info'>
             <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
-           <strong>Docker on uCPE (IP address) </strong>
+           <strong>Data Collector on uCPE (IP address) </strong>
            <span class="badge badge-warning">Paused</span>
            <hr>
 
@@ -50,8 +51,8 @@ import DSidebar from '@/components/DSidebar.vue';
       DSidebar,
   },
 })
-export default class DockerHome extends Vue {
-    name: 'dockerhome'
+export default class DataHome extends Vue {
+    name: 'datahome'
     data() {
         return {
             endpoint: '',
