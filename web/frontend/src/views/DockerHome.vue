@@ -1,13 +1,7 @@
 <template>
 <div class="dockerhome">
 
-    <div id="nav">
-
-        <router-link to="/login">Login</router-link> |
-        <router-link to="/docker">Docker</router-link>
-        <DSidebar></DSidebar>
-
-    </div>
+    <NavBar></NavBar>
     <div class="content">
         <div class='header'>
             <strong>Home</strong>
@@ -66,10 +60,11 @@ import {
     Vue
 } from 'vue-property-decorator';
 import DSidebar from '@/components/DSidebar.vue';
+import NavBar from '@/components/NavBar';
 
 @Component({
     components: {
-        DSidebar,
+        DSidebar, NavBar
     },
 })
 export default class DockerHome extends Vue {
