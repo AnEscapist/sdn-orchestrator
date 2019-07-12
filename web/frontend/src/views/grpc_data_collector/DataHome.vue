@@ -1,5 +1,5 @@
 <template>
-  <div class="datahome">
+  <div class="data-home">
 
       <div id="nav">
 
@@ -52,7 +52,7 @@ import DSidebar from '@/components/DSidebar.vue';
   },
 })
 export default class DataHome extends Vue {
-    name: 'datahome'
+    name: 'data-home'
     data() {
         return {
             endpoint: '',
