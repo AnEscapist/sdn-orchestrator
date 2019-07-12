@@ -28,100 +28,100 @@ class DockerController(object):
             '''
 
 
-        @staticmethod
-        def docker_controller_client_info(**kwargs):
-            func = client_info
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_client_info(**kwargs):
+        func = client_info
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_list_containers(**kwargs):
-            func = list_containers
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_list_containers(**kwargs):
+        func = list_containers
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_list_images(**kwargs):
-            func = list_images
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_list_images(**kwargs):
+        func = list_images
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_containers_status(**kwargs):
-            func = containers_status
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_containers_status(**kwargs):
+        func = containers_status
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_containers_info(**kwargs):
-            func = containers_info
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_containers_info(**kwargs):
+        func = containers_info
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_images_info(**kwargs):
-            func = images_info
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_images_info(**kwargs):
+        func = images_info
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_commit(**kwargs):
-            func = commit
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_commit(**kwargs):
+        func = commit
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_save_image(**kwargs):
-            func = save_image
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_save_image(**kwargs):
+        func = save_image
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_export_container(**kwargs):
-            func = export_container
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_export_container(**kwargs):
+        func = export_container
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_create_image(**kwargs):
-            func = create_image
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_create_image(**kwargs):
+        func = create_image
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_pull_image(**kwargs):
-            func = pull_image
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_pull_image(**kwargs):
+        func = pull_image
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_create_container(**kwargs):
-            func = create_container
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_create_container(**kwargs):
+        func = create_container
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_change_status(**kwargs):
-            func = change_status
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_change_status(**kwargs):
+        func = change_status
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_inspect_container(**kwargs):
-            func = inspect_container
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_inspect_container(**kwargs):
+        func = inspect_container
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_create_network(**kwargs):
-            func = create_network
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_create_network(**kwargs):
+        func = create_network
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_connect_container(**kwargs):
-            func = connect_container
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_connect_container(**kwargs):
+        func = connect_container
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_disconnect_container(**kwargs):
-            func = disconnect_container
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_disconnect_container(**kwargs):
+        func = disconnect_container
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_remove_network(**kwargs):
-            func = remove_network
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_remove_network(**kwargs):
+        func = remove_network
+        return _call_function(func, **kwargs)
 
-        @staticmethod
-        def docker_controller_create_volume(**kwargs):
-            func = create_volume
-            return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_create_volume(**kwargs):
+        func = create_volume
+        return _call_function(func, **kwargs)
 
 # =====================================private functions======================#
 
@@ -165,7 +165,3 @@ def client_info(path='ClientInfo.json'):
     except FileNotFoundError:
         return fnf_error(path, func)
 #===========================docker client end=========================
-
-
-
-
