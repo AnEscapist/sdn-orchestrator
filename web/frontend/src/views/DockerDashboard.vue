@@ -80,7 +80,7 @@ export default class Dashboard extends Vue {
 
             console.log(typeof(response.data.result))
             var obj = JSON.parse(response.data.result)
-            console.log('obj', obj['return'])
+            // console.log('obj', obj['return'])
             this.endpoint = response.data.result
         });
     }

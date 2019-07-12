@@ -70,7 +70,7 @@ export default new Router({
                 // }
             ]
         },
-        grpc_routes,
+        ...grpc_routes,
         // {
         //     path: '/dashboard',
         //     name: 'dashboard',
