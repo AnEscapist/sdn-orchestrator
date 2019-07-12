@@ -1,28 +1,47 @@
 <template>
-  <div class="dockerhome">
+<div class="dockerhome">
 
-      <div id="nav">
+    <div id="nav">
 
         <router-link to="/login">Login</router-link> |
         <router-link to="/docker">Docker</router-link>
         <DSidebar></DSidebar>
 
-      </div>
-      <div class="content">
-          <div class='header'>
-             <strong>Home</strong><font-awesome-icon :icon="['fas', 'home']" size=lg pull='left' color="black"/>
-          </div>
-          <br>
-          <div class='info'>
-              <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
-             <strong>Docker on uCPE (IP address) </strong>
-             <span class="badge badge-success">Running</span>
-             <hr>
+    </div>
+    <div class="content">
+        <div class='header'>
+            <strong>Home</strong>
+            <font-awesome-icon :icon="['fas', 'home']" size=lg pull='left' color="black" />
+        </div>
+        <br>
+        <div class='info'>
+            <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)' />
+            <strong>Docker on uCPE (IP address) </strong>
+            <span class="badge badge-success">Running</span>
+            <hr>
+            <table>
+                <tr>
+                    <td width='30px'></td>
+                    <td width='200px'>
+                        <font-awesome-icon :icon="['fas', 'info-circle']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                        <strong> Info: </strong>
+                    </td>
 
-         </div>
-         <br>
-         <div class='info'>
-             <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
+                    <td width='60px'>
+                        <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                        {{containers.length}}
+                    </td>
+                    <td>
+                        <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                        {{images.length}}
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <br>
+        <div class='info'>
+            <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)' />
             <strong>Docker on uCPE (IP address) </strong>
             <span class="badge badge-danger">Exited</span>
             <hr>
@@ -30,33 +49,48 @@
         </div>
         <br>
         <div class='info'>
-            <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
-           <strong>Docker on uCPE (IP address) </strong>
-           <span class="badge badge-warning">Paused</span>
-           <hr>
+            <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)' />
+            <strong>Docker on uCPE (IP address) </strong>
+            <span class="badge badge-warning">Paused</span>
+            <hr>
 
-       </div>
-      </div>
+        </div>
+    </div>
 
-  </div>
+</div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import {
+    Component,
+    Vue
+} from 'vue-property-decorator';
 import DSidebar from '@/components/DSidebar.vue';
 
 @Component({
-  components: {
-      DSidebar,
-  },
+    components: {
+        DSidebar,
+    },
 })
 export default class DockerHome extends Vue {
     name: 'dockerhome'
     data() {
         return {
-            endpoint: '',
-            content: ''
+            containers: [],
+            images: []
         };
+    }
+    mounted() {
+        this.axios.get("/api/docker/list_containers").then(response => {
+            var res = JSON.parse(response.data.result)['return']
+            var containers = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
+            this.containers = containers
+        });
+        this.axios.get("/api/docker/list_images").then(response => {
+            var res = JSON.parse(response.data.result)['return']
+            var images = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
+            this.images = images
+        });
     }
 
 }

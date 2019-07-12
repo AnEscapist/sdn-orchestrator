@@ -63,7 +63,7 @@
                      </td>
                      <td>
                          <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                         {{images}}
+                         {{images.length}}
                      </td>
                  </tr>
              </table>
@@ -98,12 +98,10 @@ export default class Dashboard extends Vue {
             var containers = res.substring(res.indexOf('[')+1, res.indexOf(']')).split(',')
             this.containers = containers
         });
-        this.axios.get("/api/docker/list").then(response => {
-            console.log(response.data)
-            //var res = JSON.parse(response.data.result)['return']
-            //var images = res
-            //var images = res.substring(res.indexOf('[')+1, res.indexOf(']')).split(',')
-            this.images = response.data
+        this.axios.get("/api/docker/list_images").then(response => {
+            var res = JSON.parse(response.data.result)['return']
+            var images = res.substring(res.indexOf('[')+1, res.indexOf(']')).split(',')
+            this.images = images
         });
     }
 }
