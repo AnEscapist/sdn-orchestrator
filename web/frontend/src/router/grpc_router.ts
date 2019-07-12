@@ -5,13 +5,13 @@ import LibvirtHome from "*.vue";
 const grpc_routes = [
     {
         path: '/data-collect',
-        name: 'home',
+        name: 'data-home',
         redirect: '/data-collect/home',
         component: Home,
         children: [
             {
                 path: 'dashboard',
-                name: 'dashboard',
+                name: 'data-dashboard',
                 component: Dashboard
             }
         ]

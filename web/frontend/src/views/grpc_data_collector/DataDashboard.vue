@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div class="data-dashboard">
       <div id="nav">
         <!-- <router-link to="/">Home</router-link> |
         <router-link to="/about">About</router-link> | -->
@@ -69,7 +69,7 @@ import DSidebar from '@/components/DSidebar.vue';
   },
 })
 export default class Dashboard extends Vue {
-    name: 'dashboard'
+    name: 'data-dashboard'
     data() {
         return {
             endpoint: '',
