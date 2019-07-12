@@ -1,14 +1,6 @@
 <template>
 <div class="dockerimage">
-    <div id="nav">
-        <!-- <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link> | -->
-
-        <router-link to="/login">Login</router-link> |
-        <router-link to="/docker">Docker</router-link>
-        <DSidebar></DSidebar>
-
-    </div>
+    <NavBar></NavBar>
 
     <div class="content">
         <div class='header'>
@@ -51,7 +43,7 @@
                 <br>
                 <p class="note">
                     <font-awesome-icon :icon="['fas', 'exclamation-triangle']" size=sm />
-                    Note: if you don't specify the tag of the image,  <span class="badge badge-pill badge-info">latest</span> will be used.</p>
+                    Note: if you don't specify the tag of the image, <span class="badge badge-pill badge-info">latest</span> will be used.</p>
             </div>
             <button type="button" class="btn btn-primary">
                 <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=lg />
@@ -73,10 +65,12 @@ import {
     Vue
 } from 'vue-property-decorator';
 import DSidebar from '@/components/DSidebar.vue';
+import NavBar from '@/components/NavBar.vue'
 
 @Component({
     components: {
         DSidebar,
+        NavBar
     },
 })
 export default class DockerContainer extends Vue {

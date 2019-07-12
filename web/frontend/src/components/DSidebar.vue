@@ -4,7 +4,7 @@
 
         <font-awesome-icon :icon="['fab', 'docker']" size=5x color='white'/><br><br>
 
-        <router-link to="/docker/dashboard">
+        <router-link to="/docker/dockerdashboard">
             <button class="sidebar-item">
                 <strong>Dashboard</strong><font-awesome-icon :icon="['fas', 'tachometer-alt']" size=lg pull='right' color="white"/>
             </button>

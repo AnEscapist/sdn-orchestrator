@@ -64,7 +64,8 @@ import NavBar from '@/components/NavBar';
 
 @Component({
     components: {
-        DSidebar, NavBar
+        DSidebar,
+        NavBar
     },
 })
 export default class DockerHome extends Vue {
