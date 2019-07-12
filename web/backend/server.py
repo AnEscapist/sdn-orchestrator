@@ -20,7 +20,6 @@ def get_containers():
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
 
     #return jsonify(name='ucpe', email='alkjdflk@gmail.com')
-    print(jsonify(call_ucpe_function(messagedata)))
     return jsonify(call_ucpe_function(messagedata))
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
