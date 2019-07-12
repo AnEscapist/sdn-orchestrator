@@ -5,17 +5,12 @@
         <router-link to="/docker">Docker</router-link> |
         <router-link to="/vms">Virtual Machines</router-link> |
         <router-link to="/data-collect">Data Collection</router-link>
-        <DSidebar></DSidebar>
     </div>
 </template>
 
 <script>
-    import DSidebar from './DSidebar'
     export default {
         name: "navbar",
-        components:{
-            DSidebar,
-        }
     }
 </script>
 
