@@ -1,11 +1,12 @@
 <template>
-<div class="dockerimage">
+<div class="libvirtimage">
     <div id="nav">
         <!-- <router-link to="/">Home</router-link> |
         <router-link to="/about">About</router-link> | -->
 
         <router-link to="/login">Login</router-link> |
         <router-link to="/docker">Docker</router-link>
+        <router-link to="/libvirt">Libvirt</router-link>
         <DSidebar></DSidebar>
 
     </div>
@@ -43,7 +44,7 @@
                         <td>
                             <form class="form-inline">
                                 <strong style="font-size:20px">Repository: &nbsp</strong>
-                                <input type="text" class="form-control mb-2 mr-sm-2" id="inlineFormInputName2" placeholder="docker hub">
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="inlineFormInputName2" placeholder="libvirt hub">
                             </form>
                         </td>
                     </tr>

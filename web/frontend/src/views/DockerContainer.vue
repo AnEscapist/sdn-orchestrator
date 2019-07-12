@@ -1,14 +1,16 @@
 <template>
 <div class="dockercontainer">
-    <div id="nav">
-        <!-- <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link> | -->
+<!--    <div id="nav">-->
+<!--        &lt;!&ndash; <router-link to="/">Home</router-link> |-->
+<!--        <router-link to="/about">About</router-link> | &ndash;&gt;-->
 
-        <router-link to="/login">Login</router-link> |
-        <router-link to="/docker">Docker</router-link>
-        <DSidebar></DSidebar>
+<!--        <router-link to="/login">Login</router-link> |-->
+<!--        <router-link to="/docker">Docker</router-link>-->
+<!--        <DSidebar></DSidebar>-->
 
-    </div>
+<!--    </div>-->
+
+    <NavBar></NavBar>
 
     <div class="content">
         <div class='header'>
@@ -43,10 +45,11 @@ import {
     Vue
 } from 'vue-property-decorator';
 import DSidebar from '@/components/DSidebar.vue';
+import NavBar from "@/components/NavBar.vue";
 
 @Component({
     components: {
-        DSidebar,
+        DSidebar, NavBar
     },
 })
 export default class DockerContainer extends Vue {

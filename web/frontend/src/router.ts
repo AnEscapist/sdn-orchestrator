@@ -9,6 +9,7 @@ import Dashboard from './views/DockerDashboard.vue';
 import DockerContainer from './views/DockerContainer.vue';
 import DockerHome from './views/DockerHome.vue'
 import DockerImage from './views/DockerImage.vue'
+import grpc_routes from './router/grpc_router'
 
 
 Vue.use(Router);
@@ -69,6 +70,7 @@ export default new Router({
                 // }
             ]
         },
+        ...grpc_routes,
         // {
         //     path: '/dashboard',
         //     name: 'dashboard',
