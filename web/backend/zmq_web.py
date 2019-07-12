@@ -84,10 +84,17 @@ if __name__ == "__main__":
     controller_id = "test-id"
     ucpe_sn = "test-sn"
 
-    messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
-        "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
-                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
-    print(call_ucpe_function(messagedata, controller_id, ucpe_sn))
+    # messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
+    #     "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+    #              "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    # print(call_ucpe_function(messagedata, controller_id, ucpe_sn))
+    # docker_md = {"method": "docker_controller_list_containers", "params": {
+    #     "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+    #              "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    # docker_md = {"method": "docker_controller_list_containers", "params": {
+    #     "body": {}}, "jsonrpc": "2.0", "id": 0}
+    # print(call_ucpe_function(docker_md, controller_id, ucpe_sn))
+
     # number_of_threads = 1
     # sleep_time = 0.001
     # threads = []
