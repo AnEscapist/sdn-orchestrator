@@ -16,12 +16,26 @@
           <div class='info'>
               <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
              <strong>Docker on uCPE (IP address) </strong>
+             <span class="badge badge-success">Running</span>
              <hr>
-             <ul>
-                 <li>a</li>
-                 <li>b</li>
-             </ul>
+
          </div>
+         <br>
+         <div class='info'>
+             <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
+            <strong>Docker on uCPE (IP address) </strong>
+            <span class="badge badge-danger">Exited</span>
+            <hr>
+
+        </div>
+        <br>
+        <div class='info'>
+            <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
+           <strong>Docker on uCPE (IP address) </strong>
+           <span class="badge badge-warning">Paused</span>
+           <hr>
+
+       </div>
       </div>
 
   </div>

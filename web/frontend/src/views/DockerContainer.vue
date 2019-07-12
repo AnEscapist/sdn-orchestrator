@@ -18,7 +18,18 @@
         <br>
 
         <div class="action">
-            <button type="button" class="btn btn-success"><font-awesome-icon :icon="['fas', 'play']" size=sm /> Start</button>
+            <div class="buttons">
+                <button type="button" class="btn btn-success"><font-awesome-icon :icon="['fas', 'play']" size=sm /> Start</button>
+                <button type="button" class="btn btn-danger"><font-awesome-icon :icon="['fas', 'square']" size=sm /> Stop</button>
+                <button type="button" class="btn btn-danger"><font-awesome-icon :icon="['fas', 'skull-crossbones']" size=sm />  Kill</button>
+                <button type="button" class="btn btn-primary"><font-awesome-icon :icon="['fas', 'sync-alt']" size=sm /> Restart</button>
+                <button type="button" class="btn btn-primary"><font-awesome-icon :icon="['fas', 'pause']" size=sm /> Pause</button>
+                <button type="button" class="btn btn-danger"><font-awesome-icon :icon="['fas', 'trash-alt']" size=sm /> Remove</button>
+            </div>
+            <div class="list">
+
+            </div>
+
         </div>
 
     </div>
@@ -42,19 +53,10 @@ export default class DockerContainer extends Vue {
     name: 'dashboard'
     data() {
         return {
-            endpoint: '',
-            content: ''
+
         };
     }
-    mounted() {
-        this.axios.get("../manifest.json").then(response => {
-            console.log(response.data)
-            this.endpoint = response.data.name
-        });
-        this.axios.post("http://api.komavideo.com/news/list").then(body => {
-            this.content = body.data[0].title;
-        })
-    }
+
 }
 </script>
 
@@ -85,6 +87,18 @@ export default class DockerContainer extends Vue {
     height: auto;
     margin-left: 220px;
     margin-right: 20px;
+}
+.action{
+    padding-top: 10px;
+    padding-bottom: 5px;
+    background: rgb(240, 240, 240);
+}
+button{
+    font-size: 15px;
+    width: 100px;
+    margin-right: 2px;
+}
+.buttons{
 }
 
 

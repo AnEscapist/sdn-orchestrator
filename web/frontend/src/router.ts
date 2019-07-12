@@ -8,6 +8,7 @@ import Docker from './views/Docker.vue';
 import Dashboard from './views/DockerDashboard.vue';
 import DockerContainer from './views/DockerContainer.vue';
 import DockerHome from './views/DockerHome.vue'
+import DockerImage from './views/DockerImage.vue'
 
 
 Vue.use(Router);
@@ -56,6 +57,11 @@ export default new Router({
                     name: 'dockercontainer',
                     component: DockerContainer
                 },
+                {
+                    path: 'dockerimage',
+                    name: 'dockerimage',
+                    component: DockerImage
+                }
                 // {
                 //     path: 'image',
                 //     name: 'image',

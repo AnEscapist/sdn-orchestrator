@@ -16,7 +16,7 @@
             </button>
         </router-link>
 
-        <router-link to="/docker/image">
+        <router-link to="/docker/dockerimage">
             <button class="sidebar-item">
                 <strong>Image</strong><font-awesome-icon :icon="['fas', 'clone']" size=lg pull='right' color="white"/>
             </button>

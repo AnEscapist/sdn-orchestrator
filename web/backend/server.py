@@ -6,19 +6,22 @@ import threading
 import json
 import queue
 import signal
-from flask import Flask, escape, request
+from flask import Flask, escape, request, jsonify
 
 app = Flask(__name__)
 
 #example route
 #/api/containers in frontend
-@app.route('/containers')
+@app.route('/docker/abcde', methods=['POST', 'GET'])
 def get_containers():
     # messagedata = {"body": {"id": 5}}
     messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
         "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
-    call_ucpe_function(messagedata)
+
+    #return jsonify(name='ucpe', email='alkjdflk@gmail.com')
+    print(jsonify(call_ucpe_function(messagedata)))
+    return jsonify(call_ucpe_function(messagedata))
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -100,7 +103,8 @@ messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
 
 if __name__ == "__main__":
     app.run(threaded=True)
-    # number_of_threads = 10000
+    #print(call_ucpe_function(messagedata, controller_id, ucpe_sn))
+    # number_of_threads = 1
     # sleep_time = 0.001
     # threads = []
     # for i in range(number_of_threads):

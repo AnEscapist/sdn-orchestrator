@@ -44,4 +44,7 @@ export default {
     }
   }
 }
+.docker{
+    height: 948px;
+}
 </style>

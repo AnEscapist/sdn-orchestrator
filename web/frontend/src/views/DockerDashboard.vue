@@ -13,16 +13,42 @@
       <div class="content">
 
           <div class='header'>
+
              <strong>Endpoint info</strong><font-awesome-icon :icon="['fas', 'tachometer-alt']" size=lg pull='left' color="black"/>
           </div>
           <div class='info'>
-             <strong>Endpoint: </strong>{{endpoint}} - get from local json data.
+              <table>
+                  <tr>
+                      <td width='200px'><strong>Endpoint</strong></td>
+                      <td>local <font-awesome-icon :icon="['fas', 'microchip']" size=sm color='rgb(111, 111, 111)'/> 8
+                           <font-awesome-icon :icon="['fas', 'memory']" size=sm color='rgb(111, 111, 111)'/> 16.7GB
+                           - Standalone 18.09.5
+                      </td>
+                  </tr>
+              </table>
          </div>
           <div class='info'>
-             <strong>URL</strong>
+              <table>
+                  <tr>
+                      <td width='200px'>
+                          <strong>URL </strong>
+                          <font-awesome-icon :icon="['fas', 'link']" size=sm color='rgb(111, 111, 111)'/>
+                      </td>
+                      <td>/var/run/docker.sock</td>
+                  </tr>
+              </table>
          </div>
           <div class='info'>
-             <strong>Tags</strong>
+              <table>
+                  <tr>
+                      <td width='200px'>
+                          <strong>Tags </strong>
+                          <font-awesome-icon :icon="['fas', 'tags']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                      </td>
+                      <td>-</td>
+                  </tr>
+                  {{endpoint}}
+              </table>
          </div>
          <div class='info'>
             <strong>Content: </strong>{{content}} - get from remote api
@@ -50,12 +76,13 @@ export default class Dashboard extends Vue {
         };
     }
     mounted() {
-        this.axios.get("../manifest.json").then(response => {
-            console.log(response.data)
-            this.endpoint = response.data.name
+        this.axios.get("/api/docker/abcde").then(response => {
+            console.log(response)
+            this.endpoint = response.data
         });
-        this.axios.post("http://api.komavideo.com/news/list").then(body => {
-            this.content = body.data[0].title;
+        this.axios.post("http://api.komavideo.com/news/list").then(response => {
+            console.log(response)
+            this.content = response.data[0].title;
         })
     }
 }
