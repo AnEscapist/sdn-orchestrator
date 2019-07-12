@@ -20,6 +20,24 @@
                         <strong> Info: </strong>
                     </td>
 
+
+                    <td width='60px'>
+                        <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                        {{containers.length}}
+                    </td>
+                    <td>
+                        <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                        {{images.length}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width='30px'></td>
+                    <td width='200px'>
+                        <font-awesome-icon :icon="['fas', 'info-circle']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                        <strong> Client: {{client}}</strong>
+                    </td>
+
+
                     <td width='60px'>
                         <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
                         {{containers.length}}
@@ -72,7 +90,8 @@ export default class DockerHome extends Vue {
     data() {
         return {
             containers: [],
-            images: []
+            images: [],
+            client: 'x'
         };
     }
     mounted() {
@@ -85,6 +104,12 @@ export default class DockerHome extends Vue {
             var res = JSON.parse(response.data.result)['return']
             var images = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
             this.images = images
+        });
+        this.axios.get("/api/docker/client_info").then(response => {
+            console.log(response)
+            var res = JSON.parse(response.data.result)['return']
+            var client = res
+            this.client = client
         });
     }
 

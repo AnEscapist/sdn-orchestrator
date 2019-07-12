@@ -154,7 +154,7 @@ api_cli = _create_client(low_level=True)
 
 
 def client_info(path='ClientInfo.json'):
-    func = DockerController.docker_controller_client_info
+    func = client_info
     try:
         info = dcli.info()
     except OSError as ose:

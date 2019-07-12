@@ -26,11 +26,12 @@ def list_containers():
 @docker_routes.route('/docker/list_images')
 def list_images():
     messagedata = {"method": "docker_controller_list_images", "params": {
+        "body": {}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))
+
+@docker_routes.route('/docker/client_info')
+def client_info():
+    messagedata = {"method": "docker_controller_client_info", "params": {
         "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
-
-
-@docker_routes.route('/docker/hello')
-def hello():
-    return jsonify(name='docker docker')
