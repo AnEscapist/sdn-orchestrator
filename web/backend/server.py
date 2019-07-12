@@ -17,18 +17,6 @@ app.register_blueprint(libvirt_routes)
 app.register_blueprint(docker_routes)
 app.register_blueprint(grpc_routes)
 
-#example route
-#/api/containers in frontend
-@app.route('/docker/abcde', methods=['POST', 'GET'])
-def get_containers():
-    # messagedata = {"body": {"id": 5}}
-    messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
-        "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
-                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
-
-    #return jsonify(name='ucpe', email='alkjdflk@gmail.com')
-    return jsonify(call_ucpe_function(messagedata))
-
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 port_pub = "5559"
