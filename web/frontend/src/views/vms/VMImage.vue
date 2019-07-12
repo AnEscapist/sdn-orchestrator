@@ -81,7 +81,7 @@ import DSidebar from '@/components/DSidebar.vue';
     },
 })
 export default class DockerContainer extends Vue {
-    name: 'dashboard'
+    name: 'vm-image'
     data() {
         return {
 

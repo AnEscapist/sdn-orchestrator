@@ -46,7 +46,7 @@ import NavBar from '@/components/NavBar.vue'
   },
 })
 export default class DockerHome extends Vue {
-    name: 'dockerhome'
+    name: 'vm-home'
     data() {
         return {
             endpoint: '',

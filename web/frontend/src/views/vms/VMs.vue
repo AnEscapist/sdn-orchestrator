@@ -20,7 +20,7 @@
 import DSidebar from '@/components/DSidebar.vue'
 
 export default {
-    name: 'docker',
+    name: 'vms',
     data() {
         return {}
     },
