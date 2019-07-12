@@ -76,7 +76,7 @@ export default class Dashboard extends Vue {
         };
     }
     mounted() {
-        this.axios.get("/api/docker/hello").then(response => {
+        this.axios.get("/api/docker/abcde").then(response => {
             console.log(response)
             this.endpoint = response.data
         });
