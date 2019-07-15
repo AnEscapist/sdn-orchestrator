@@ -6,6 +6,8 @@ import './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import VueSidebarMenu from 'vue-sidebar-menu'
+import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faUserSecret} from '@fortawesome/free-solid-svg-icons';
 import {fas} from '@fortawesome/free-solid-svg-icons'

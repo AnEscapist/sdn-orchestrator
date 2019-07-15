@@ -94,6 +94,9 @@ if __name__ == "__main__":
     # docker_md = {"method": "docker_controller_list_containers", "params": {
     #     "body": {}}, "jsonrpc": "2.0", "id": 0}
     # print(call_ucpe_function(docker_md, controller_id, ucpe_sn))
+    grpc_md = {"method": "grpc_get_totalcpus", "params": {
+        "body": {"hostname": "10.10.81.100", "port": "50051"}}, "jsonrpc": "2.0", "id": 0}
+    print(call_ucpe_function(grpc_md, controller_id, ucpe_sn))
 
     # number_of_threads = 1
     # sleep_time = 0.001
