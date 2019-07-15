@@ -18,7 +18,7 @@ port_sub = "5570"
 TIMEOUT = 1000 #todo: decide
 CONTROLLER_ID = "test-id"
 BROKER_IP = "10.10.81.200" #todo: make this not global
-ALL_TOPICS = "" #empty prefix to zmq means subscribe to every topic
+UCPE_LIST = ["test-sn"] #serial numbers of ucpes this controller controls
 #todo: set topic to something reasonable, like request id or timestampidk
 REQUEST_ID_DELIMITER = "___"
 #NOTE: TOPICS CANNOT CONTAIN SPACES
@@ -26,6 +26,7 @@ REQUEST_ID_DELIMITER = "___"
 request_ids = queue.Queue()
 request_queue = queue.Queue()
 response_queues = dict() # request_id -> responseQueue
+response_queues_lock = threading.Lock()
 max_id = 0
 max_id_lock = threading.Lock()
 
@@ -34,10 +35,11 @@ def call_ucpe_function(messagedata, controller_id='test-id', ucpe_sn='test-sn'):
         print('ids', request_ids.queue)
     request_id = get_request_id()
     response_queue = queue.Queue()
-    response_queues[request_id] = response_queue
-    response_thread = threading.Thread(target=sub_response, args=(response_queue, ucpe_sn, request_id))
-    response_thread.start() #todo: figure out how to configure timeout
-    time.sleep(1) #todo: BAD
+    with response_queues_lock:
+        response_queues[request_id] = response_queue
+    # response_thread = threading.Thread(target=sub_response, args=(response_queue, ucpe_sn, request_id))
+    # response_thread.start() #todo: figure out how to configure timeout
+    # time.sleep(1) #todo: BAD
     send_request(messagedata, controller_id, request_id)
     response = response_queue.get(timeout=TIMEOUT)
     request_ids.put(request_id)
@@ -47,7 +49,7 @@ def get_topic(id, request_id):
     return f'{id}___{request_id}'
 
 def request_id_from_topic(topic):
-    return topic.rsplit(REQUEST_ID_DELIMITER)[1]
+    return int(topic.rsplit(REQUEST_ID_DELIMITER)[1])
 
 def get_request_id():
     global max_id
@@ -106,23 +108,33 @@ def startRequestHandler():
     requestHandler = threading.Thread(target=handleRequests)
     requestHandler.start()
 
-def startRequestHandlerFinite(iterations):
+def startFiniteRequestHandler(iterations):
     finiteRequestHandler = threading.Thread(target=handleFiniteRequests, args=[iterations])
     finiteRequestHandler.start()
+    time.sleep(0.5) #todo: why do we need this?
 
 def handleFiniteResponses(iterations):
     context_sub = zmq.Context()
     socket_sub = context_sub.socket(zmq.SUB)
     # print("Collecting updates from server...")
     socket_sub.connect("tcp://%s:%s" % (BROKER_IP, port_sub))
-    socket_sub.setsockopt_string(zmq.SUBSCRIBE, ALL_TOPICS)
+    for ucpe_sn in UCPE_LIST:
+        socket_sub.setsockopt_string(zmq.SUBSCRIBE, ucpe_sn)
+    print("Listening for Responses")
     for i in range(iterations):
         received = socket_sub.recv().decode('ASCII')
         topic, message = received.split(" ", 1)
+        print('received', topic, message)
         response = json.loads(message)
-        id = request_id_from_topic(topic)
-        response_queue = response_queues[id]
+        request_id = request_id_from_topic(topic)
+        with response_queues_lock:
+            response_queue = response_queues[request_id]
         response_queue.put(response)
+
+def startFiniteResponseHandler(iterations):
+    finiteResponseHandler = threading.Thread(target=handleFiniteResponses, args=[iterations])
+    finiteResponseHandler.start()
+    time.sleep(0.5) #todo: why do we need this?
 
 # creating thread
 # t1 = threading.Thread(target=sub_response)
@@ -149,12 +161,13 @@ if __name__ == "__main__":
     #     "body": {"hostname": "10.10.81.100", "port": "50051"}}, "jsonrpc": "2.0", "id": 0}
     # print(call_ucpe_function(grpc_md, controller_id, ucpe_sn))
 
-    number_of_threads = 600
+    number_of_threads = 4000
     sleep_time = 0
     threads = []
 
     print("testing with", number_of_threads, "threads")
-    startRequestHandlerFinite(number_of_threads)
+    startFiniteRequestHandler(number_of_threads)
+    startFiniteResponseHandler(number_of_threads)
 
     for i in range(number_of_threads):
         thread = threading.Thread(target=call_ucpe_function, args=(messagedata, controller_id, ucpe_sn))
