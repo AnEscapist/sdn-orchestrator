@@ -11,9 +11,8 @@ grpc_routes = Blueprint('grpc', __name__, template_folder='templates')
 def get_cpucount():
     # messagedata = {"body": {"id": 5}}
     messagedata = {"method": "grpc_get_totalcpus",
-                   "params": {"body": {"hostname": "10.10.81.100", "port": "50051", "command": "cpu",
-                                       "str_request": "total"}}, "jsonrpc": "2.0", "id": 0}
-
+                   "params": {"body": {"hostname": "10.10.81.100", "port": "50051"}}, "jsonrpc": "2.0", "id": 0}
+    print("connection established")
     return jsonify(call_ucpe_function(messagedata))
 
 

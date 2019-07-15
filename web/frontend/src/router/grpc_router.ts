@@ -6,15 +6,8 @@ const grpc_routes = [
     {
         path: '/data-collect',
         name: 'data-home',
-        redirect: '/data-collect/home',
+        redirect: '/data-collect/bot',
         component: Home,
-        children: [
-            {
-                path: 'dashboard',
-                name: 'data-dashboard',
-                component: Dashboard
-            }
-        ]
     }
 ]
 
