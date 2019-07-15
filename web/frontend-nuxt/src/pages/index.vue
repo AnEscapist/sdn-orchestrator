@@ -3,22 +3,15 @@
     <div>
       <logo />
       <h1 class="title">
-        app
+        SDN Orchestrator
       </h1>
       <h2 class="subtitle">
-        orchestrator frontend
+        a portal for managing your virtual network functions
       </h2>
       <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+        <nuxt-link to="/docker" class="button--grey">docker</nuxt-link>
+        <nuxt-link to="/vms" class="button--grey">virtual machines</nuxt-link>
+        <nuxt-link to="/data-collect" class="button--grey">network data</nuxt-link>
       </div>
     </div>
   </div>
