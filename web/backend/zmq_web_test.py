@@ -113,6 +113,25 @@ def startFiniteRequestHandler(iterations):
     finiteRequestHandler.start()
     time.sleep(0.5) #todo: why do we need this?
 
+def handleResponses():
+    context_sub = zmq.Context()
+    socket_sub = context_sub.socket(zmq.SUB)
+    # print("Collecting updates from server...")
+    socket_sub.connect("tcp://%s:%s" % (BROKER_IP, port_sub))
+    for ucpe_sn in UCPE_LIST:
+        socket_sub.setsockopt_string(zmq.SUBSCRIBE, ucpe_sn)
+    print("Listening for Responses")
+    while True:
+        received = socket_sub.recv().decode('ASCII')
+        topic, message = received.split(" ", 1)
+        print('received', topic, message)
+        response = json.loads(message)
+        request_id = request_id_from_topic(topic)
+        with response_queues_lock:
+            response_queue = response_queues[request_id]
+        response_queue.put(response)
+
+
 def handleFiniteResponses(iterations):
     context_sub = zmq.Context()
     socket_sub = context_sub.socket(zmq.SUB)
@@ -131,10 +150,20 @@ def handleFiniteResponses(iterations):
             response_queue = response_queues[request_id]
         response_queue.put(response)
 
+def startResponseHandler():
+    responseHandler = threading.Thread(target=handleResponses)
+    responseHandler.start()
+    time.sleep(0.5) #todo: why do we need this?
+
 def startFiniteResponseHandler(iterations):
     finiteResponseHandler = threading.Thread(target=handleFiniteResponses, args=[iterations])
     finiteResponseHandler.start()
     time.sleep(0.5) #todo: why do we need this?
+
+def start():
+    startResponseHandler()
+    startRequestHandler()
+
 
 # creating thread
 # t1 = threading.Thread(target=sub_response)
@@ -161,13 +190,12 @@ if __name__ == "__main__":
     #     "body": {"hostname": "10.10.81.100", "port": "50051"}}, "jsonrpc": "2.0", "id": 0}
     # print(call_ucpe_function(grpc_md, controller_id, ucpe_sn))
 
-    number_of_threads = 4000
+    number_of_threads = 10000
     sleep_time = 0
     threads = []
 
     print("testing with", number_of_threads, "threads")
-    startFiniteRequestHandler(number_of_threads)
-    startFiniteResponseHandler(number_of_threads)
+    start()
 
     for i in range(number_of_threads):
         thread = threading.Thread(target=call_ucpe_function, args=(messagedata, controller_id, ucpe_sn))
@@ -181,5 +209,5 @@ if __name__ == "__main__":
         assert len(set(request_ids.queue)) == len(list(request_ids.queue))
         thread.join()
 
-    print(list(request_ids.queue))
     assert len(set(request_ids.queue)) == len(list(request_ids.queue))
+    print("Success!")

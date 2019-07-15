@@ -5,6 +5,8 @@ venv/
 .idea/
 __pycache__/
 */__pycache__/
+*/.nuxt/
+*/node_modules/
 *trash.py
 
 
