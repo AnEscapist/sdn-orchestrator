@@ -3,11 +3,11 @@ import App from './App.vue';
 import router from './router';
 import store from './app/store';
 import './registerServiceWorker';
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'vuetify/dist/vuetify.min.css';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import VueSidebarMenu from 'vue-sidebar-menu'
-import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+import Vuetify from 'vuetify';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faUserSecret} from '@fortawesome/free-solid-svg-icons';
 import {fas} from '@fortawesome/free-solid-svg-icons'
@@ -18,6 +18,7 @@ import {FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText} from '@fortaw
 library.add(fas, far, fab, faUserSecret)
 
 Vue.use(VueAxios, axios)
+Vue.use(Vuetify)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)
 Vue.component('font-awesome-layers-text', FontAwesomeLayersText)

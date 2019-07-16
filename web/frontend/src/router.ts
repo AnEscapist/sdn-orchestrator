@@ -39,7 +39,7 @@ export default new Router({
             component: Login,
         },
         ...docker_routes,
-        ...grpc_routes,
+        // ...grpc_routes,
         ...vm_routes
         // {
         //     path: '/dashboard',
