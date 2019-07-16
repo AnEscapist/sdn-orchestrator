@@ -171,4 +171,6 @@ def sriov_numvfs(device):
     dev_id = dpdk.dev_id_from_dev_name(device)
     value = subprocess.Popen(['cat', f'/sys/bus/pci/devices/{dev_id}/sriov_numvfs'], stdout=subprocess.PIPE)
     # print(value)
+    if value.stdout.read().decode('utf-8').strip() == '0':
+        return 0
     return int(value.stdout.read().decode('utf-8').strip())
