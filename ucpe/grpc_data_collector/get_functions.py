@@ -160,7 +160,7 @@ def sriov_totalvfs(device):
     dev_id = dpdk.dev_id_from_dev_name(device)
     value = subprocess.Popen(['cat', f'/sys/bus/pci/devices/{dev_id}/sriov_totalvfs'], stdout=subprocess.PIPE)
     # print(value)
-    return value.stdout.read().decode('utf-8')
+    return value.stdout.read().decode('utf-8').strip()
 
 
 def sriov_numvfs(device):
@@ -168,4 +168,4 @@ def sriov_numvfs(device):
     dev_id = dpdk.dev_id_from_dev_name(device)
     value = subprocess.Popen(['cat', f'/sys/bus/pci/devices/{dev_id}/sriov_numvfs'], stdout=subprocess.PIPE)
     # print(value)
-    return value.stdout.read().decode('utf-8')
+    return value.stdout.read().decode('utf-8').strip()
