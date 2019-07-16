@@ -32,7 +32,6 @@ def run(request_type, hostname=HOSTNAME, port=PORT, str_param1=None, str_param2=
         response = stub.GetData(request)
     elif request_type == 'modify':
         response = stub.ModifyData(request)
-
     return response
 
 
@@ -43,6 +42,6 @@ def main(response_type, **kwargs):
 
 if __name__ == "__main__":
     request = 'get'
-    kwargs = {'body': {'command': 'bridge', 'str_request': 'all'}}
+    kwargs = {'body': {'command': 'sriov', 'str_request': 'total_vfs', 'str_param1': 'b7:00.3'}}
     # print(kwargs['body']['str_param1'])
     main(request, **kwargs)

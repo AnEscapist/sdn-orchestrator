@@ -60,13 +60,15 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
         elif request.command == 'sriov':
             if request.str_request == 'total_vfs':
                 response.header = f"Total vfs for {request.str_param1}"
-                response.str_response = str(get_functions.sriov_totalvfs(request.str_param1))
-
+                response.int_response = get_functions.sriov_totalvfs(request.str_param1)
+            elif request.str_request == 'num_vfs':
+                response.header = f'Current vfs for {request.str_param1}'
+                response.int_response = get_functions.sriov_numvfs(request.str_param1)
         return response
 
     def ModifyData(self, request, context):
         response = data_pb2.DataChangeResponse()
-        # print('hello2')
+
         if request.command == 'sriov':
             None
 

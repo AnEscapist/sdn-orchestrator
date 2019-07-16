@@ -53,6 +53,10 @@ class gRPCDataCollector(object):
     def grpc_get_sriov_totalvfs(**kwargs):
         return get_execute(f"sriov total_vfs {kwargs['body']['str_param1']}", **kwargs)
 
+    @staticmethod
+    def grpc_get_sriov_numvfs(**kwargs):
+        return get_execute(f"sriov num_vfs {kwargs['body']['str_param1']}", **kwargs)
+
     # device driver
     @staticmethod
     def grpc_modify_dpdk_bind(**kwargs):
