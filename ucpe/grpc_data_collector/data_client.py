@@ -42,6 +42,6 @@ def main(response_type, **kwargs):
 
 if __name__ == "__main__":
     request = 'get'
-    kwargs = {'body': {'command': 'sriov', 'str_request': 'total_vfs', 'str_param1': 'b7:00.3'}}
+    kwargs = {'body': {'command': 'sriov', 'str_request': 'num_vfs', 'str_param1': 'b7:00.3'}}
     # print(kwargs['body']['str_param1'])
     main(request, **kwargs)
