@@ -52,7 +52,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                 response.str_response = str(get_functions.get_linux_bridges_all())
             elif request.str_request == 'details':
                 response.header = f'Details for {request.str_param1}'
-                response.str_response = str(get_functions.get_linux_bridge_details(request.str_param1))
+                response.str_response = str(get_functions.get_linux_bridge_details(request.str_param1)).strip('\\')
         elif request.command == 'dpdk':
             if request.str_request == 'devices':
                 response.header = "List of network devices using DPDK-compatible drivers"
