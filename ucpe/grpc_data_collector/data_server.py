@@ -2,6 +2,7 @@ import grpc
 from concurrent import futures
 import time
 import sys
+import json
 
 sys.path.append('/home/potato/projects/sdn-orchestrator/')
 
@@ -14,6 +15,10 @@ import ucpe.grpc_data_collector.modify_functions as modify_functions
 # import dpdk
 
 PORT = '50051'
+
+
+def json_str(message):
+    return json.dumps(message, indent=4)
 
 
 class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
@@ -46,10 +51,10 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
         elif request.command == 'bridge':
             if request.str_request == 'list':
                 response.header = "List of Linux bridges"
-                response.str_response = str(get_functions.print_linux_bridges_list())
+                response.str_response = json_str(get_functions.print_linux_bridges_list())
             elif request.str_request == 'all':
                 response.header = "All Linux bridge info"
-                response.str_response = str(get_functions.get_linux_bridges_all())
+                response.str_response = json_str(get_functions.get_linux_bridges_all())
             elif request.str_request == 'details':
                 response.header = f'Details for {request.str_param1}'
                 response.str_response = str(get_functions.get_linux_bridge_details(request.str_param1))
