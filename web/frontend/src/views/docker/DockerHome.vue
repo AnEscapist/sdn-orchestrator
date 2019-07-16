@@ -9,7 +9,7 @@
         <br>
 
         <router-link to="/docker/dockerdashboard">
-            
+
             <div class='info'>
                 <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)' />
                 <strong>Docker on uCPE ({{client['Name']}}) </strong>
@@ -85,7 +85,7 @@ import {
     Vue
 } from 'vue-property-decorator';
 import DSidebar from '@/components/DSidebar.vue';
-import NavBar from '@/components/NavBar';
+import NavBar from '@/components/NavBar.vue';
 
 @Component({
     components: {

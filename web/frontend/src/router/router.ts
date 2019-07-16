@@ -2,14 +2,14 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 
-import Home from './views/Home.vue';
-import Login from './views/Login.vue';
-import Docker from './views/Docker.vue';
-import DockerDashboard from './views/DockerDashboard.vue';
-import DockerContainer from './views/DockerContainer.vue';
-import DockerHome from './views/DockerHome.vue'
-import DockerImage from './views/DockerImage.vue'
-import grpc_routes from './router/grpc_router'
+import Home from '../views/Home.vue';
+import Login from '../views/Login.vue';
+import Docker from '../views/docker/Docker.vue';
+import DockerDashboard from '../views/docker/DockerDashboard.vue';
+import DockerContainer from '../views/docker/DockerContainer.vue';
+import DockerHome from '../views/docker/DockerHome.vue'
+import DockerImage from '../views/docker/DockerImage.vue'
+import grpc_routes from './grpc_router'
 import vm_routes from "@/router/vm_routes";
 import docker_routes from '@/router/docker_routes'
 
@@ -31,7 +31,7 @@ export default new Router({
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+            component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
         },
         {
             path: '/login',

@@ -1,8 +1,8 @@
-import Docker from '../views/Docker.vue';
-import DockerDashboard from '../views/DockerDashboard.vue';
-import DockerContainer from '../views/DockerContainer.vue';
-import DockerHome from '../views/DockerHome.vue'
-import DockerImage from '../views/DockerImage.vue'
+import Docker from '../views/docker/Docker.vue';
+import DockerDashboard from '../views/docker/DockerDashboard.vue';
+import DockerContainer from '../views/docker/DockerContainer.vue';
+import DockerHome from '../views/docker/DockerHome.vue'
+import DockerImage from '../views/docker/DockerImage.vue'
 
 const vm_routes =  [
     {
