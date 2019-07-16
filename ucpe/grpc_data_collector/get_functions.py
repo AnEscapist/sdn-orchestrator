@@ -120,15 +120,18 @@ def brctl_show(self):
 
 
 def get_linux_bridge_id(br):
-    return brctl_show(br)[1]
+    return brctl_show(br)[1].strip()
 
 
 def get_interfaces(br):
-    return brctl_show(br)[3:]
+    list1 = []
+    for i in brctl_show(br)[3:]:
+        list1.append(i.strip())
+    return list1
 
 
 def get_stp(br):
-    return brctl_show(br)[2]
+    return brctl_show(br)[2].strip()
 
 
 def get_linux_bridges_all():
