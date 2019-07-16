@@ -5,6 +5,7 @@ import store from './app/store';
 import './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'vuetify/dist/vuetify.min.css';
+import "vue-material-design-icons/styles.css"
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import Vuetify from 'vuetify';
@@ -18,7 +19,7 @@ import {FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText} from '@fortaw
 library.add(fas, far, fab, faUserSecret)
 
 Vue.use(VueAxios, axios)
-Vue.use(Vuetify)
+Vue.use(Vuetify, {iconfont: 'mdi'})
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)
 Vue.component('font-awesome-layers-text', FontAwesomeLayersText)

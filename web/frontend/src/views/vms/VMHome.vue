@@ -87,7 +87,6 @@ export default class DockerHome extends Vue {
     border: 1px solid rgb(180, 180, 180);
     background: rgb(240, 240, 240);
     text-align: left;
-
 }
 
 .ucpe{
