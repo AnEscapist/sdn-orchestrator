@@ -42,8 +42,26 @@
                 </tr>
             </table>
         </div>
-        
+        <div class='info'>
+            <table>
+                <tr>
+                    <td width='200px'>
+                        <strong>Info: </strong>
+                        <font-awesome-icon :icon="['fas', 'info-circle']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                    </td>
 
+                    <td width='60px'>
+                        <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                        {{containers.length}}
+                    </td>
+                    <td>
+                        <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
+                        {{images.length}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
 
     </div>
 

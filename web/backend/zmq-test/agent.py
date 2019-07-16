@@ -69,6 +69,7 @@ class test2:
         return "test2_3"
 """
 
+
 def server_routine():
     d = Dispatcher()
     d.build_method_map(LibvirtController)

@@ -1,33 +1,5 @@
 <template>
-
 <div class="dockerhome">
-      <div id="nav">
-
-        <router-link to="/login">Login</router-link> |
-        <router-link to="/docker">Docker</router-link> |
-        <router-link to="/data-collect">Data collector</router-link>
-        <DSidebar></DSidebar>
-
-      </div>
-      <div class="content">
-          <div class='header'>
-             <strong>Home</strong><font-awesome-icon :icon="['fas', 'home']" size=lg pull='left' color="black"/>
-          </div>
-          <br>
-          <div class='info'>
-              <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
-             <strong>Data Collector on uCPE (IP address) {{endpoint}}</strong>
-             <span class="badge badge-success">Running</span>
-             <hr>
-
-         </div>
-         <br>
-         <div class='info'>
-             <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)'/>
-            <strong>Data Collector on uCPE (IP address) </strong>
-            <span class="badge badge-danger">Exited</span>
-            <hr>
-
 
     <div class="content">
         <div class="header">
