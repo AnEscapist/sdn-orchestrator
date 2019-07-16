@@ -74,8 +74,6 @@ class gRPCDataCollector(object):
 
 
 # ==================== private functions ===============================
-
-
 def interpret_params(input_string, **kwargs):
     tmp = input_string.split(" ")
     count = len(tmp)
