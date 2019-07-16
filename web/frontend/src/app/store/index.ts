@@ -7,8 +7,9 @@ import vms from './modules/vms';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  modules: {
-    product,
-    cart
-  }
+    modules: {
+        data,
+        docker,
+        vms
+    }
 });

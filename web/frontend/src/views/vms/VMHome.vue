@@ -2,6 +2,8 @@
   <div class="dockerhome">
 
       <NavBar></NavBar>
+      <Sidebar></Sidebar>
+
       <div class="content">
           <div class='header'>
              <strong>Home</strong><font-awesome-icon :icon="['fas', 'home']" size=lg pull='left' color="black"/>
@@ -36,13 +38,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import DSidebar from '@/components/DSidebar.vue';
-import NavBar from '@/components/NavBar.vue'
+    import {Component, Vue} from 'vue-property-decorator';
+    import NavBar from '@/components/NavBar.vue'
+    import VMSidebar from "@/components/vms/VMSidebar.vue";
+    import Sidebar from "@/components/Sidebar.vue";
 
-@Component({
+    @Component({
   components: {
-      DSidebar, NavBar
+      VMSidebar,
+      Sidebar,
+      NavBar,
   },
 })
 export default class DockerHome extends Vue {

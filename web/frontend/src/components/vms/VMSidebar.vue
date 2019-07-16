@@ -4,7 +4,7 @@
 
         <font-awesome-icon :icon="['fab', 'docker']" size=5x color='white'/><br><br>
 
-        <router-link to="/docker/dashboard">
+        <router-link to="/docker/dockerdashboard">
             <button class="sidebar-item">
                 <strong>Dashboard</strong><font-awesome-icon :icon="['fas', 'tachometer-alt']" size=lg pull='right' color="white"/>
             </button>
@@ -75,12 +75,16 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
+
+
 .dsidebar{
+    margin-top: 44px;
     padding-top: 30px;
     float: left;
     /* border-radius: 20px; */
     width: 200px;
-    height: 880px;
+    height: 860px;
     background: rgb(62, 62, 62);
 }
 
