@@ -7,42 +7,57 @@
             <font-awesome-icon :icon="['fas', 'home']" size=lg pull='left' color="black" />
         </div>
         <br>
-        <div class='info'>
-            <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)' />
-            <strong>Docker on uCPE (IP address) </strong>
-            <span class="badge badge-success">Running</span>
-            <hr>
-            <table>
-                <tr>
-                    <td width='30px'></td>
-                    <td width='200px'>
-                        <font-awesome-icon :icon="['fas', 'info-circle']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                        <strong> Info: </strong>
-                    </td>
+
+        <router-link to="/docker/dockerdashboard">
+            
+            <div class='info'>
+                <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)' />
+                <strong>Docker on uCPE ({{client['Name']}}) </strong>
+                <span class="badge badge-success">Running</span>
+                <hr>
+                <table>
+                    <tr>
+                        <td width='30px'></td>
+                        <td width='100px'>
+                            <font-awesome-icon :icon="['fas', 'info-circle']" size=lg color='rgb(111, 111, 111)' />
+                            <strong> Info: </strong>
+                        </td>
+                        <td width='250px'>
+                            <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' />
+                            {{client['Containers']}} containers -
+                            <font-awesome-icon :icon="['fas', 'heartbeat']" size=sm color='rgb(81, 164, 81)' />
+                            {{client['ContainersRunning']}}
+                            <font-awesome-icon :icon="['fas', 'heartbeat']" size=sm color='rgb(237, 187, 66)' />
+                            {{client['ContainersPaused']}}
+                            <font-awesome-icon :icon="['fas', 'heartbeat']" size=sm color='rgb(204, 68, 74)' />
+                            {{client['ContainersStopped']}}
+                        </td>
+                        <td width='120px'>
+                            <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' />
+                            {{client['Images']}} images
+                        </td>
+                        <td>
+                            <font-awesome-icon :icon="['fas', 'microchip']" size=sm color='rgb(111, 111, 111)' />
+                            {{client['NCPU']}} CPU
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width='30px'></td>
+                        <td width='100px'>
+                            <font-awesome-icon :icon="['fab', 'linux']" size=lg color='rgb(111, 111, 111)' />
+                            <strong> OS: </strong>
+                        </td>
+                        <td width='250px'>
+                            {{client['OperatingSystem']}}
+                        </td>
+
+                    </tr>
 
 
-                    <td width='60px'>
-                        <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                        {{containers.length}}
-                    </td>
-                    <td>
-                        <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                        {{images.length}}
-                    </td>
-                </tr>
-                <tr>
-                    <td width='30px'></td>
-                    <td width='200px'>
-                        <font-awesome-icon :icon="['fas', 'info-circle']" size=sm color='rgb(111, 111, 111)' flip='horizontal' />
-                        <strong> Client: {{client}}</strong>
-                    </td>
+                </table>
 
-
-
-                </tr>
-            </table>
-
-        </div>
+            </div>
+        </router-link>
         <br>
         <div class='info'>
             <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)' />
@@ -100,14 +115,13 @@ export default class DockerHome extends Vue {
         });
         this.axios.get("/api/docker/client_info").then(response => {
             var res = JSON.parse(response.data.result)
-
-            var client = res['return']
-            console.log(client)
-            // x = JSON.parse(client)
+            var client = JSON.parse(res['return'])
             this.client = client
         });
     }
+    methods() {
 
+    }
 }
 </script>
 
