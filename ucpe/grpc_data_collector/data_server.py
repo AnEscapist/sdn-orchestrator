@@ -49,10 +49,11 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                 response.str_response = str(get_functions.print_linux_bridges_list())
             elif request.str_request == 'all':
                 response.header = "All Linux bridge info"
-                response.str_response = str(get_functions.get_linux_bridges_all())
+                tmp = get_functions.get_linux_bridges_all()
+                response.str_response = f'{tmp}'
             elif request.str_request == 'details':
                 response.header = f'Details for {request.str_param1}'
-                response.str_response = str(get_functions.get_linux_bridge_details(request.str_param1)).strip('\\')
+                response.str_response = str(get_functions.get_linux_bridge_details(request.str_param1))
         elif request.command == 'dpdk':
             if request.str_request == 'devices':
                 response.header = "List of network devices using DPDK-compatible drivers"
