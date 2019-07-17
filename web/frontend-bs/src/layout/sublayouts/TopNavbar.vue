@@ -56,6 +56,11 @@
 <!--            </a>-->
 <!--          </li>-->
           <li class="nav-item">
+            <router-link to="/host-info" class="nav-link">
+              Host Info
+            </router-link>
+          </li>
+          <li class="nav-item">
             <router-link to="/docker" class="nav-link">
               Docker
             </router-link>
@@ -63,11 +68,6 @@
           <li class="nav-item">
             <router-link to="/vms" class="nav-link">
               Virtual Machines
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/data-collect" class="nav-link">
-              Data Collection
             </router-link>
           </li>
           <base-dropdown title="Dropdown">

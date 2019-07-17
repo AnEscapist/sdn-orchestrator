@@ -4,9 +4,9 @@ import LibvirtHome from "*.vue";
 
 const grpcRoutes = [
     {
-        path: '/data-collect',
+        path: '/host-info',
         name: 'data-home',
-        redirect: '/data-collect/bot',
+        redirect: '/host-info/home',
         component: Home,
     }
 ]

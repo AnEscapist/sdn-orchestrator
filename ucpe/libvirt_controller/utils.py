@@ -105,7 +105,6 @@ def state(libvirt_domain):
 def get_caller_function_name():
     return sys._getframe().f_back.f_back.f_code.co_name
 
-
 def read(path):
     """return contents of file as a string"""
     with open(path) as f:

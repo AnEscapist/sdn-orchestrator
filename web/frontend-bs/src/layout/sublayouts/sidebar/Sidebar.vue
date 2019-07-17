@@ -4,7 +4,7 @@
             :background-color="color"
             :background-image="image"
   >
-    <!--    <mobile-menu slot="content"></mobile-menu>-->
+        <mobile-menu slot="content"></mobile-menu>
     <SidebarItem
       v-for="(item, i) in items"
       :key="i"
