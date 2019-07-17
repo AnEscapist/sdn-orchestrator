@@ -1,17 +1,17 @@
-import DashboardLayout from '../layout/template/TemplateLayout.vue'
+import DashboardLayout from '../layout/sample-layout/TemplateLayout.vue'
 
 // Admin pages
-import Overview from 'src/pages/template/Overview.vue'
-import UserProfile from 'src/pages/template/UserProfile.vue'
-import TableList from 'src/pages/template/TableList.vue'
-import Typography from 'src/pages/template/Typography.vue'
-import Icons from 'src/pages/template/Icons.vue'
-import Maps from 'src/pages/template/Maps.vue'
-import Notifications from 'src/pages/template/Notifications.vue'
-import Upgrade from 'src/pages/template/Upgrade.vue'
-import Test from 'src/pages/template/Test.vue'
+import Overview from '../pages/sample-pages/Overview.vue'
+import UserProfile from '../pages/sample-pages/UserProfile.vue'
+import TableList from '../pages/sample-pages/TableList.vue'
+import Typography from '../pages/sample-pages/Typography.vue'
+import Icons from '../pages/sample-pages/Icons.vue'
+import Maps from '../pages/sample-pages/Maps.vue'
+import Notifications from '../pages/sample-pages/Notifications.vue'
+import Upgrade from '../pages/sample-pages/Upgrade.vue'
+import Test from '../pages/sample-pages/Test.vue'
 
-const templateRoutes = [
+const sampleRoutes = [
   {
     path: '/admin',
     component: DashboardLayout,
@@ -75,4 +75,4 @@ function view(name) {
    return res;
 };**/
 
-export default templateRoutes
+export default sampleRoutes

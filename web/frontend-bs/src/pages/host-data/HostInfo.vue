@@ -171,10 +171,16 @@
 </template>
 
 <script>
+    import ChartCard from "../../components/Cards/ChartCard";
+    import StatsCard from "../../components/Cards/StatsCard";
+    import LTable from "../../components/Table";
+
     export default {
         name: "HostInfo",
         components: [
-
+          LTable,
+          ChartCard,
+          StatsCard
         ],
         data() {
 

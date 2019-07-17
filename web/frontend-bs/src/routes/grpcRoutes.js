@@ -1,4 +1,4 @@
-import DashboardLayout from '../layout/template/TemplateLayout.vue'
+import DashboardLayout from '../layout/sample-layout/TemplateLayout.vue'
 import HostInfo from '../pages/host-data/HostInfo.vue'
 
 const grpcRoutes = [

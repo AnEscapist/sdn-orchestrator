@@ -21,11 +21,11 @@
 </style>
 
 <script>
-  import TopNavbar from './sublayouts/TopNavbar.vue'
-  import ContentFooter from './sublayouts/ContentFooter.vue'
-  import DashboardContent from './sublayouts/Content.vue'
-  import MobileMenu from './sublayouts/MobileMenu.vue'
-  import Sidebar from './sublayouts/sidebar/Sidebar.vue'
+  import TopNavbar from '../components/layout/TopNavbar.vue'
+  import ContentFooter from '../components/layout/ContentFooter.vue'
+  import DashboardContent from '../components/layout/Content.vue'
+  import MobileMenu from '../components/layout/MobileMenu.vue'
+  import Sidebar from '../components/layout/sidebar/Sidebar.vue'
   export default {
     props: ['title', 'home', 'logo', 'sidebarColor', 'sidebarBackgroundImage', 'sidebarItems'],
     components: {

@@ -1,10 +1,10 @@
-import templateRoutes from './templateRoutes'
+import sampleRoutes from './sampleRoutes'
 // import dockerRoutes from './dockerRoutes'
 // import vmRoutes from './vmRoutes'
 import grpcRoutes from './grpcRoutes'
-import DashboardLayout from '../layout/template/TemplateLayout.vue'
+import DashboardLayout from '../layout/sample-layout/TemplateLayout.vue'
 // GeneralViews
-import NotFound from '../pages/template/NotFoundPage.vue'
+import NotFound from '../pages/sample-pages/NotFoundPage.vue'
 
 const routes = [
   {
@@ -12,7 +12,7 @@ const routes = [
     component: DashboardLayout,
     redirect: '/admin/overview'
   },
-  ...templateRoutes,
+  ...sampleRoutes,
   // ...dockerRoutes,
   // ...vmRoutes,
   ...grpcRoutes,

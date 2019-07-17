@@ -23,7 +23,7 @@
       return {
         title: 'template',
         home: '/admin/overview',
-        logo: 'img/template-logo.png', //public/img/template-logo.png
+        logo: 'img/sample-pages-logo.png', //public/img/sample-pages-logo.png
         sidebar: templateSidebar
       }
     }
