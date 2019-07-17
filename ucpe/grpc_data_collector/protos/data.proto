@@ -29,5 +29,5 @@ message DataResponse {
 
 message DataChangeResponse {
     string str_response = 1;
-    bool func_status = 2;
+    string status = 2;
 }

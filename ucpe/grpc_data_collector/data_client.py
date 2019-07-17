@@ -30,6 +30,7 @@ def run(request_type, hostname=HOSTNAME, port=PORT, str_param1=None, str_param2=
 
     if request_type == 'get':
         response = stub.GetData(request)
+
     elif request_type == 'modify':
         response = stub.ModifyData(request)
     return response
