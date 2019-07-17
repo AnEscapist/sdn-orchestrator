@@ -1,5 +1,6 @@
 <template>
   <side-bar :title="title"
+            :home="home"
             :logo="logo"
             :background-color="color"
             :background-image="image"
@@ -26,7 +27,7 @@
 
   export default {
     name: "Sidebar",
-    props: ['logo', 'title', 'items', 'image', 'color'],
+    props: ['logo','home', 'title', 'items', 'image', 'color'],
     components: { SidebarItem, MobileMenu },
   }
 </script>

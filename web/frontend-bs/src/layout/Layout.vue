@@ -4,7 +4,8 @@
       <Sidebar
                :logo="logo"
                :title="title"
-               :image="sidebarBackground"
+               :home="home"
+               :image="sidebarBackgroundImage"
                :color="sidebarColor"
                :items="sidebarItems"
       ></Sidebar>
@@ -26,7 +27,7 @@
   import MobileMenu from './sublayouts/MobileMenu.vue'
   import Sidebar from './sublayouts/sidebar/Sidebar.vue'
   export default {
-    props: ['title', 'logo', 'sidebarColor', 'sidebarBackground', 'sidebarItems'],
+    props: ['title', 'home', 'logo', 'sidebarColor', 'sidebarBackgroundImage', 'sidebarItems'],
     components: {
       Sidebar,
       TopNavbar,

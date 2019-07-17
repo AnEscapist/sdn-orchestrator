@@ -5,14 +5,13 @@
        :data-image="backgroundImage">
     <div class="sidebar-wrapper">
       <div class="logo">
-        <a href="#" class="simple-text logo__container">
+        <router-link :to="home" class="simple-text logo__container">
             <div class="logo-img">
                 <img :src="logo" alt="">
             </div>
           {{title}}
-        </a>
+        </router-link>
       </div>
-
       <slot name="content"></slot>
       <ul class="nav nav-main__links">
         <!--By default vue-router adds an active class to each route link. This way the links are colored when clicked-->
@@ -76,6 +75,10 @@
       autoClose: {
         type: Boolean,
         default: true
+      },
+      home: {
+        type: String,
+        default: '/'
       }
     },
     provide () {
