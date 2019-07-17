@@ -1,11 +1,12 @@
 
 const templateSidebar = {
   color: 'black', //accepted: '', 'blue', 'azure', 'green', 'orange', 'red', 'purple', 'black';
-    backgroundImage: 'img/sidebar-5.jpg',
+    backgroundImage: 'img/sidebar-5.jpg', //public/img/sidebar-5.jpg
     items: [
     {
       to: '/admin/overview',
-      icon: 'nc-icon nc-chart-pie-35',
+      // icon: 'nc-icon nc-chart-pie-35',
+      icon: 'fas fa-tachometer-alt', //font awesome icon you're welcome;
       text: 'Dashboard'
     },
     {

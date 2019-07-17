@@ -14,7 +14,8 @@
     <template slot="bottom-links">
       <sidebar-link class="active"
                     to="/admin/upgrade">
-        <i class="nc-icon nc-alien-33"></i>
+<!--        <i class="nc-icon nc-alien-33"></i>-->
+        <i class="fas fa-tachometer-alt"></i>
         <p>Upgrade to PRO</p>
       </sidebar-link>
     </template>
