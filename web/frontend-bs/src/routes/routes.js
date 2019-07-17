@@ -15,7 +15,7 @@ const routes = [
   },
   // ...dockerRoutes,
   // ...vmRoutes,
-  // ...grpcRoutes,
+  ...grpcRoutes,
   ...ucpeRoutes,
   ...sampleRoutes,
 
