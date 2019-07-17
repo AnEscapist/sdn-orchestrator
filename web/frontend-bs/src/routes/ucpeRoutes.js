@@ -7,7 +7,7 @@ const ucpeRoutes = [
     // component: DashboardLayout,
     // redirect: '/ucpe/home',
     children: [
-      ...grpcRoutes,
+      // ...grpcRoutes,
       ...vnfRoutes
     ]
   },

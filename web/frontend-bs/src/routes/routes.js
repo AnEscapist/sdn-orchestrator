@@ -10,12 +10,13 @@ const routes = [
   {
     path: '/',
     component: DashboardLayout,
-    redirect: '/admin/overview'
+    redirect: '/admin/overview',
   },
-  ...sampleRoutes,
   // ...dockerRoutes,
   // ...vmRoutes,
   ...grpcRoutes,
+  ...sampleRoutes,
+
   { path: '*', component: NotFound }
 ];
 
