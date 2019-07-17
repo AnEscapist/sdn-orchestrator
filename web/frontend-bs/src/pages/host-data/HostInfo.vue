@@ -183,7 +183,33 @@
           StatsCard
         ],
         data() {
-
+          return {
+            data_values: {}
+          };
+        },
+        mounted() {
+          this.getValues()
+        },
+        methods: {
+          getValues(func) {
+            const token = sessionStorage.getItem('token')
+            const URL = `/api/grpc/${func}`
+            this.$axios({
+              method: 'get',
+              url: URL,
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+              }
+            })
+              .then(res => {
+                const res_val = JSON.parse(res.data.result)['return']
+                this.data_values[`${func}`] = res_val
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          }
         }
     }
 </script>

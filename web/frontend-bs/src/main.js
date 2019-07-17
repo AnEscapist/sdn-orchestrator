@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
@@ -26,6 +28,7 @@ Vue.component('font-awesome-layers-text', FontAwesomeLayersText)
 // plugin setup
 Vue.use(VueRouter)
 Vue.use(LightBootstrap)
+Vue.use(VueAxios, axios)
 
 // configure router
 const router = new VueRouter({

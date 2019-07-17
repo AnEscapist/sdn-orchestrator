@@ -4,3 +4,4 @@ from web.backend.zmq_web import call_ucpe_function
 
 grpc_routes = Blueprint('grpc', __name__, template_folder='templates')
 
+@app.route('/'
