@@ -8,9 +8,9 @@ PORT = '50051'
 
 
 def run(request_type, hostname=HOSTNAME, port=PORT, str_param1=None, str_param2=None, str_param3=None, **kwargs):
-    if 'hostname' in kwargs:
+    if 'hostname' in kwargs['body']:
         hostname = kwargs['body']['hostname']
-    if 'port' in kwargs:
+    if 'port' in kwargs['body']:
         port = kwargs['body']['port']
     command = kwargs['body']['command']
     str_request = kwargs['body']['str_request']

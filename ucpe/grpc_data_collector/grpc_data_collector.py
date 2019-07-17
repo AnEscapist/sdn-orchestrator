@@ -106,6 +106,7 @@ def modify_message(func, status, info, var=True):
 
     return json_str(message)
 
+
 def interpret_params(input_string, **kwargs):
     tmp = input_string.split(" ")
     count = len(tmp)
@@ -126,6 +127,16 @@ def interpret_params(input_string, **kwargs):
 def get_execute(name, input_string, **kwargs):
     controller = interpret_params(input_string, **kwargs)
     response = data_client.run('get', **controller)
+    message = {
+        'function': f'{name}',
+        'status': f'{response.header}',
+    }
+    if 'str_response' in response:
+        message['return'] = response.str_response
+    elif 'int_response' in response:
+        message['return'] = response.int_response
+    elif 'float_response' in response:
+        message['return'] = response.float_response
 
 
 def modify_execute(name, input_string, **kwargs):
@@ -134,8 +145,9 @@ def modify_execute(name, input_string, **kwargs):
     message = {
         'function': f'{name}',
         'status': f'{response.status}',
-        'info': f'{response.str_response}'
+        'return': f'{response.str_response}'
     }
+    return json_str(message)
 
 
 def main():
