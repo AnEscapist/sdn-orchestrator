@@ -88,25 +88,6 @@ def json_str(message):
     return json.dumps(message, indent=4)
 
 
-def get_message(func, info):
-    message = {
-        'status': f'Get request for {func.__name__} finished',
-        'return': f'{info}'
-    }
-    return json_str(message)
-
-
-def modify_message(func, status, info, var=True):
-    message = {
-        'function': f'<{func.__name__}>',
-        'status': f'{status}'
-    }
-    if var:
-        message['return'] = f'{info}'
-
-    return json_str(message)
-
-
 def interpret_params(input_string, **kwargs):
     tmp = input_string.split(" ")
     count = len(tmp)
