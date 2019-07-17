@@ -137,6 +137,7 @@ def get_execute(name, input_string, **kwargs):
         message['return'] = response.int_response
     elif 'float_response' in response:
         message['return'] = response.float_response
+    return json_str(message)
 
 
 def modify_execute(name, input_string, **kwargs):
