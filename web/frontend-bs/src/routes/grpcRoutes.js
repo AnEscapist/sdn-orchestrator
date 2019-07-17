@@ -1,6 +1,5 @@
 import DashboardLayout from '../layout/template/TemplateLayout.vue'
 import HostInfo from '../pages/host-data/HostInfo.vue'
-import LibvirtHome from "*.vue";
 
 const grpcRoutes = [
     {
