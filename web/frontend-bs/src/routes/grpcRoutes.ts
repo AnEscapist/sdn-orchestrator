@@ -1,13 +1,19 @@
-import Dashboard from '../views/grpc_data_collector/DataDashboard.vue'
-import Home from '../views/grpc_data_collector/DataHome.vue'
+import DashboardLayout from '../layout/template/TemplateLayout.vue'
+import HostInfo from '../pages/host-data/HostInfo.vue'
 import LibvirtHome from "*.vue";
 
 const grpcRoutes = [
     {
         path: '/host-info',
-        name: 'data-home',
+        name: 'DashboardLayout',
         redirect: '/host-info/home',
-        component: Home,
+        children: [
+          {
+            path: 'overview',
+            name: 'HostInfoOverview',
+            component: HostInfo
+          }
+        ]
     }
 ]
 
