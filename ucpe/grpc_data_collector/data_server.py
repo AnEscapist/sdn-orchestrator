@@ -28,6 +28,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
             elif request.str_request == 'free':
                 response.header = "Total free hugepages memory in kB"
                 response.int_response = get_functions.get_hugepages_freemem_kB()
+
         elif request.command == 'memory':
             if request.str_request == 'total':
                 response.header = "Total memory in kB"
@@ -35,14 +36,17 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
             elif request.str_request == 'available':
                 response.header = "Total available memory in kB"
                 response.int_response = get_functions.get_avail_mem_kB()
+
         elif request.command == 'cpu':
             if request.str_request == 'total':
                 response.header = "Total CPUs"
                 response.int_response = get_functions.get_total_cpus()
+
         elif request.command == 'netifaces':
             if request.str_request == 'list':
                 response.header = "List of network interfaces"
                 response.str_response = str(get_functions.get_network_interfaces())
+
         elif request.command == 'bridge':
             if request.str_request == 'list':
                 response.header = "List of Linux bridges"
@@ -53,10 +57,12 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
             elif request.str_request == 'details':
                 response.header = f'Details for {request.str_param1}'
                 response.str_response = str(get_functions.get_linux_bridge_details(request.str_param1))
+
         elif request.command == 'dpdk':
             if request.str_request == 'devices':
                 response.header = "List of network devices using DPDK-compatible drivers"
                 response.str_response = str(get_functions.dpdk_get_devices())
+
         elif request.command == 'sriov':
             if request.str_request == 'total_vfs':
                 response.header = f"Total vfs for {request.str_param1}"
@@ -65,6 +71,8 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                 response.header = f'Current vfs for {request.str_param1}'
                 response.str_response = get_functions.sriov_numvfs(request.str_param1)
         return response
+
+# ==============================================================================================
 
     def ModifyData(self, request, context):
         response = data_pb2.DataChangeResponse()
@@ -75,33 +83,51 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
         elif request.command == 'dpdk':
             if request.str_request == 'bind':
                 # print('trying to bind')
-                response.str_response = f'Binding {request.str_param1} to {request.str_param2}, please wait'
-                print(response.str_response)
-                response.func_status = modify_functions.dpdk_bind(request.str_param1, request.str_param2, force=True)
-                print('Bind successful')
+                response.status = f'Binding {request.str_param1} to {request.str_param2}, please wait'
+                print(response.status)
+                proc = modify_functions.dpdk_bind(request.str_param1, request.str_param2, force=True)
+                if proc:
+                    response.status = f'Binding {request.str_param1} to {request.str_param2} successful'
+                else:
+                    response.status = f'Binding {request.str_param1} to {request.str_param2} unsuccessful'
+                response.str_response = str(get_functions.dpdk_get_devices())
+                print(response.status)
 
             elif request.str_request == 'unbind':
-                response.str_response = f'Unbinding {request.str_param1}, please wait'
-                print(response.str_response)
-                response.func_status = modify_functions.dpdk_unbind(request.str_param1)
+                response.status = f'Unbinding {request.str_param1}, please wait'
+                print(response.status)
+                proc = modify_functions.dpdk_unbind(request.str_param1)
+                if proc:
+                    response.status = f'Unbinding {request.str_param1} successful'
+                else:
+                    response.status = f'Unbinding {request.str_param1} unsuccessful'
+                response.str_response = str(get_functions.dpdk_get_devices())
                 print('Unbind successful')
 
             elif request.str_request == 'enable':
-                response.str_response = f'Enabling {request.str_param1} driver, please wait'
+                response.status = f'Enabling {request.str_param1} driver, please wait'
                 print(response.str_response)
-                response.func_status = modify_functions.dpdk_enable(request.str_param1)
+                proc = modify_functions.dpdk_enable(request.str_param1)
+                if proc:
+                    response.status = f'Enabling {request.str_param1} successful'
+                else:
+                    response.status = f'Enabling {request.str_param1} unsuccessful'
                 print('Driver enabled')
+
         elif request.command == 'ovs':
-            if request.str_request == 'add_dpdk_port':
-                response.str_response = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
+            if request.str_request == ' add_dpdk_port':
+                response.status = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
                 print(response.str_response)
-                response.func_status = modify_functions.ovs_add_dpdk_port(request.str_param1, request.str_param2,
+                proc = modify_functions.ovs_add_dpdk_port(request.str_param1, request.str_param2,
                                                                           request.str_param3)
-                print('Port added')
+                if proc:
+                    response.status = f"Port {request.str_param2} added"
+                response.str_response = None
 
             elif request.str_request == 'add_port':
-                response.str_response = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
-                print(response.str_response)
+                response.status = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
+                print(response.status)
+                response.str_response = None
 
         return response
 

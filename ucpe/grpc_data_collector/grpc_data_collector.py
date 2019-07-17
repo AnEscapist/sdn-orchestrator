@@ -134,7 +134,7 @@ def modify_execute(name, input_string, **kwargs):
     message = {
         'function': f'{name}',
         'status': f'{response.status}',
-        'info':
+        'info': f'{response.str_response}'
     }
 
 
