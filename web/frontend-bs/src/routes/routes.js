@@ -1,7 +1,7 @@
 import templateRoutes from './templateRoutes'
 // import dockerRoutes from './dockerRoutes'
 // import vmRoutes from './vmRoutes'
-// import grpcRoutes from './grpcRoutes'
+import grpcRoutes from './grpcRoutes'
 import DashboardLayout from '../layout/template/TemplateLayout.vue'
 // GeneralViews
 import NotFound from '../pages/template/NotFoundPage.vue'
@@ -15,7 +15,7 @@ const routes = [
   ...templateRoutes,
   // ...dockerRoutes,
   // ...vmRoutes,
-  // ...dataRoutes,
+  ...grpcRoutes,
   { path: '*', component: NotFound }
 ];
 
