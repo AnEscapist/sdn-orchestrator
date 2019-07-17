@@ -6,7 +6,7 @@ const grpcRoutes = [
     {
         path: '/host-info',
         name: 'DashboardLayout',
-        redirect: '/host-info/home',
+        redirect: '/host-info/overview',
         children: [
           {
             path: 'overview',
@@ -15,6 +15,6 @@ const grpcRoutes = [
           }
         ]
     }
-]
+];
 
 export default grpcRoutes
