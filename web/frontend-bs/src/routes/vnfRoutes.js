@@ -1,15 +1,12 @@
 // import grpcRoutes from ./grpcRoutes
 // import vnfRoutes from ./vnfRoutes
+import TestComponent from '../components/TestComponent'
 
-const ucpeRoutes = [
+const vnfRoutes = [
   {
-    path: '/ucpe/:ucpe-sn',
-    // component: DashboardLayout,
-    // redirect: '/ucpe/home',
-    children: [
-      ...grpcRoutes,
-      ...vnfRoutes
-    ]
+    path: '/vnfs',
+    component: TestComponent,
+    // redirect: '/home',
   },
 ];
 
@@ -22,4 +19,4 @@ const ucpeRoutes = [
    return res;
 };**/
 
-export default ucpeRoutes
+export default vnfRoutes

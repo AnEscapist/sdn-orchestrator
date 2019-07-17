@@ -1,10 +1,11 @@
 // import grpcRoutes from ./grpcRoutes
-// import vnfRoutes from ./vnfRoutes
+import vnfRoutes from './vnfRoutes'
+import DashboardLayout from '../layout/sample-layout/TemplateLayout'
 
 const ucpeRoutes = [
   {
     path: '/ucpe/:ucpe-sn',
-    // component: DashboardLayout,
+    component: DashboardLayout,
     // redirect: '/ucpe/home',
     children: [
       // ...grpcRoutes,
