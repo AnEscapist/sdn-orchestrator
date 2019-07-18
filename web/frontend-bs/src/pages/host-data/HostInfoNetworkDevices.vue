@@ -75,14 +75,24 @@
               });
               var res = response.data.result.return
               console.log(res)
-              var data2 = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split('|')
+              var data2 = res.substring(res.indexOf('{') + 1, res.indexOf('}')).split('|')
               console.log(data2)
               var i;
+              var x = {};
               for (i = 0; i < data2.length; i++){
-                console.log(data2[i])
-                res = data2[i]
-                this.data.push(JSON.parse(res))
-                console.log(this.data)
+                // console.log(data2[i])
+                res = data2[i];
+                x = {
+                  slot: res[0],
+                  device_name: res[1],
+                  interface: res[2],
+                  driver: res[3],
+                  unused: res[4],
+                  driver_type: res[5]
+                };
+                // this.data.push(JSON.parse(res))
+                this.data.push(JSON.parse(x))
+                // console.log(this.data)
               }
             });
           }
