@@ -46,12 +46,12 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
         elif request.command == 'netifaces':
             if request.str_request == 'list':
                 response.header = "List of network interfaces"
-                response.str_response = str(get_functions.get_network_interfaces())
+                response.str_response = json.dumps(get_functions.get_network_interfaces())
 
         elif request.command == 'bridge':
             if request.str_request == 'list':
                 response.header = "List of Linux bridges"
-                response.str_response = str(get_functions.print_linux_bridges_list())
+                response.str_response = json.dumps(get_functions.print_linux_bridges_list())
             elif request.str_request == 'all':
                 response.header = "All Linux bridge info"
                 response.str_response = json.dumps(get_functions.get_linux_bridges_all())
