@@ -244,6 +244,6 @@ def checkForMemoryLeakage():
 # time.sleep(1)
 
 if __name__ == "__main__":
-    # checkForMemoryLeakage()
+    checkForMemoryLeakage()
     # checkForDeadlock()
 
