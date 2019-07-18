@@ -127,7 +127,7 @@ def main():
     kwargs = {'body': {'str_param1': 'b7:00.3', 'str_param2': 'i40e'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
-    print(tmp.grpc_get_dpdk_devices(**kwargs))
+    print(tmp.grpc_get_network_interfaces(**kwargs))
 
 
 if __name__ == '__main__':

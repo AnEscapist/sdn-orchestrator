@@ -4,6 +4,7 @@ from web.backend.zmq_web import call_ucpe_function
 
 grpc_routes = Blueprint('grpc', __name__, template_folder='templates')
 
+
 @grpc_routes.route('/grpc/total_mem')
 def total_mem():
     messagedata = {"method": "grpc_get_totalmem", "params": {
@@ -12,6 +13,7 @@ def total_mem():
     }
     return jsonify(call_ucpe_function(messagedata))
 
+
 @grpc_routes.route('/grpc/avail_mem')
 def avail_mem():
     messagedata = {"method": "grpc_get_availmem", "params": {
@@ -19,6 +21,7 @@ def avail_mem():
         "jsonrpc": "2.0", "id": 0
     }
     return jsonify(call_ucpe_function(messagedata))
+
 
 @grpc_routes.route('/grpc/get_net_devices')
 def get_net_devices():
