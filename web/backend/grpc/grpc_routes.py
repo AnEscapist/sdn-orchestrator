@@ -11,3 +11,10 @@ def total_mem():
         "jsonrpc": "2.0", "id": 0
     }
     return jsonify(call_ucpe_function(messagedata))
+
+def avail_mem():
+    messagedata = {"method": "grpc_get_availmem", "params": {
+        "body": {"hostname": "10.10.81.100", "port": "50051"}},
+        "jsonrpc": "2.0", "id": 0
+    }
+    return jsonify(call_ucpe_function(messagedata))

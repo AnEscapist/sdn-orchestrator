@@ -8,8 +8,8 @@
               <i class="nc-icon nc-chart text-warning"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Capacity</p>
-              <h4 class="card-title">{{ total_mem }}}</h4>
+              <p class="card-category">Total Memory</p>
+              <h4 class="card-title">{{ total_mem }} kB</h4>
             </div>
             <div slot="footer">
               <i class="fa fa-refresh"></i>Updated now
@@ -74,42 +74,38 @@
     import LTable from "../../components/Table";
 
     export default {
-        name: "HostInfo",
-        components: [
-          LTable,
-          ChartCard,
-          StatsCard
-        ],
-        data() {
-          return {
-            total_mem: this.getTotalMem
-          };
-        },
-        methods: {
-          getValues(func) {
-            // const token = sessionStorage.getItem('token')
-            const URL = `/api/grpc/${func}`
-            this.$axios({
-              method: 'get',
-              url: URL,
-              headers: {
-                'Content-Type': 'application/json',
-                // Authorization: `Bearer ${token}`
-              }
-            })
-              .then(res => {
-                const res_val = JSON.parse(res.data.result)['return']
-                // this.data_values[`${func}`] = res_val
-                return res_val
-              })
-              .catch(err => {
-                console.log(err)
-              })
-          }
-        },
-        computed: {
-          getTotalMem:() => this.getValues("total_mem")
+      name: "HostData",
+      components: {
+        LTable,
+        StatsCard,
+        ChartCard
+      },
+      data() {
+        return {
+          total_mem: '',
+          avail_mem: '',
+
         }
+      },
+      mounted() {
+        this.getTotalMem();
+        this.getAvailableMem();
+      },
+      methods: {
+        getTotalMem() {
+          this.axios.get("/api/grpc/total_mem").then(response => {
+            // console.log(response.data.result['return']);
+            var res = response.data.result['return'];
+            this.total_mem = res
+          });
+        },
+        getAvailableMem() {
+          this.axios.get("/api/grpc/avail_mem").then(response => {
+            var res = response.data.result['return'];
+            this.avail_mem = res
+          })
+        }
+      }
     }
 </script>
 
