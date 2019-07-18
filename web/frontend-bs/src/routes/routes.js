@@ -15,8 +15,8 @@ const routes = [
   // ...dockerRoutes,
   // ...vmRoutes,
   ...grpcRoutes,
-  // ...ucpeRoutes,
-  ...vnfRoutes,
+  ...ucpeRoutes,
+  // ...vnfRoutes,
   ...sampleRoutes,
 
   { path: '*', component: NotFound }

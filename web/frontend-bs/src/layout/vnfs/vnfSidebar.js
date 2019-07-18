@@ -3,37 +3,37 @@ const vnfSidebar = {
   backgroundImage: 'img/sidebar-5.jpg', //public/img/sidebar-5.jpg
   items: [
     {
-      to: '/vnfs/home',
+      to: 'home',
       icon: 'fas fa-tachometer-alt', //font awesome icon you're welcome;
       text: 'Dashboard'
     },
     {
-      to: '/vnfs/images',
+      to: 'images',
       icon: 'fas fa-clone',
       text: 'Images'
     },
     {
-      to: '/vnfs/table-list',
+      to: 'networking',
       icon: 'fas fa-network-wired',
       text: 'Networking'
     },
     {
-      to: '/vnfs/typography',
+      to: 'volume',
       icon: 'fas fa-boxes',
       text: 'Volume'
     },
     {
-      to: '/vnfs/icons',
+      to: 'swarm',
       icon: 'fas fa-users',
       text: 'Swarm'
     },
     {
-      to: '/vnfs/icons',
+      to: 'events',
       icon: 'fas fa-history',
       text: 'Event'
     },
     {
-      to: '/vnf/notifications',
+      to: 'notifications',
       icon: 'fas fa-bell',
       text: 'Notifications'
     },

@@ -6,9 +6,11 @@ import VNFDashboard from '../pages/vnfs/VNFDashboard'
 
 const vnfRoutes = [
   {
-    path: '/vnfs',
+    path: 'vnfs',
+    // path: '/vnfs',
     component: VNFLayout,
-    redirect: '/vnfs/home',
+    redirect: 'vnfs/home',
+    // redirect: '/vnfs/home',
     children: [
       {
         path: 'home',

@@ -1,8 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand"
-         href="#">uCPE Controller</a>
+      <router-link class="navbar-brand"
+         to="/">uCPE Controller</router-link>
+<!--      todo: change-->
       <button type="button"
               class="navbar-toggler navbar-toggler-right"
               :class="{toggled: $sidebar.showSidebar}"
@@ -56,12 +57,13 @@
 <!--            </a>-->
 <!--          </li>-->
           <li class="nav-item">
-            <router-link to="/host-info" class="nav-link">
+            <router-link to="../host-info" class="nav-link">
               Host Info
             </router-link>
+<!--            todo: the .. in ../host-info and ../vnfs is REALLY BAD-->
           </li>
           <li class="nav-item">
-            <router-link to="/vnfs" class="nav-link">
+            <router-link to="../vnfs" class="nav-link">
               Virtual Network Functions
             </router-link>
           </li>

@@ -1,12 +1,13 @@
 // import grpcRoutes from ./grpcRoutes
 import vnfRoutes from './vnfRoutes'
 import DashboardLayout from '../layout/sample-layout/TemplateLayout'
+import Blank from '../components/Blank'
 
 const ucpeRoutes = [
   {
-    path: '/ucpe/:ucpe-sn',
-    component: DashboardLayout,
-    // redirect: '/ucpe/home',
+    path: '/ucpe/:ucpe_sn',
+    component: Blank,
+    // redirect: '/ucpe/home', //todo: redirect to list of ucpes
     children: [
       // ...grpcRoutes,
       ...vnfRoutes

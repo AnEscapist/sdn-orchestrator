@@ -2,6 +2,11 @@
   <div class="content">
     <div class="container-fluid">
       <card>
+        <div class="info">
+
+        </div>
+      </card>
+      <card>
         <div class="row">
           <div class="col-md-6">
             <h5>Notifications Style</h5>
