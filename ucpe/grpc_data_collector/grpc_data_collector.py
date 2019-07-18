@@ -84,10 +84,6 @@ def func_name():
     return sys._getframe().f_back.f_code.co_name
 
 
-def json_str(message):
-    return json.dumps(message, indent=4)
-
-
 def interpret_params(input_string, **kwargs):
     tmp = input_string.split(" ")
     count = len(tmp)
@@ -113,7 +109,7 @@ def get_execute(name, input_string, **kwargs):
         'status': f'{response.header}',
         'return': f'{response.str_response}'
     }
-    return json_str(message)
+    return message
 
 
 def modify_execute(name, input_string, **kwargs):
@@ -124,7 +120,7 @@ def modify_execute(name, input_string, **kwargs):
         'status': f'{response.status}',
         'return': f'{response.str_response}'
     }
-    return json_str(message)
+    return message
 
 
 def main():
