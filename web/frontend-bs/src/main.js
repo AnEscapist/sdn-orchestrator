@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import store from './store';
 
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
@@ -20,15 +21,15 @@ import {far} from '@fortawesome/free-regular-svg-icons'
 import {fab} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText} from '@fortawesome/vue-fontawesome'
 
-library.add(fas, far, fab, faUserSecret)
-Vue.component('font-awesome-icon', FontAwesomeIcon)
-Vue.component('font-awesome-layers', FontAwesomeLayers)
-Vue.component('font-awesome-layers-text', FontAwesomeLayersText)
+library.add(fas, far, fab, faUserSecret);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('font-awesome-layers', FontAwesomeLayers);
+Vue.component('font-awesome-layers-text', FontAwesomeLayersText);
 
 // plugin setup
-Vue.use(VueRouter)
-Vue.use(LightBootstrap)
-Vue.use(VueAxios, axios)
+Vue.use(VueRouter);
+Vue.use(LightBootstrap);
+Vue.use(VueAxios, axios);
 
 // configure router
 const router = new VueRouter({
@@ -41,11 +42,12 @@ const router = new VueRouter({
       return { x: 0, y: 0 }
     }
   }
-})
+});
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   render: h => h(App),
-  router
-})
+  router,
+  store
+});

@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
 sys.path.append('/home/att-pc-7/Zhengqi/Project/sdn-orchestrator/')
 sys.path.append('/home/att/projects/sdn-orchestrator/')
@@ -15,20 +16,21 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 port_pub = "5559"
 port_sub = "5570"
-TIMEOUT = 1000 #todo: decide
+TIMEOUT = 10  # todo: decide
 CONTROLLER_ID = "test-id"
-BROKER_IP = "10.10.81.200" #todo: make this not global
-UCPE_LIST = ["test-sn"] #serial numbers of ucpes this controller controls
-#todo: set topic to something reasonable, like request id or timestampidk
+BROKER_IP = "10.10.81.200"  # todo: make this not global
+UCPE_LIST = ["test-sn"]  # serial numbers of ucpes this controller controls
+# todo: set topic to something reasonable, like request id or timestampidk
 REQUEST_ID_DELIMITER = "___"
-#NOTE: TOPICS CANNOT CONTAIN SPACES
+# NOTE: TOPICS CANNOT CONTAIN SPACES
 
 request_ids = queue.Queue()
 request_queue = queue.Queue()
-response_queues = dict() # request_id -> responseQueue
+response_queues = dict()  # request_id -> responseQueue
 response_queues_lock = threading.Lock()
 max_id = 0
 max_id_lock = threading.Lock()
+
 
 def call_ucpe_function(messagedata, controller_id='test-id', ucpe_sn='test-sn'):
     if not request_ids.empty():
@@ -45,11 +47,14 @@ def call_ucpe_function(messagedata, controller_id='test-id', ucpe_sn='test-sn'):
     request_ids.put(request_id)
     return response
 
+
 def get_topic(id, request_id):
     return f'{id}___{request_id}'
 
+
 def request_id_from_topic(topic):
     return int(topic.rsplit(REQUEST_ID_DELIMITER)[1])
+
 
 def get_request_id():
     global max_id
@@ -58,6 +63,7 @@ def get_request_id():
             max_id += 1
             return max_id
         return request_ids.get()
+
 
 def send_request(messagedata, controller_id, request_id):
     # Socket to publish requests
@@ -68,6 +74,7 @@ def send_request(messagedata, controller_id, request_id):
     request.message = message
     request.topic = topic
     request_queue.put(request)
+
 
 def sub_response(queue, ucpe_sn, request_id):
     # Socket to subscribe to responses
@@ -86,32 +93,37 @@ def sub_response(queue, ucpe_sn, request_id):
     queue.put(response)
     return response
 
+
 def handleRequests():
     context_pub = zmq.Context()
     socket_pub = context_pub.socket(zmq.PUB)
     socket_pub.connect("tcp://%s:%s" % (BROKER_IP, port_pub))
     while True:
-        request = request_queue.get() #blocks
+        request = request_queue.get()  # blocks
         socket_pub.send_string('%s %s' % (request.topic, request.message))
         print('sent', request.topic, request.message)
+
 
 def handleFiniteRequests(iterations):
     context_pub = zmq.Context()
     socket_pub = context_pub.socket(zmq.PUB)
     socket_pub.connect("tcp://%s:%s" % (BROKER_IP, port_pub))
     for i in range(iterations):
-        request = request_queue.get() #blocks
+        request = request_queue.get()  # blocks
         socket_pub.send_string('%s %s' % (request.topic, request.message))
         print('sent', request.topic, request.message)
+
 
 def startRequestHandler():
     requestHandler = threading.Thread(target=handleRequests)
     requestHandler.start()
 
+
 def startFiniteRequestHandler(iterations):
     finiteRequestHandler = threading.Thread(target=handleFiniteRequests, args=[iterations])
     finiteRequestHandler.start()
-    time.sleep(0.5) #todo: why do we need this?
+    time.sleep(0.5)  # todo: why do we need this?
+
 
 def handleResponses():
     context_sub = zmq.Context()
@@ -150,30 +162,26 @@ def handleFiniteResponses(iterations):
             response_queue = response_queues[request_id]
         response_queue.put(response)
 
+
 def startResponseHandler():
     responseHandler = threading.Thread(target=handleResponses)
     responseHandler.start()
-    time.sleep(0.5) #todo: why do we need this?
+    time.sleep(0.5)  # todo: why do we need this?
+
 
 def startFiniteResponseHandler(iterations):
     finiteResponseHandler = threading.Thread(target=handleFiniteResponses, args=[iterations])
     finiteResponseHandler.start()
-    time.sleep(0.5) #todo: why do we need this?
+    time.sleep(0.5)  # todo: why do we need this?
+
 
 def start():
     startResponseHandler()
     startRequestHandler()
 
 
-# creating thread
-# t1 = threading.Thread(target=sub_response)
-
-# starting thread 1
-# t1.start()
-#
-# time.sleep(1)
-
-if __name__ == "__main__":
+# tests
+def checkForDeadlock():
     controller_id = "test-id"
     ucpe_sn = "test-sn"
     messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
@@ -211,3 +219,26 @@ if __name__ == "__main__":
 
     assert len(set(request_ids.queue)) == len(list(request_ids.queue))
     print("Success!")
+
+
+def checkForMemoryLeakage():
+    minutes = 15
+    messagedata = {"method": "libvirt_controller_get_vm_state", "params": {
+        "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    for i in range(minutes * 60):
+        call_ucpe_function(messagedata)
+        time.sleep(1)
+    time.sleep(math.inf)  # wait
+
+
+# creating thread
+# t1 = threading.Thread(target=sub_response)
+
+# starting thread 1
+# t1.start()
+#
+# time.sleep(1)
+
+if __name__ == "__main__":
+    checkForMemoryLeakage()
