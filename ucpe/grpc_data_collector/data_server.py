@@ -2,6 +2,7 @@ import grpc
 from concurrent import futures
 import time
 import sys
+import json
 
 sys.path.append('/home/potato/projects/sdn-orchestrator/')
 
@@ -53,15 +54,15 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                 response.str_response = str(get_functions.print_linux_bridges_list())
             elif request.str_request == 'all':
                 response.header = "All Linux bridge info"
-                response.str_response = str(get_functions.get_linux_bridges_all())
+                response.str_response = json.dumps(get_functions.get_linux_bridges_all())
             elif request.str_request == 'details':
                 response.header = f'Details for {request.str_param1}'
-                response.str_response = str(get_functions.get_linux_bridge_details(request.str_param1))
+                response.str_response = json.dumps(get_functions.get_linux_bridge_details(request.str_param1))
 
         elif request.command == 'dpdk':
             if request.str_request == 'devices':
                 response.header = "List of network devices using DPDK-compatible drivers"
-                response.str_response = str(get_functions.dpdk_get_devices())
+                response.str_response = json.dumps(get_functions.dpdk_get_devices())
 
         elif request.command == 'sriov':
             if request.str_request == 'total_vfs':
@@ -90,7 +91,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                     response.status = f'Binding {request.str_param1} to {request.str_param2} successful'
                 else:
                     response.status = f'Binding {request.str_param1} to {request.str_param2} unsuccessful'
-                response.str_response = str(get_functions.dpdk_get_devices())
+                response.str_response = json.dumps(get_functions.dpdk_get_devices())
                 print(response.status)
 
             elif request.str_request == 'unbind':
@@ -101,7 +102,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                     response.status = f'Unbinding {request.str_param1} successful'
                 else:
                     response.status = f'Unbinding {request.str_param1} unsuccessful'
-                response.str_response = str(get_functions.dpdk_get_devices())
+                response.str_response = json.dumps(get_functions.dpdk_get_devices())
                 print('Unbind successful')
 
             elif request.str_request == 'enable':
