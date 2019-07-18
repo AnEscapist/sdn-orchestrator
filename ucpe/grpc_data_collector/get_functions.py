@@ -77,13 +77,16 @@ def dpdk_get_devices():
     tmp_list = []
     for d in devices.keys():
         list1 = []
+
+        device_dict = dict()
+        dd = devices[d]
+
         list1[0] = dd["Slot"]
         list1[1] = dd["Device_str"]
         list1[2] = dd["Interface"]
         list1[3] = dd["Driver_str"]
         list1[4] = dd["Module_str"]
-        device_dict = dict()
-        dd = devices[d]
+
         device_dict['slot'] = dd["Slot"]
         device_dict['device_name'] = dd["Device_str"]
         device_dict['interface'] = dd["Interface"]
