@@ -4,10 +4,10 @@ import HostInfoNetworkDevices from "../pages/host-data/HostInfoNetworkDevices";
 
 const grpcRoutes = [
     {
-        path: '/host-info',
+        path: '/hostData',
         name: 'DashboardLayout',
         component: DashboardLayout,
-        redirect: '/host-info/overview',
+        redirect: '/hostData/overview',
         children: [
           {
             path: 'overview',

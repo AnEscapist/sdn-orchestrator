@@ -60,7 +60,7 @@
             <router-link to="../host-info" class="nav-link">
               Host Info
             </router-link>
-<!--            todo: the .. in ../host-info and ../vnfs is REALLY BAD-->
+<!--            todo: the .. in ../hostData and ../vnfs is REALLY BAD-->
           </li>
           <li class="nav-item">
             <router-link to="../vnfs" class="nav-link">
