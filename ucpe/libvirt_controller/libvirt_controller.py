@@ -130,15 +130,15 @@ def get_vm_info(ucpe, vm_name):
 
 def get_all_vm_info(ucpe):
     func = _construct_info_dict
-    return _libvirt_domain_observer(func, ucpe)
+    return _libvirt_all_domains_observer(func, ucpe)
 
 
 def _construct_info_dict(domain):
     state, maxmem, mem, cpus, cpu_time = domain.info()
-    memory_stats = domain.memoryStats()
+    # memory_stats = domain.memoryStats()
     info_dict = {"state": VMState(state).name, "max_memory": maxmem, "memory": mem, "cpu_count": cpus,
                  "cpu_time": cpu_time}
-    info_dict.update(memory_stats)
+    # info_dict.update(memory_stats)
     return info_dict
 
 
@@ -450,5 +450,6 @@ UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
 # LibvirtController.libvirt_controller_save_vm(**DEFAULT_KWARGS)
 # LibvirtController.libvirt_controller_restore_vm(**DEFAULT_KWARGS)
 # print(LibvirtController.libvirt_controller_get_vm_info(**DEFAULT_KWARGS))
+print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
 # print(LibvirtController.libvirt_controller_destroy_vm(**DEFAULT_KWARGS))
 # LibvirtController.libvirt_controller_undefine_vm(**DEFAULT_KWARGS)
