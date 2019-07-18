@@ -3,12 +3,13 @@ import docker from './modules/docker'
 import vms from './modules/vms'
 import requestVMList from './modules/vms'
 
-//don't make state, mutations, actions
+//don't make add things to state, mutations, actions
+const state = {}; //empty declaration necessary for getters
 
 const getters = {
-  VNFList: state => vms.state.vmList.concat(docker.state.containerList)
+  VNFList: state => vms.state.vmList.concat(docker.state.containerList),
   VNFCount: state => {
-    ret
+    return vms.state.vmList.length + vms.state.containerList.length
   }
 };
 
@@ -18,8 +19,6 @@ const modules = {
 
 const vnfModule = {
   state,
-  mutations,
-  actions,
   getters,
   modules
 };

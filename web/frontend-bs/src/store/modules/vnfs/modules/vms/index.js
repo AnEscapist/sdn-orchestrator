@@ -5,11 +5,14 @@ const state = {
 };
 
 const mutations = {
+  SET_VM_LIST(state, payload){
+    state.vmList = payload;
+  }
 };
 
 const actions = {
-  getVMList({commit}, token){
-    return methods.requestVMList() //todo: make this a promise
+  updateVMList({commit}, token){
+    commit('SET_VM_LIST', methods.requestVMList()) //todo: make this a promise
   }
 };
 

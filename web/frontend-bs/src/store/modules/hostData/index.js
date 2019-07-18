@@ -9,14 +9,19 @@ const mutations = {
 const actions = {
 };
 
-const getters = {
+const getters = { //note: this is for retrieving things from the state.  DO NOT put backend requests here
+};
+
+const methods = { //axios requests go here
+
 };
 
 const hostInfoModule = {
   state,
   mutations,
   actions,
-  getters
+  getters,
+  methods
 };
 
 export default hostInfoModule;
