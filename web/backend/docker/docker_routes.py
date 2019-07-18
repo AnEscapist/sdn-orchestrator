@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort,jsonify
+from flask import Blueprint, render_template, abort,jsonify, request
 from jinja2 import TemplateNotFound
 from web.backend.zmq_web import call_ucpe_function
 
@@ -33,5 +33,13 @@ def list_images():
 def client_info():
     messagedata = {"method": "docker_controller_client_info", "params": {
         "body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))
+
+@docker_routes.route('/docker/inspect_container')
+def inspect_container():
+    id = request.args.get('id')
+    messagedata = {"method": "docker_controller_inspect_container", "params": {
+        "body": {"id_name": id, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))

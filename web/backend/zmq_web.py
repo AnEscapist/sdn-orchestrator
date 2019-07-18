@@ -142,8 +142,9 @@ def handleResponses():
         response = json.loads(message)
         request_id = request_id_from_topic(topic)
         with response_queues_lock:
-            response_queue = response_queues[request_id]
-        response_queue.put(response)
+            if request_id in response_queues:
+                response_queue = response_queues[request_id]
+                response_queue.put(response)
 
 
 def handleFiniteResponses(iterations):
@@ -161,8 +162,9 @@ def handleFiniteResponses(iterations):
         response = json.loads(message)
         request_id = request_id_from_topic(topic)
         with response_queues_lock:
-            response_queue = response_queues[request_id]
-        response_queue.put(response)
+            if request_id in response_queue:
+                response_queue = response_queues[request_id]
+                response_queue.put(response)
 
 
 def startResponseHandler():
