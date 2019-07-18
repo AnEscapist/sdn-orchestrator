@@ -8,8 +8,8 @@
               <i class="nc-icon nc-chart text-warning"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Capacity</p>
-              <h4 class="card-title">{{ total_mem }}}</h4>
+              <p class="card-category">Total Memory</p>
+              <h4 class="card-title">{{ total_mem }} kB</h4>
             </div>
             <div slot="footer">
               <i class="fa fa-refresh"></i>Updated now
@@ -82,18 +82,28 @@
       },
       data() {
         return {
-          mem: ''
+          total_mem: '',
+          avail_mem: '',
+
         }
       },
       mounted() {
-        this.getMem()
+        this.getTotalMem();
+        this.getAvailableMem();
       },
       methods: {
-        getMem(){
+        getTotalMem() {
           this.axios.get("/api/grpc/total_mem").then(response => {
-            var res = JSON.parse(response.data.result)['return']
-            this.mem = res
+            // console.log(response.data.result['return']);
+            var res = response.data.result['return'];
+            this.total_mem = res
           });
+        },
+        getAvailableMem() {
+          this.axios.get("/api/grpc/avail_mem").then(response => {
+            var res = response.data.result['return'];
+            this.avail_mem = res
+          })
         }
       }
     }
