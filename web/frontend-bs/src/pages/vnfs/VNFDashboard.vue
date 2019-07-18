@@ -2,6 +2,8 @@
   <div class="content">
     <div class="container-fluid">
       <VNFSummaryPanel></VNFSummaryPanel>
+      <ZhengqiTest></ZhengqiTest>
+      <RogerTest></RogerTest>
       <SampleCard></SampleCard>
 <!--      todo: notifications fo VNF status changes-->
     </div>
@@ -9,16 +11,17 @@
 </template>
 
 <script>
-    import Card from 'src/components/Cards/Card.vue'
+    import Card from '../../components/Cards/Card.vue'
     import SampleCard from './SampleCard'
     import VNFSummaryPanel from './VNFSummaryPanel'
     import VNFInfoPanel from './VNFInfoPanel'
-
+    import ZhengqiTest from '../../components/test/ZhengqiTest'
+    import RogerTest from '../../components/test/RogerTest'
 
     export default {
       name: 'VNFDashboard',
       components: {
-        Card, SampleCard, VNFSummaryPanel, VNFInfoPanel
+        Card, SampleCard, VNFSummaryPanel, VNFInfoPanel, ZhengqiTest, RogerTest
       },
       data () {
         return {
