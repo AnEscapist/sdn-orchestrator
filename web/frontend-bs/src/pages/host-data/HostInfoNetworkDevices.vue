@@ -75,8 +75,10 @@
         methods: {
           getDevices(){
             this.axios.get("/api/grpc/get_net_devices").then(response => {
-              var res = JSON.parse(response.data.result)['return']
-              this.data = res
+              console.log(response.data);
+              var res = response.data.result['return']
+              // console.log(res)
+              this.table1.data = res
             });
           }
         }

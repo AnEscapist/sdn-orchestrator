@@ -22,7 +22,7 @@ def avail_mem():
 
 @grpc_routes.route('/grpc/get_net_devices')
 def get_net_devices():
-    messagedata = {"method": "grpc_get_availmem", "params": {
+    messagedata = {"method": "grpc_get_dpdk_devices", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051"}},
         "jsonrpc": "2.0", "id": 0
     }
