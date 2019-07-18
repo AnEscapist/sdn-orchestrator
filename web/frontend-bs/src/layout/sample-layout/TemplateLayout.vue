@@ -16,6 +16,7 @@
   import templateSidebar from './templateSidebar'
 
   export default {
+    name: 'TemplateLayout',
     components: {
       Layout
     },

@@ -5,7 +5,7 @@ import Notifications from 'src/components/NotificationPlugin'
 import GlobalComponents from './globalComponents'
 // A plugin file where you could register global directives
 import GlobalDirectives from './globalDirectives'
-// sidebar on the right. Used as a local plugin in TemplateLayout.vue
+// sidebar on the right. Used as a local plugin in VNFLayout.vue
 import SideBar from './components/SidebarPlugin'
 
 // asset imports
