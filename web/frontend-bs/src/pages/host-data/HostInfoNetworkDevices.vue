@@ -11,7 +11,7 @@
               <p class="card-category">Here is a subtitle for this table</p>
             </template>
             <l-table class="table-hover table-striped"
-                     :columns="table1.columns" :data="table1.data">
+                     :columns="columns" :data="data">
             </l-table>
           </card>
         </div>
@@ -24,7 +24,7 @@
             </template>
             <div class="table-responsive">
               <l-table class="table-hover"
-                       :columns="table2.columns" :data="table2.data">
+                       :columns="columns" :data="data">
               </l-table>
             </div>
           </card>
@@ -38,7 +38,7 @@
               <p class="card-category">Here is a subtitle for this table</p>
             </template>
             <l-table class="table-hover table-striped table-sm"
-                     :columns="table1.columns" :data="table1.data">
+                     :columns="columns" :data="data">
             </l-table>
           </card>
         </div>
@@ -59,15 +59,8 @@
         },
         data () {
           return {
-            data2: [],
-            table1: {
-              columns: [...tableColumns],
-              data: []
-            },
-            table2: {
-              columns: [...tableColumns],
-              data: []
-            }
+            columns: [...tableColumns],
+            data: []
           }
         },
         mounted() {
@@ -76,9 +69,11 @@
         methods: {
           getDevices(){
             this.axios.get("/api/grpc/get_net_devices").then(response => {
-              console.log(response.data.result.return)
-              this.data2 = response.data.result.return;
-              this.table1.data = this.data2
+              var res = JSON.parse(response.data.result)['return']
+              console.log(res)
+              var data2 = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split('|')
+              console.log(data2)
+              this.data = data2
             });
           }
         }

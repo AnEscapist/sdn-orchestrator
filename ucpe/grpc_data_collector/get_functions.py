@@ -88,7 +88,7 @@ def dpdk_get_devices():
             device_dict['driver_type'] = 'Kernel'
 
         device_list.append(str(device_dict))
-    str_tmp = "|".join(device_list)
+    str_tmp = '[' + "|".join(device_list) + ']'
     print(str_tmp)
     return str_tmp
 
