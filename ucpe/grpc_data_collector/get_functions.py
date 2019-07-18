@@ -74,7 +74,14 @@ def dpdk_get_devices():
     dpdk.get_device_details(dpdk.network_devices)
 
     device_list = []
+    tmp_list = []
     for d in devices.keys():
+        list1 = []
+        list1[0] = dd["Slot"]
+        list1[1] = dd["Device_str"]
+        list1[2] = dd["Interface"]
+        list1[3] = dd["Driver_str"]
+        list1[4] = dd["Module_str"]
         device_dict = dict()
         dd = devices[d]
         device_dict['slot'] = dd["Slot"]
@@ -86,10 +93,14 @@ def dpdk_get_devices():
             device_dict['driver_type'] = 'DPDK'
         else:
             device_dict['driver_type'] = 'Kernel'
+        list1[5] = device_dict['driver_type']
+
+        tmp_list.append(tmp_list)
 
         device_list.append(str(device_dict))
     str_tmp = '[' + "|".join(device_list) + ']'
     print(str_tmp)
+    print(tmp_list)
     return str_tmp
 
 
