@@ -111,13 +111,8 @@ def get_execute(name, input_string, **kwargs):
     message = {
         'function': f'{name}',
         'status': f'{response.header}',
+        'return': f'{response.str_response}'
     }
-    if 'str_response' in response:
-        message['return'] = response.str_response
-    elif 'int_response' in response:
-        message['return'] = response.int_response
-    elif 'float_response' in response:
-        message['return'] = response.float_response
     return json_str(message)
 
 
@@ -136,7 +131,7 @@ def main():
     kwargs = {'body': {'str_param1': 'b7:00.3', 'str_param2': 'i40e'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
-    print(tmp.grpc_get_linux_bridges_all(**kwargs))
+    print(tmp.grpc_get_totalcpus(**kwargs))
 
 
 if __name__ == '__main__':

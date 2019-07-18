@@ -74,42 +74,28 @@
     import LTable from "../../components/Table";
 
     export default {
-        name: "HostInfo",
-        components: [
-          LTable,
-          ChartCard,
-          StatsCard
-        ],
-        data() {
-          return {
-            total_mem: this.getTotalMem
-          };
-        },
-        methods: {
-          getValues(func) {
-            // const token = sessionStorage.getItem('token')
-            const URL = `/api/grpc/${func}`
-            this.$axios({
-              method: 'get',
-              url: URL,
-              headers: {
-                'Content-Type': 'application/json',
-                // Authorization: `Bearer ${token}`
-              }
-            })
-              .then(res => {
-                const res_val = JSON.parse(res.data.result)['return']
-                // this.data_values[`${func}`] = res_val
-                return res_val
-              })
-              .catch(err => {
-                console.log(err)
-              })
-          }
-        },
-        computed: {
-          getTotalMem:() => this.getValues("total_mem")
+      name: "HostData",
+      components: {
+        LTable,
+        StatsCard,
+        ChartCard
+      },
+      data() {
+        return {
+          mem: ''
         }
+      },
+      mounted() {
+        this.getMem()
+      },
+      methods: {
+        getMem(){
+          this.axios.get("/api/grpc/total_mem").then(response => {
+            var res = JSON.parse(response.data.result)['return']
+            this.mem = res
+          });
+        }
+      }
     }
 </script>
 
