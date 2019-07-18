@@ -13,7 +13,7 @@
 
 <script>
   import Layout from '../Layout.vue'
-  import templateSidebar from './templateSidebar'
+  import vnfSidebar from './vnfSidebar'
 
   export default {
     components: {
@@ -21,10 +21,10 @@
     },
     data() {
       return {
-        title: 'template',
-        home: '/admin/overview',
-        logo: 'img/sample-pages-logo.png', //public/img/sample-pages-logo.png
-        sidebar: templateSidebar
+        title: 'virtual network functions',
+        home: '/vnfs/dashboard',
+        logo: 'img/router.png', //public/img/sample-pages-logo.png
+        sidebar: vnfSidebar
       }
     }
   }

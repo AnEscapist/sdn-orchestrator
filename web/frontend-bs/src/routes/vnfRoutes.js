@@ -1,12 +1,21 @@
 // import grpcRoutes from ./grpcRoutes
 // import vnfRoutes from ./vnfRoutes
 import TestComponent from '../components/TestComponent'
+import VNFLayout from '../layout/vnfs/VNFLayout'
+import VNFDashboard from '../pages/vnfs/VNFDashboard'
 
 const vnfRoutes = [
   {
     path: '/vnfs',
-    component: TestComponent,
-    // redirect: '/home',
+    component: VNFLayout,
+    redirect: '/vnfs/home',
+    children: [
+      {
+        path: 'home',
+        name: 'VNF Dashboard',
+        component: VNFDashboard
+      },
+    ]
   },
 ];
 

@@ -1,20 +1,22 @@
 import sampleRoutes from './sampleRoutes'
 import grpcRoutes from './grpcRoutes'
+import vnfRoutes from './vnfRoutes'
 import ucpeRoutes from './ucpeRoutes'
-import DashboardLayout from '../layout/sample-layout/TemplateLayout.vue'
+import TemplateLayout from '../layout/sample-layout/TemplateLayout.vue'
 // GeneralViews
 import NotFound from '../pages/sample-pages/NotFoundPage.vue'
 
 const routes = [
   {
     path: '/',
-    component: DashboardLayout,
+    component: TemplateLayout,
     redirect: '/admin/overview',
   },
   // ...dockerRoutes,
   // ...vmRoutes,
   ...grpcRoutes,
-  ...ucpeRoutes,
+  // ...ucpeRoutes,
+  ...vnfRoutes,
   ...sampleRoutes,
 
   { path: '*', component: NotFound }

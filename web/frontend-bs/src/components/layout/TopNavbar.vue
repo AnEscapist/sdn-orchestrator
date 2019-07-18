@@ -61,13 +61,8 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/docker" class="nav-link">
-              Docker
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/vms" class="nav-link">
-              Virtual Machines
+            <router-link to="/vnfs" class="nav-link">
+              Virtual Network Functions
             </router-link>
           </li>
           <base-dropdown title="Dropdown">
