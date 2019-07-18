@@ -10,13 +10,14 @@ import json
 import queue
 import signal
 import math
+import random
 from collections import namedtuple
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 port_pub = "5559"
 port_sub = "5570"
-TIMEOUT = 10  # todo: decide
+TIMEOUT = 5  # todo: decide
 CONTROLLER_ID = "test-id"
 BROKER_IP = "10.10.81.200"  # todo: make this not global
 UCPE_LIST = ["test-sn"]  # serial numbers of ucpes this controller controls
@@ -44,7 +45,7 @@ def call_ucpe_function(messagedata, controller_id='test-id', ucpe_sn='test-sn'):
     # time.sleep(1) #todo: BAD
     send_request(messagedata, controller_id, request_id)
     response = response_queue.get(timeout=TIMEOUT)
-    request_ids.put(request_id)
+    # request_ids.put(request_id) #todo: remember to put this back when we're done
     return response
 
 
@@ -57,12 +58,13 @@ def request_id_from_topic(topic):
 
 
 def get_request_id():
-    global max_id
-    with max_id_lock:
-        if request_ids.empty():
-            max_id += 1
-            return max_id
-        return request_ids.get()
+    # global max_id
+    # with max_id_lock:
+    #     if request_ids.empty():
+    #         max_id += 1
+    #         return max_id
+    #     return request_ids.get()
+    return random.randrange(0, 10**12)
 
 
 def send_request(messagedata, controller_id, request_id):
@@ -178,6 +180,7 @@ def startFiniteResponseHandler(iterations):
 def start():
     startResponseHandler()
     startRequestHandler()
+    time.sleep(2)
 
 
 # tests
@@ -198,7 +201,7 @@ def checkForDeadlock():
     #     "body": {"hostname": "10.10.81.100", "port": "50051"}}, "jsonrpc": "2.0", "id": 0}
     # print(call_ucpe_function(grpc_md, controller_id, ucpe_sn))
 
-    number_of_threads = 10000
+    number_of_threads = 1000
     sleep_time = 0
     threads = []
 
@@ -241,4 +244,6 @@ def checkForMemoryLeakage():
 # time.sleep(1)
 
 if __name__ == "__main__":
-    checkForMemoryLeakage()
+    # checkForMemoryLeakage()
+    # checkForDeadlock()
+
