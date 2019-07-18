@@ -1,0 +1,139 @@
+{
+    "ID": "HOBW:CJN7:XJTI:CA2L:3QHY:IWKR:QYXQ:IIWJ:7OWH:IH42:R3BE:XS7V",
+    "Containers": 10,
+    "ContainersRunning": 6,
+    "ContainersPaused": 0,
+    "ContainersStopped": 4,
+    "Images": 7,
+    "Driver": "overlay2",
+    "DriverStatus": [
+        [
+            "Backing Filesystem",
+            "extfs"
+        ],
+        [
+            "Supports d_type",
+            "true"
+        ],
+        [
+            "Native Overlay Diff",
+            "true"
+        ]
+    ],
+    "SystemStatus": null,
+    "Plugins": {
+        "Volume": [
+            "local"
+        ],
+        "Network": [
+            "bridge",
+            "host",
+            "macvlan",
+            "null",
+            "overlay"
+        ],
+        "Authorization": null,
+        "Log": [
+            "awslogs",
+            "fluentd",
+            "gcplogs",
+            "gelf",
+            "journald",
+            "json-file",
+            "local",
+            "logentries",
+            "splunk",
+            "syslog"
+        ]
+    },
+    "MemoryLimit": true,
+    "SwapLimit": false,
+    "KernelMemory": true,
+    "CpuCfsPeriod": true,
+    "CpuCfsQuota": true,
+    "CPUShares": true,
+    "CPUSet": true,
+    "IPv4Forwarding": true,
+    "BridgeNfIptables": true,
+    "BridgeNfIp6tables": true,
+    "Debug": false,
+    "NFd": 69,
+    "OomKillDisable": true,
+    "NGoroutines": 70,
+    "SystemTime": "2019-07-18T21:51:27.63153475Z",
+    "LoggingDriver": "json-file",
+    "CgroupDriver": "cgroupfs",
+    "NEventsListener": 0,
+    "KernelVersion": "4.15.0-52-generic",
+    "OperatingSystem": "Ubuntu 18.04.2 LTS",
+    "OSType": "linux",
+    "Architecture": "x86_64",
+    "IndexServerAddress": "https://index.docker.io/v1/",
+    "RegistryConfig": {
+        "AllowNondistributableArtifactsCIDRs": [],
+        "AllowNondistributableArtifactsHostnames": [],
+        "InsecureRegistryCIDRs": [
+            "127.0.0.0/8"
+        ],
+        "IndexConfigs": {
+            "docker.io": {
+                "Name": "docker.io",
+                "Mirrors": [],
+                "Secure": true,
+                "Official": true
+            }
+        },
+        "Mirrors": []
+    },
+    "NCPU": 16,
+    "MemTotal": 67269992448,
+    "GenericResources": null,
+    "DockerRootDir": "/var/lib/docker",
+    "HttpProxy": "",
+    "HttpsProxy": "",
+    "NoProxy": "",
+    "Name": "potato3",
+    "Labels": [],
+    "ExperimentalBuild": false,
+    "ServerVersion": "18.09.7",
+    "ClusterStore": "",
+    "ClusterAdvertise": "",
+    "Runtimes": {
+        "runc": {
+            "path": "runc"
+        }
+    },
+    "DefaultRuntime": "runc",
+    "Swarm": {
+        "NodeID": "",
+        "NodeAddr": "",
+        "LocalNodeState": "inactive",
+        "ControlAvailable": false,
+        "Error": "",
+        "RemoteManagers": null
+    },
+    "LiveRestoreEnabled": false,
+    "Isolation": "",
+    "InitBinary": "docker-init",
+    "ContainerdCommit": {
+        "ID": "894b81a4b802e4eb2a91d1ce216b8817763c29fb",
+        "Expected": "894b81a4b802e4eb2a91d1ce216b8817763c29fb"
+    },
+    "RuncCommit": {
+        "ID": "425e105d5a03fabd737a126ad93d62a9eeede87f",
+        "Expected": "425e105d5a03fabd737a126ad93d62a9eeede87f"
+    },
+    "InitCommit": {
+        "ID": "fec3683",
+        "Expected": "fec3683"
+    },
+    "SecurityOptions": [
+        "name=apparmor",
+        "name=seccomp,profile=default"
+    ],
+    "ProductLicense": "Community Engine",
+    "Warnings": [
+        "WARNING: API is accessible on http://0.0.0.0:2375 without encryption.\n         Access to the remote API is equivalent to root access on the host. Refer\n         to the 'Docker daemon attack surface' section in the documentation for\n         more information: https://docs.docker.com/engine/security/security/#docker-daemon-attack-surface",
+        "WARNING: No swap limit support"
+    ]
+}
