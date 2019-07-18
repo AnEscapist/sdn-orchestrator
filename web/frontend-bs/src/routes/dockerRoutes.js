@@ -3,22 +3,21 @@
 import TestComponent from '../components/test/TestComponent'
 import VNFLayout from '../layout/vnfs/VNFLayout'
 import VNFDashboard from '../pages/vnfs/VNFDashboard'
-import dockerRoutes from './dockerRoutes'
-
-const vnfRoutes = [
+import DockerDashboard from '../pages/vnfs/docker/dockerdashboard'
+import DockerContainer from '../pages/vnfs/docker/dockercontainer'
+const dockerRoutes = [
   {
-    path: 'vnfs',
+    path: 'dockerdashboard',
     // path: '/vnfs',
-    component: VNFLayout,
-    redirect: 'vnfs/home',
+    component: DockerDashboard,
+    redirect: 'vnfs/docker',
     // redirect: '/vnfs/home',
     children: [
       {
-        path: 'home',
-        name: 'VNF Dashboard',
-        component: VNFDashboard
+        path: 'vnfs/docker/dockercontainer',
+        name: 'dockercontainer',
+        component: DockerContainer
       },
-      ...dockerRoutes,
     ]
   },
 ];
@@ -32,4 +31,4 @@ const vnfRoutes = [
    return res;
 };**/
 
-export default vnfRoutes
+export default dockerRoutes
