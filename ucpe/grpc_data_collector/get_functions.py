@@ -87,9 +87,10 @@ def dpdk_get_devices():
         else:
             device_dict['driver_type'] = 'Kernel'
 
-        device_list.append(device_dict)
-
-    return device_list
+        device_list.append(str(device_dict))
+    str_tmp = "|".join(device_list)
+    print(str_tmp)
+    return str_tmp
 
 
 def get_linux_bridges_list():
