@@ -1,6 +1,6 @@
 import DashboardLayout from '../layout/sample-layout/TemplateLayout.vue'
 import HostInfo from '../pages/host-data/HostInfo.vue'
-import Test2 from "../pages/host-data/Test2";
+import HostInfoNetworkDevices from "../pages/host-data/HostInfoNetworkDevices";
 
 const grpcRoutes = [
     {
@@ -15,9 +15,9 @@ const grpcRoutes = [
             component: HostInfo
           },
           {
-            path: 'test2',
-            name: 'Test2',
-            component: Test2
+            path: 'network-devices',
+            name: 'HostInfoNetworkDevices',
+            component: HostInfoNetworkDevices
           }
         ]
     }

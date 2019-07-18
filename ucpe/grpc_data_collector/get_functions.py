@@ -83,9 +83,9 @@ def dpdk_get_devices():
         device_dict['driver'] = dd["Driver_str"]
         device_dict['unused'] = dd["Module_str"]
         if dd["Driver_str"] in drivers:
-            device_dict['current_use'] = 'DPDK'
+            device_dict['driver_type'] = 'DPDK'
         else:
-            device_dict['current_use'] = 'Kernel'
+            device_dict['driver_type'] = 'Kernel'
 
         device_list.append(device_dict)
 

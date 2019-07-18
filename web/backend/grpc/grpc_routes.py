@@ -12,7 +12,16 @@ def total_mem():
     }
     return jsonify(call_ucpe_function(messagedata))
 
+@grpc_routes.route('/grpc/avail_mem')
 def avail_mem():
+    messagedata = {"method": "grpc_get_availmem", "params": {
+        "body": {"hostname": "10.10.81.100", "port": "50051"}},
+        "jsonrpc": "2.0", "id": 0
+    }
+    return jsonify(call_ucpe_function(messagedata))
+
+@grpc_routes.route('/grpc/get_net_devices')
+def get_net_devices():
     messagedata = {"method": "grpc_get_availmem", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051"}},
         "jsonrpc": "2.0", "id": 0

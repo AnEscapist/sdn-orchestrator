@@ -12,7 +12,7 @@
               <h4 class="card-title">{{ total_mem }} kB</h4>
             </div>
             <div slot="footer">
-              <i class="fa fa-refresh"></i>Updated now
+              <i class="fa fa-cannabis"></i>Updated now
             </div>
           </stats-card>
         </div>

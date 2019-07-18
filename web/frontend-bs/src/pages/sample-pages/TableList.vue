@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <card class="strpied-tabled-with-hover"
+          <card class="striped-tabled-with-hover"
                 body-classes="table-full-width table-responsive"
           >
             <template slot="header">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="col-12">
-          <card class="strpied-tabled-with-hover"
+          <card class="striped-tabled-with-hover"
                 body-classes="table-full-width table-responsive"
           >
             <template slot="header">
@@ -56,6 +56,7 @@
 <script>
   import LTable from 'src/components/Table.vue'
   import Card from 'src/components/Cards/Card.vue'
+
   const tableColumns = ['Id', 'Name', 'Salary', 'Country', 'City']
   const tableData = [{
     id: 1,
