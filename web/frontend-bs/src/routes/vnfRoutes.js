@@ -1,6 +1,6 @@
 // import grpcRoutes from ./grpcRoutes
 // import vnfRoutes from ./vnfRoutes
-import TestComponent from '../components/TestComponent'
+import TestComponent from '../components/test/TestComponent'
 import VNFLayout from '../layout/vnfs/VNFLayout'
 import VNFDashboard from '../pages/vnfs/VNFDashboard'
 
