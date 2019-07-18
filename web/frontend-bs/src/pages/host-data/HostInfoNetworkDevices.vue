@@ -50,7 +50,7 @@
     import LTable from "../../components/Table.vue"
     import Card from "../../components/Cards/Card.vue"
 
-    const tableColumns = ['Slot', 'Device name', 'Interface', 'Driver', 'Unused', 'Driver type']
+    const tableColumns = ['slot', 'device_name', 'interface', 'driver', 'unused', 'driver_type']
     export default {
         name: "HostInfoNetworkDevices",
         components: {
@@ -59,6 +59,7 @@
         },
         data () {
           return {
+            data2: [],
             table1: {
               columns: [...tableColumns],
               data: []
@@ -75,9 +76,8 @@
         methods: {
           getDevices(){
             this.axios.get("/api/grpc/get_net_devices").then(response => {
-              var res = response.data.result.return
-              console.log(res)
-              this.table1.data = res
+              this.data2 = response.data.result.return;
+              this.table1.data = this.data2
             });
           }
         }
