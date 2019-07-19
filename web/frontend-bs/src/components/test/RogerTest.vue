@@ -2,9 +2,10 @@
     <div>
       <card>
       <h1>Roger's Playground</h1>
-        <h2>VNF Count: {{VNFCount}}</h2>
-        <h2>VNF List: {{VNFList}}</h2>
+        <h2>VNF Count: {{vnfCount}}</h2>
+        <h2>VNF List: {{vnfList}}</h2>
         <h2>VM List: {{vmList}}</h2>
+        <h2>VM Info: {{vmInfo}}</h2>
       </card>
     </div>
 </template>
@@ -16,10 +17,11 @@
         created() {
           this.$store.dispatch('updateContainerList');
           this.$store.dispatch('updateVMList');
+          this.$store.dispatch('updateVMInfo');
         },
         computed: {
           ...mapGetters([
-            'VNFList', 'VNFCount', 'vmList'
+            'vnfList', 'vnfCount', 'vmList', 'vmInfo'
           ])
         },
         methods: {

@@ -7,8 +7,8 @@ import requestVMList from './modules/vms'
 const state = {}; //empty declaration necessary for getters
 
 const getters = {
-  VNFList: (state, getters, rootstate) => rootstate.vnfs.vms.vmList.concat(rootstate.vnfs.docker.containerList),
-  VNFCount: (state, getters, rootstate) => {
+  vnfList: (state, getters, rootstate) => rootstate.vnfs.vms.vmList.concat(rootstate.vnfs.docker.containerList),
+  vnfCount: (state, getters, rootstate) => {
     return rootstate.vnfs.vms.vmList.length + rootstate.vnfs.docker.containerList.length
   }
 };

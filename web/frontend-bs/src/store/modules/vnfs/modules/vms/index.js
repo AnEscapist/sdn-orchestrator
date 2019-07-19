@@ -1,33 +1,43 @@
 import axios from 'axios';
 
 const state = {
-  vmList: []
+  vmList: [],
+  vmInfo: {}
 };
 
 const mutations = {
   SET_VM_LIST(state, payload){
     state.vmList = payload;
     console.log('mutated');
-    console.log(payload);
+    console.log(state.vmList);
+  },
+  SET_VM_INFO(state, payload){
+    state.vmInfo = payload
   }
-};
-
-const actions = {
-  updateVMList({commit}, token){
-    axios.get('/api/all_vm_info/' + controller_id + '/' + ucpe_sn).then((response) => {
-      console.log(response.data.result.return);
-      commit('SET_VM_LIST', response.data.result.return)
-    });
-    // commit('SET_VM_LIST', methods.requestVMList()) //todo: make this a promise
-  }
-};
-
-const getters = {
-  vmList: state => state.vmList
 };
 
 const controller_id = "test-id";
 const ucpe_sn = "test-sn";
+
+const actions = {
+  updateVMList({commit}, token){
+    // axios.get('/api/all_vm_info/' + controller_id + '/' + ucpe_sn).then((response) => {
+    //   commit('SET_VM_LIST', response.data.result.return)
+    // });
+    // commit('SET_VM_LIST', methods.requestVMList()) //todo: make this a promise
+  },
+  updateVMInfo({commit}, token){
+      axios.get('/api/all_vm_info/' + controller_id + '/' + ucpe_sn).then((response) => {
+        commit('SET_VM_INFO', response.data.result.return)}
+      )
+  }
+};
+
+const getters = {
+  vmList: state => state.vmList,
+  vmInfo: state => state.vmInfo
+};
+
 
 const methods = {
   // requestVMList()  {
