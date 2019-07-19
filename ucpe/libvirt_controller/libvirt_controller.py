@@ -137,7 +137,7 @@ def get_all_vm_info(ucpe):
 
 def _construct_info_dict(domain):
     state, maxmem, mem, cpus, cpu_time = domain.info()
-    info_dict = {"name": domain.name(), "state": VMState(state).name.capitalize(), "max memory": filesize.size(maxmem), "memory": mem, "cpus": cpus,
+    info_dict = {"name": domain.name(), "state": VMState(state).name.capitalize(), "memory allocated": filesize.size(maxmem), "memory": mem, "cpus": cpus,
                  "cpu time": str(datetime.timedelta(seconds=int(cpu_time/10**9)))} # by default it seems mem == maxmem, cpu time reported in nanoseconds
     if VMState(state) == VMState.RUNNING:
         memory_stats = domain.memoryStats() # this line only works for running domains
