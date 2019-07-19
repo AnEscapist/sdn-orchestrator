@@ -34,11 +34,11 @@ def containers_status(path='ContainerStatus.json', all=False, id_name=None):
 
     if all:
         for container in container_list:
-            status['container:' + container.name + '(id: ' + container.short_id + ')'] = container.status
+            status['container:' + container.name + '(id: ' + container.short_id + ')'] = f'[{container.status}]'
     else:
         try:
             container = dcli.containers.get(id_name)
-            status['container:' + container.name + '(id: ' + container.short_id + ')'] = container.status
+            status['container:' + container.name + '(id: ' + container.short_id + ')'] = f'[{container.status}]'
         except docker.errors.NotFound:
             return cnf_error(id_name, func)
         except docker.errors.NullResource as nre:
