@@ -4,7 +4,9 @@ import os
 import sys
 import json
 import subprocess
+
 from hurry.filesize import size as fsize
+from hurry.filesize import alternative
 
 import netifaces
 
