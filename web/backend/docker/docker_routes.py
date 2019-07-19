@@ -25,7 +25,7 @@ def list_containers():
 
 @docker_routes.route('/docker/containers_status')
 def containers_status():
-    messagedata = {"method": "docker_controller_container_status", "params": {
+    messagedata = {"method": "docker_controller_containers_status", "params": {
         "body": {"username": "potato", "hostname": "10.10.81.100", "all": "True", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
 
