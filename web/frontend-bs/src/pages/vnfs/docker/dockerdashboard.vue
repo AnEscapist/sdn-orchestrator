@@ -61,7 +61,7 @@ export default {
 
     this.axios.get('/api/docker/containers_status').then(response => {
         var res = JSON.parse(response.data.result)['return']
-        console.log(res)
+        console.log(response)
         var status = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
         this.status = status
     })
