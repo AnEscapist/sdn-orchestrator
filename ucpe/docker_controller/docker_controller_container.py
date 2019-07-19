@@ -11,12 +11,16 @@ from ucpe.docker_controller.docker_controller_message import *
 
 def list_containers(all=True):
     func = list_containers
+    name_list = []
     try:
         if all == True:
             container_list = dcli.containers.list(all=all)
         else:
             container_list = dcli.containers.list()
-        return container_list_message(list=container_list, all=all, func=func)
+
+        for container in container_list:
+            name_list.append(container.name)
+        return container_list_message(list=name_list, all=all, func=func)
     except OSError as ose:
         return ose_error(ose,func)
 

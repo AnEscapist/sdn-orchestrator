@@ -1,19 +1,20 @@
 <template>
-<div>
-  <card>
-    <!-- <h1>Zhengqi's Playground</h1> -->
-    <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)' />
-    <strong> Docker on uCPE ({{client['Name']}}) </strong>
-    <span class="badge badge-success">Running</span>
-    <hr>
-    <table>
-      <tr>
-        <td width='30px'></td>
-        <td width='100px'>
-          <font-awesome-icon :icon="['fas', 'info-circle']" size=lg color='rgb(111, 111, 111)' />
-          <strong> Info: </strong>
-        </td>
-        <router-link to="dockercontainers">
+<router-link to="./docker">
+  <div>
+    <card>
+      <!-- <h1>Zhengqi's Playground</h1> -->
+      <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)' />
+      <strong> Docker on uCPE ({{client['Name']}}) </strong>
+      <span class="badge badge-success">Running</span>
+      <hr>
+      <table>
+        <tr>
+          <td width='30px'></td>
+          <td width='100px'>
+            <font-awesome-icon :icon="['fas', 'info-circle']" size=lg color='rgb(111, 111, 111)' />
+            <strong> Info: </strong>
+          </td>
+
           <td width='250px'>
             <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' />
             {{client['Containers']}} containers -
@@ -24,54 +25,55 @@
             <font-awesome-icon :icon="['fas', 'heartbeat']" size=sm color='rgb(204, 68, 74)' />
             {{client['ContainersStopped']}}
           </td>
-        </router-link>
 
 
 
-        <td width='120px'>
-          <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' />
-          {{client['Images']}} images
-        </td>
-        <td>
-          <font-awesome-icon :icon="['fas', 'microchip']" size=sm color='rgb(111, 111, 111)' />
-          {{client['NCPU']}} CPU
-        </td>
-      </tr>
-      <br>
-    </table>
+          <td width='120px'>
+            <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' />
+            {{client['Images']}} images
+          </td>
+          <td>
+            <font-awesome-icon :icon="['fas', 'microchip']" size=sm color='rgb(111, 111, 111)' />
+            {{client['NCPU']}} CPU
+          </td>
+        </tr>
+        <br>
+      </table>
 
-    <table cellspacing='20'>
-      <tr>
-        <th width='30px'></th>
-        <th>Contaiers</th>
-        <th>Images</th>
-        <th>Status</th>
-        <th>Ports</th>
-      </tr>
-      <tr v-for='container in containers'>
-        <!-- <p>{{inspect('67588f30bc')}}</p> -->
-        <td></td>
-        <td>
-            {{container.slice(1,-1).split(":")[1]}}
-        </td>
-        <td>
-            <!-- {{inspect('c33833f1cd')}} -->
-            {{container.slice(1,-1).split(":")[1].trim()}}
-            <!-- {{typeof(container.slice(1,-1).split(":")[1].trim())}} -->
-            <!-- {{inspect(container.slice(1,-1).split(":")[1].trim())}} -->
-        </td>
+      <table cellspacing='20'>
+        <tr>
+          <th width='30px'></th>
+          <th>Contaiers</th>
+          <th>Images</th>
+          <th>Status</th>
+          <th>Ports</th>
+        </tr>
+        <!-- {{inspect(test[0])}} -->
+        <tr v-for="container in containers">
+          <!-- <p>{{inspect('67588f30bc')}}</p> -->
+          <td></td>
+          <td>
+            <router-link :to="'docker/dockercontainer/' + container">
+              {{container}}
+            </router-link>
 
-      </tr>
+          </td>
+          <td>
 
+          </td>
 
-
-      <br>
-    </table>
+        </tr>
 
 
-  </card>
 
-</div>
+        <br>
+      </table>
+
+
+    </card>
+
+  </div>
+</router-link>
 </template>
 
 <script>
@@ -91,7 +93,11 @@ export default {
     this.axios.get("/api/docker/list_containers").then(response => {
       var res = JSON.parse(response.data.result)['return']
       var containers = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
-      this.containers = containers
+      var i;
+      for (i = 1; i < containers.length; i++) {
+        this.containers.push(containers[i].slice(2, -1).split(":")[1].trim())
+      }
+
     });
     this.axios.get("/api/docker/list_images").then(response => {
       var res = JSON.parse(response.data.result)['return']
@@ -115,9 +121,9 @@ export default {
   methods: {
     inspect(id) {
       this.axios.get("/api/docker/inspect_container", {
-          params: {
-              id: id
-          }
+        params: {
+          id: id
+        }
       }).then(response => {
         this.info = JSON.parse(response.data.result)['return']['Image']
       });

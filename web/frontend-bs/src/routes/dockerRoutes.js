@@ -7,14 +7,13 @@ import DockerDashboard from '../pages/vnfs/docker/dockerdashboard'
 import DockerContainer from '../pages/vnfs/docker/dockercontainer'
 const dockerRoutes = [
   {
-    path: 'dockerdashboard',
+    path: 'docker',
     // path: '/vnfs',
     component: DockerDashboard,
-    redirect: 'vnfs/docker',
     // redirect: '/vnfs/home',
     children: [
       {
-        path: 'vnfs/docker/dockercontainer',
+        path: 'dockercontainer/:id',
         name: 'dockercontainer',
         component: DockerContainer
       },
