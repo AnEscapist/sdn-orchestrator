@@ -7,8 +7,8 @@
       <h2>VM List: {{vmList}}</h2>
       <h2>VM Info: {{vmInfo}}</h2>
       <LTable class="table-hover"
-               :columns="table2.columns"
-               :data="vmInfo.values()">
+               :columns="vmTableColumns"
+               :data="Object.values(vmInfo)">
       </LTable>
     </card>
   </div>
@@ -25,9 +25,9 @@
     },
     data() {
       return {
-        vmTableColumns: ['Name', '']
+        vmTableColumns: ['Name', 'State', 'Max Memory', 'CPUs', 'CPU Time']
       }
-    }
+    },
     created() {
       this.$store.dispatch('updateContainerList');
       this.$store.dispatch('updateVMList');
