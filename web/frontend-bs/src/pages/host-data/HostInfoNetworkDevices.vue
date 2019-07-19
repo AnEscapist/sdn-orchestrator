@@ -72,6 +72,7 @@
               var res = response.data.result.return
               console.log(res)
               // console.log(this.data)
+              this.data = res
             });
           }
         }
