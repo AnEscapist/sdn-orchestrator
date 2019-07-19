@@ -28,9 +28,9 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 meminfo = dict((i.split()[0].rstrip(':'), int(i.split()[1])) for i in open('/proc/meminfo').readlines())
 
-hugepagesize_in_kb = meminfo['Hugepagesize']
-total_memory_in_kb = meminfo['MemTotal']
-available_memory_in_kb = meminfo['MemAvailable']
+hugepagesize_in_b = meminfo['Hugepagesize'] * 1000
+total_memory_in_b = meminfo['MemTotal'] * 1000
+available_memory_in_b = meminfo['MemAvailable'] * 1000
 hugepages_total = meminfo['HugePages_Total']
 hugepages_free = meminfo['HugePages_Free']
 
@@ -40,19 +40,19 @@ drivers = dpdk.dpdk_drivers
 
 
 def get_hugepages_totalmem():
-    return fsize(hugepagesize_in_kb * hugepages_total, system=alternative)
+    return fsize(hugepagesize_in_b * hugepages_total, system=alternative)
 
 
 def get_hugepages_freemem():
-    return fsize(hugepagesize_in_kb * hugepages_free, system=alternative)
+    return fsize(hugepagesize_in_b * hugepages_free, system=alternative)
 
 
 def get_total_mem():
-    return fsize(total_memory_in_kb, system=alternative)
+    return fsize(total_memory_in_b, system=alternative)
 
 
 def get_avail_mem():
-    return fsize(available_memory_in_kb, system=alternative)
+    return fsize(available_memory_in_b, system=alternative)
 
 
 def get_total_cpus():
