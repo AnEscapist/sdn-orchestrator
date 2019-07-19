@@ -111,11 +111,11 @@ def client_info_message(info, path,func):
     }
     return json_str(message)
 
-def containers_status_message(jsno_str, path, func):
+def containers_status_message(status, path, func):
     message = {
         'function': f'<{func.__name__}>',
         'success message': f'JSON FILE: {path} created and saved.',
-        'return': f'{json_str}'
+        'return': f'{status}'
     }
     return json_str(message)
 
