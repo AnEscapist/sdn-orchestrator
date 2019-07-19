@@ -2,6 +2,7 @@ from concurrent import futures
 
 import os
 import sys
+import json
 import subprocess
 
 import netifaces
@@ -100,13 +101,9 @@ def dpdk_get_devices():
 
         # tmp_list.append(str(list1))
 
-        device_list.append(str(device_dict))
-    str_tmp = '[' + ",".join(device_list) + ']'
-    # tmp_str = ','.join(tmp_list)
-    # print(str_tmp)
-    # print(tmp_str)
-    return str_tmp
-    # return device_list
+        device_list.append(device_dict)
+
+    return json.dumps(device_list)
 
 
 def get_linux_bridges_list():

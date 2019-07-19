@@ -62,7 +62,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
         elif request.command == 'dpdk':
             if request.str_request == 'devices':
                 response.header = "List of network devices using DPDK-compatible drivers"
-                response.str_response = str(get_functions.dpdk_get_devices())
+                response.str_response = get_functions.dpdk_get_devices()
 
         elif request.command == 'sriov':
             if request.str_request == 'total_vfs':
