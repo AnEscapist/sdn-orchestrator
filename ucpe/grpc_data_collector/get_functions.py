@@ -74,9 +74,19 @@ def dpdk_get_devices():
     dpdk.get_device_details(dpdk.network_devices)
 
     device_list = []
+    tmp_list = []
     for d in devices.keys():
+        list1 = []
+
         device_dict = dict()
         dd = devices[d]
+
+        list1.append(dd["Slot"])
+        list1.append(dd["Device_str"])
+        list1.append(dd["Interface"])
+        list1.append(dd["Driver_str"])
+        list1.append(dd["Module_str"])
+
         device_dict['slot'] = dd["Slot"]
         device_dict['device_name'] = dd["Device_str"]
         device_dict['interface'] = dd["Interface"]
@@ -86,11 +96,16 @@ def dpdk_get_devices():
             device_dict['driver_type'] = 'DPDK'
         else:
             device_dict['driver_type'] = 'Kernel'
+        list1.append(device_dict['driver_type'])
+
+        tmp_list.append(str(list1))
 
         device_list.append(str(device_dict))
-    str_tmp = '[' + "|".join(device_list) + ']'
+    str_tmp = '[' + ",".join(device_list) + ']'
+    tmp_str = ','.join(tmp_list)
     print(str_tmp)
-    return str_tmp
+    print(tmp_str)
+    return tmp_str
 
 
 def get_linux_bridges_list():
