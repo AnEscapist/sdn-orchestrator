@@ -18,7 +18,7 @@ import grpc
 import ucpe.libvirt_controller.grpc.libvirt_pb2 as libvirt_pb2
 import ucpe.libvirt_controller.grpc.libvirt_pb2_grpc as libvirt_pb2_grpc
 
-
+import hurry.filesize as filesize
 
 
 class LibvirtController():
@@ -136,14 +136,14 @@ def get_all_vm_info(ucpe):
 
 def _construct_info_dict(domain):
     state, maxmem, mem, cpus, cpu_time = domain.info()
-    info_dict = {"name": domain.name(), "state": VMState(state).name, "max memory": maxmem, "memory": mem, "cpus": cpus,
-                 "cpu time": cpu_time} # by default it seems mem == maxmem
+    info_dict = {"name": domain.name(), "state": VMState(state).name.capitalize(), "max memory": filesize.size(maxmem), "memory": mem, "cpus": cpus,
+                 "cpu time": int(cpu_time/10**9)} # by default it seems mem == maxmem, cpu time reported in nanoseconds
     if VMState(state) == VMState.RUNNING:
         memory_stats = domain.memoryStats() # this line only works for running domains
         info_dict['memory'] = memory_stats['rss'] #todo: beware of magic string 'rss' (resident state memory - basically RAM usage)
     else:
         info_dict['memory'] = 0
-    info_dict['memory usage'] = "{:.2%}".format(info_dict['memory']/info_dict['max memory'])
+    info_dict['memory usage'] = "{:.2%}".format(info_dict['memory']/maxmem)
     return info_dict
 
 
