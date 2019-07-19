@@ -15,7 +15,6 @@
                      :data="table1.data">
             </l-table>
           </card>
-
         </div>
 
         <div class="col-12">

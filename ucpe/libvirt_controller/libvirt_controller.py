@@ -136,13 +136,14 @@ def get_all_vm_info(ucpe):
 
 def _construct_info_dict(domain):
     state, maxmem, mem, cpus, cpu_time = domain.info()
-    info_dict = {"name": domain.name(), "state": VMState(state).name, "max_memory": maxmem, "memory": mem, "cpu_count": cpus,
-                 "cpu_time": cpu_time} # by default it seems mem == maxmem
+    info_dict = {"name": domain.name(), "state": VMState(state).name, "max memory": maxmem, "memory": mem, "cpus": cpus,
+                 "cpu time": cpu_time} # by default it seems mem == maxmem
     if VMState(state) == VMState.RUNNING:
         memory_stats = domain.memoryStats() # this line only works for running domains
         info_dict['memory'] = memory_stats['rss'] #todo: beware of magic string 'rss' (resident state memory - basically RAM usage)
     else:
         info_dict['memory'] = 0
+    info_dict['memory usage'] = "{:.2%}".format(info_dict['memory']/info_dict['max memory'])
     return info_dict
 
 
@@ -454,6 +455,6 @@ UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
 # LibvirtController.libvirt_controller_save_vm(**DEFAULT_KWARGS)
 # LibvirtController.libvirt_controller_restore_vm(**DEFAULT_KWARGS)
 # print(LibvirtController.libvirt_controller_get_vm_info(**DEFAULT_KWARGS))
-# print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
+print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
 # print(LibvirtController.libvirt_controller_destroy_vm(**DEFAULT_KWARGS))
 # LibvirtController.libvirt_controller_undefine_vm(**DEFAULT_KWARGS)

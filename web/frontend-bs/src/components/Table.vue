@@ -20,7 +20,7 @@
   export default {
     name: 'l-table',
     props: {
-      columns: Array,
+      columns: Array, //todo: rewrite this to take in an object mapping column name --> data object key
       data: Array
     },
     methods: {
