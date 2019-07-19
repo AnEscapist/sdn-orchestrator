@@ -9,7 +9,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Total Memory</p>
-              <h4 class="card-title">{{ total_mem }} kB</h4>
+              <h4 class="card-title">{{ total_mem }}</h4>
             </div>
             <div slot="footer">
               <i class="fa fa-cannabis"></i>Updated now

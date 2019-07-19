@@ -7,8 +7,8 @@
           <card class="striped-tabled-with-hover"
                 body-classes="table-full-width table-responsive">
             <template slot="header">
-              <h4 class="card-title">Striped Table with Hover</h4>
-              <p class="card-category">Here is a subtitle for this table</p>
+              <h4 class="card-title">Network Devices</h4>
+              <p class="card-category">A list of NICs and their details</p>
             </template>
             <l-table class="table-hover table-striped"
                      :columns="columns" :data="data">
@@ -69,10 +69,8 @@
         methods: {
           getDevices(){
             this.axios.get("/api/grpc/get_net_devices").then(response => {
-              var res = response.data.result.return
-              console.log(res)
-              // console.log(this.data)
-              this.data = res
+              var res = JSON.parse(response.data.result.return)
+              this.data = Object.values(res)
             });
           }
         }

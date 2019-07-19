@@ -24,19 +24,19 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
         # print('hello')
         if request.command == 'hugepages':
             if request.str_request == 'total':
-                response.header = "Total hugepages memory in kB"
-                response.str_response = str(get_functions.get_hugepages_totalmem_kB())
+                response.header = "Total hugepages memory"
+                response.str_response = get_functions.get_hugepages_totalmem()
             elif request.str_request == 'free':
-                response.header = "Total free hugepages memory in kB"
-                response.str_response = str(get_functions.get_hugepages_freemem_kB())
+                response.header = "Total free hugepages memory"
+                response.str_response = get_functions.get_hugepages_freemem()
 
         elif request.command == 'memory':
             if request.str_request == 'total':
-                response.header = "Total memory in kB"
-                response.str_response = str(get_functions.get_total_mem_kB())
+                response.header = "Total memory"
+                response.str_response = get_functions.get_total_mem()
             elif request.str_request == 'available':
-                response.header = "Total available memory in kB"
-                response.str_response = str(get_functions.get_avail_mem_kB())
+                response.header = "Total available memory"
+                response.str_response = get_functions.get_avail_mem()
 
         elif request.command == 'cpu':
             if request.str_request == 'total':

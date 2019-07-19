@@ -4,6 +4,7 @@ import os
 import sys
 import json
 import subprocess
+from hurry.filesize import size as fsize
 
 import netifaces
 
@@ -36,20 +37,20 @@ devices = dpdk.devices
 drivers = dpdk.dpdk_drivers
 
 
-def get_hugepages_totalmem_kB():
-    return hugepagesize_in_kb * hugepages_total
+def get_hugepages_totalmem():
+    return fsize(hugepagesize_in_kb * hugepages_total)
 
 
-def get_hugepages_freemem_kB():
-    return hugepagesize_in_kb * hugepages_free
+def get_hugepages_freemem():
+    return fsize(hugepagesize_in_kb * hugepages_free)
 
 
-def get_total_mem_kB():
-    return total_memory_in_kb
+def get_total_mem():
+    return fsize(total_memory_in_kb)
 
 
-def get_avail_mem_kB():
-    return available_memory_in_kb
+def get_avail_mem():
+    return fsize(available_memory_in_kb)
 
 
 def get_total_cpus():
