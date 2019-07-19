@@ -38,19 +38,19 @@ drivers = dpdk.dpdk_drivers
 
 
 def get_hugepages_totalmem():
-    return fsize(hugepagesize_in_kb * hugepages_total)
+    return fsize(hugepagesize_in_kb * hugepages_total, system=alternative)
 
 
 def get_hugepages_freemem():
-    return fsize(hugepagesize_in_kb * hugepages_free)
+    return fsize(hugepagesize_in_kb * hugepages_free, system=alternative)
 
 
 def get_total_mem():
-    return fsize(total_memory_in_kb)
+    return fsize(total_memory_in_kb, system=alternative)
 
 
 def get_avail_mem():
-    return fsize(available_memory_in_kb)
+    return fsize(available_memory_in_kb, system=alternative)
 
 
 def get_total_cpus():
