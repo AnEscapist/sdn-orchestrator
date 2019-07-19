@@ -21,4 +21,6 @@ def vm_info(controller_id, ucpe_sn):
     method = 'get_all_vm_info'
     body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_name": "test"}
     message_data = get_message_data(method, body)
-    return jsonify(call_ucpe_function(message_data, controller_id, ucpe_sn))
+    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
+    print(type(response['result']['return']))
+    return jsonify(response)

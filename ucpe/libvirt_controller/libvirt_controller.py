@@ -18,7 +18,6 @@ import grpc
 import ucpe.libvirt_controller.grpc.libvirt_pb2 as libvirt_pb2
 import ucpe.libvirt_controller.grpc.libvirt_pb2_grpc as libvirt_pb2_grpc
 
-import json
 
 
 
@@ -137,10 +136,13 @@ def get_all_vm_info(ucpe):
 
 def _construct_info_dict(domain):
     state, maxmem, mem, cpus, cpu_time = domain.info()
-    # memory_stats = domain.memoryStats()
-    info_dict = {"state": VMState(state).name, "max_memory": maxmem, "memory": mem, "cpu_count": cpus,
-                 "cpu_time": cpu_time}
-    # info_dict.update(memory_stats)
+    info_dict = {"name": domain.name(), "state": VMState(state).name, "max_memory": maxmem, "memory": mem, "cpu_count": cpus,
+                 "cpu_time": cpu_time} # by default it seems mem == maxmem
+    if VMState(state) == VMState.RUNNING:
+        memory_stats = domain.memoryStats() # this line only works for running domains
+        info_dict['memory'] = memory_stats['rss'] #todo: beware of magic string 'rss' (resident state memory - basically RAM usage)
+    else:
+        info_dict['memory'] = 0
     return info_dict
 
 
@@ -372,7 +374,7 @@ def _libvirt_all_domains_observer(libvirt_domain_func, ucpe):
     except ConnectionRefusedError as e:
         return_dict["fail_message"] = format_exception(e)
         return_dict["traceback"] = tb.format_exc()
-    return json.dumps(return_dict)
+    return return_dict
 
 def _libvirt_connection_call(libvirt_conn_func, ucpe, success_message, fail_message, verbose=True,
                              operation_name=None):
@@ -452,6 +454,6 @@ UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
 # LibvirtController.libvirt_controller_save_vm(**DEFAULT_KWARGS)
 # LibvirtController.libvirt_controller_restore_vm(**DEFAULT_KWARGS)
 # print(LibvirtController.libvirt_controller_get_vm_info(**DEFAULT_KWARGS))
-print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
+# print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
 # print(LibvirtController.libvirt_controller_destroy_vm(**DEFAULT_KWARGS))
 # LibvirtController.libvirt_controller_undefine_vm(**DEFAULT_KWARGS)
