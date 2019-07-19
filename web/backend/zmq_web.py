@@ -34,6 +34,7 @@ max_id_lock = threading.Lock()
 
 
 def call_ucpe_function(messagedata, controller_id='test-id', ucpe_sn='test-sn'):
+    print(messagedata,'\n', controller_id,'\n', ucpe_sn)
     if not request_ids.empty():
         print('ids', request_ids.queue)
     request_id = get_request_id()
@@ -86,11 +87,11 @@ def sub_response(queue, ucpe_sn, request_id):
     socket_sub.connect("tcp://%s:%s" % (BROKER_IP, port_sub))
     topic = get_topic(ucpe_sn, request_id)
     socket_sub.setsockopt_string(zmq.SUBSCRIBE, topic)
-    print("subscribed to", topic)
+    # print("subscribed to", topic)
     received = socket_sub.recv().decode('ASCII')
-    print("received")
+    # print("received")
     topic, message = received.split(" ", 1)
-    print(topic, message)
+    # print(topic, message)
     response = json.loads(message)
     queue.put(response)
     return response
@@ -158,7 +159,7 @@ def handleFiniteResponses(iterations):
     for i in range(iterations):
         received = socket_sub.recv().decode('ASCII')
         topic, message = received.split(" ", 1)
-        print('received', topic, message)
+        # print('received', topic, message)
         response = json.loads(message)
         request_id = request_id_from_topic(topic)
         with response_queues_lock:
@@ -246,6 +247,13 @@ def checkForMemoryLeakage():
 # time.sleep(1)
 
 if __name__ == "__main__":
-    checkForMemoryLeakage()
+    # checkForMemoryLeakage()
     # checkForDeadlock()
+    start()
+    time.sleep(2)
+    # messagedata = {"method": "libvirt_controller_get_vm_state",
+    #  "params": {"body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test"}}, "jsonrpc": "2.0",
+    #  "id": 0}
+    # call_ucpe_function(messagedata)
+
 

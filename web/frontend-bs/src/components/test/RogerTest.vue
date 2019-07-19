@@ -4,6 +4,7 @@
       <h1>Roger's Playground</h1>
         <h2>VNF Count: {{VNFCount}}</h2>
         <h2>VNF List: {{VNFList}}</h2>
+        <h2>VM List: {{vmList}}</h2>
       </card>
     </div>
 </template>
@@ -18,7 +19,7 @@
         },
         computed: {
           ...mapGetters([
-            'VNFList', 'VNFCount'
+            'VNFList', 'VNFCount', 'vmList'
           ])
         },
         methods: {

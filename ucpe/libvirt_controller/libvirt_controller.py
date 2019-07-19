@@ -18,6 +18,8 @@ import grpc
 import ucpe.libvirt_controller.grpc.libvirt_pb2 as libvirt_pb2
 import ucpe.libvirt_controller.grpc.libvirt_pb2_grpc as libvirt_pb2_grpc
 
+import json
+
 
 
 class LibvirtController():
@@ -370,7 +372,7 @@ def _libvirt_all_domains_observer(libvirt_domain_func, ucpe):
     except ConnectionRefusedError as e:
         return_dict["fail_message"] = format_exception(e)
         return_dict["traceback"] = tb.format_exc()
-    return return_dict
+    return json.dumps(return_dict)
 
 def _libvirt_connection_call(libvirt_conn_func, ucpe, success_message, fail_message, verbose=True,
                              operation_name=None):
