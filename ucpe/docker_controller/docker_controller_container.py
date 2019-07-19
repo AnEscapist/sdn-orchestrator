@@ -50,7 +50,7 @@ def containers_status(path='ContainerStatus.json', all=False, id_name=None):
     except FileNotFoundError:
         return fnf_error(path, func)
 
-    return json_file_message(path, func)
+    return containers_status_message(json_str, path, func)
 
 
 def containers_info(path='ContainerInfo.json', all=True):

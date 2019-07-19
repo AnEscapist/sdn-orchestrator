@@ -9,6 +9,7 @@ const dockerRoutes = [
   {
     path: 'docker',
     // path: '/vnfs',
+    name: 'dockerdashboard',
     component: DockerDashboard,
     // redirect: '/vnfs/home',
     children: [

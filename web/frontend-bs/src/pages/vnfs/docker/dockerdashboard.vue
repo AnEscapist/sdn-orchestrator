@@ -3,9 +3,23 @@
   <div class="container-fluid">
     <card>
       <font-awesome-icon :icon="['fas', 'database']" size=lg color='rgb(0, 0, 0)' /> <strong> Containers</strong>
-      <ul v-for='container in containers'>
-          <li>{{container}}</li>
-      </ul>
+      <hr>
+
+      <table>
+        <th>Name</th>
+        <th>Status</th>
+        <!-- {{state}} -->
+        <!-- {{inspect(containers[0].trim().slice(1, -1))}} -->
+        <tr v-for='(container,i) in containers' :key="container">
+          <td>{{container.trim().slice(1, -1)}}</td>
+
+        </tr>
+      </table>
+
+      <!-- <LTable class="table-hover"
+               :columns="containerCol"
+               :data="Object.values(containerInfo)">
+           </LTable> -->
     </card>
     <!--      todo: notifications fo VNF status changes-->
   </div>
@@ -14,42 +28,30 @@
 
 <script>
 import Card from '../../../components/Cards/Card.vue'
-import SampleCard from '.././SampleCard'
-import VNFSummaryPanel from '.././VNFSummaryPanel'
-import VNFInfoPanel from '.././VNFInfoPanel'
-import ZhengqiTest from '../../../components/test/ZhengqiTest'
-import RogerTest from '../../../components/test/RogerTest'
+// import { mapGetters, mapActions } from 'vuex'
+// import LTable from '@/components/Table.vue'
 
 export default {
   name: 'DockerDashboard',
 
   components: {
     Card,
-    SampleCard,
-    VNFSummaryPanel,
-    VNFInfoPanel,
-    ZhengqiTest,
-    RogerTest
+
   },
   data() {
     return {
-      type: ['', 'info', 'success', 'warning', 'danger'],
-      notifications: {
-        topCenter: false
-      },
       containers: [],
       images: [],
       client: '',
       info: '',
+      state: [],
     }
   },
   mounted() {
     this.axios.get("/api/docker/list_containers").then(response => {
-    console.log(response.data.result)
       var res = JSON.parse(response.data.result)['return']
       var containers = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
       this.containers = containers
-      console.log(this.containers)
       // var i;
       // for (i = 1; i < containers.length; i++) {
       //   this.containers.push(containers[i].slice(2, -1).split(":")[1].trim())
@@ -85,7 +87,26 @@ export default {
         verticalAlign: verticalAlign,
         type: this.type[color]
       })
-    }
+    },
+    get_status(containers) {
+
+      var i;
+      for (i = 0; i < containers.length; i++) {
+        this.axios.get("/api/docker/inspect_container", {
+          params: {
+            id: containers[i].trim().slice(1, -1)
+          }
+        }).then(response => {
+          var x = JSON.parse(response.data.result)['return']['State']['Status']
+          console.log('x', x)
+          this.state.push(x)
+          console.log(this.state, '======')
+          console.log(JSON.parse(response.data.result)['return']['State']['Status'])
+        });
+      }
+    },
+
+
   }
 }
 </script>
