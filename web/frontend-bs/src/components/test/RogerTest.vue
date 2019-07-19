@@ -25,7 +25,7 @@
     },
     data() {
       return {
-        vmTableColumns: ['Name', 'State', 'Max Memory', 'CPUs', 'CPU Time']
+        vmTableColumns: ['Name', 'State', 'Max Memory', 'Memory Usage', 'CPUs', 'CPU Time']
       }
     },
     created() {
