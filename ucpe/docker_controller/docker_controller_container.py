@@ -52,6 +52,19 @@ def containers_status(path='ContainerStatus.json', all=False, id_name=None):
 
     return containers_status_message(status, path, func)
 
+def containers_images(all=True):
+    #return images of all the containers
+    func = containers_images
+    images = []
+    try:
+        container_list = dcli.containers.list(all=all)
+    except OSError as ose:
+        return ose_error(ose, func)
+    for container in container__list:
+        images.append(container.image)
+    return containers_images_message(images, func)
+
+
 
 def containers_info(path='ContainerInfo.json', all=True):
     func = containers_info

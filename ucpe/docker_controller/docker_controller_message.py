@@ -119,6 +119,14 @@ def containers_status_message(status, path, func):
     }
     return json_str(message)
 
+def containers_images_message(images, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': 'Got all the images for the existing containers.',
+        'return': f'{images}'
+    }
+    return json_str(message)
+
 def container_list_message(list, all, func):
     if all:
         message = {

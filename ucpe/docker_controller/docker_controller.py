@@ -41,6 +41,11 @@ class DockerController(object):
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def docker_controller_containers_images(**kwargs):
+        func = containers_images
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def docker_controller_list_images(**kwargs):
         func = list_images
         return _call_function(func, **kwargs)

@@ -11,8 +11,12 @@
         <!-- {{state}} -->
         <!-- {{inspect(containers[0].trim().slice(1, -1))}} -->
         <tr v-for='(container,i) in containers' :key="container">
-          <td>{{container.trim().slice(1, -1)}}</td>
+          <router-link :to="{ name: 'dockercontainer', params: {id: container} }">
+            <td>{{container}}</td>
+          </router-link>
 
+          <td>{{status[i]}}</td>
+          <hr>
         </tr>
       </table>
 
@@ -51,26 +55,38 @@ export default {
     this.axios.get("/api/docker/list_containers").then(response => {
       var res = JSON.parse(response.data.result)['return']
       var containers = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
-      this.containers = containers
-      // var i;
-      // for (i = 1; i < containers.length; i++) {
-      //   this.containers.push(containers[i].slice(2, -1).split(":")[1].trim())
-      // }
+      // this.containers = containers
+      var i;
+      for (i = 0; i < containers.length; i++) {
+          // console.log(containers[i].trim().slice(1, -1))
+        this.containers.push(containers[i].trim().slice(1, -1))
+      }
 
     });
 
     this.axios.get('/api/docker/containers_status').then(response => {
-        console.log(response.data.result)['return']
-        var res = JSON.parse(response.data.result)['return']
-        var status = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
-        this.status = status
+      // console.log(JSON.parse(response.data.result)['return'])
+      var res = JSON.parse(response.data.result)['return']
+      var regex2 = /\[(.+?)\]/g;
+      // console.log(res.match(regex2));
+      var status = res.match(regex2);
+      var i;
+      for (i = 0; i < status.length; i++) {
+        this.status.push(status[i].substring(status[i].indexOf('[') + 1, status[i].indexOf(']')))
+      }
     })
 
-    this.axios.get("/api/docker/list_images").then(response => {
-      var res = JSON.parse(response.data.result)['return']
-      var images = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
-      this.images = images
-    });
+    // this.axios.get("/api/docker/list_images").then(response => {
+    //   var res = JSON.parse(response.data.result)['return']
+    //   var images = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
+    //   this.images = images
+    // });
+
+    this.axios.get('api/docker/containers_images').then(response =>{
+        console.log(response.data.result)
+
+    })
+
     this.axios.get("/api/docker/client_info").then(response => {
       var res = JSON.parse(response.data.result)
       var client = JSON.parse(res['return'])
