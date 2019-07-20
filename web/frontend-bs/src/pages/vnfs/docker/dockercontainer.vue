@@ -8,7 +8,7 @@
       <font-awesome-icon :icon="['fas', 'play']" size=sm color='rgb(255,255,255)' />
       Start
     </button>
-    <button type="button" class="btn btn-danger btn-sm">
+    <button type="button" class="btn btn-danger btn-sm" @click="changeStatus('sotp')">
       <font-awesome-icon :icon="['fas', 'square']" size=sm color='rgb(255, 255, 255)' />
       Stop
     </button>
@@ -118,16 +118,16 @@ export default {
       });
   },
   methods: {
-      // changeStatus(change_to){
-      //     this.axios.get("/api/docker/change_status", {
-      //         params: {
-      //             id_name: this.name,
-      //             change_to: change_to
-      //         }
-      //     }).then(response => {
-      //         console.log(response)
-      //     })
-      // }
+      changeStatus(change_to){
+          this.axios.get("/api/docker/change_status", {
+              params: {
+                  id_name: this.name,
+                  change_to: change_to
+              }
+          }).then(response => {
+              console.log(response)
+          })
+      }
   }
 
 }

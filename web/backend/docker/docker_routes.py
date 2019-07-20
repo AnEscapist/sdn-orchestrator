@@ -44,7 +44,7 @@ def change_status():
     change_to = request.args.get('change_to')
     id_name = request.args.get('id_name')
     messagedata = {"method": "docker_controller_inspect_container", "params": {
-        "body": {"change_to": chaneg_to, 'id_name': id_name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+        "body": {"change_to": change_to, 'id_name': id_name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
 
