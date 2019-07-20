@@ -164,7 +164,6 @@ def create_container(image_name, ports=None, volumes=None, detach=True):
 
 def change_status(id_name, change_to):
     func = change_status
-
     # possible state: created, restarti, runing, paused, exited
     try:
         container = dcli.containers.get(id_name)
