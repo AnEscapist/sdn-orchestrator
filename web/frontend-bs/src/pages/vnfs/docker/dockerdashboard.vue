@@ -14,7 +14,7 @@
 
 
         <tr v-for='(container,i) in containers' :key="container" id='containerInfoCard'>
-          <router-link :to="{ name: 'dockercontainer', params: {id: container} }">
+          <router-link :to="{path: 'dockercontainer', params: {name: container}, query: {name: container}}">
             <td>{{container}}</td>
           </router-link>
           <td>{{images[i]}}</td>

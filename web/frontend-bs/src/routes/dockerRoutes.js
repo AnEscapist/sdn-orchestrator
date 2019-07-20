@@ -4,6 +4,7 @@ import TestComponent from '../components/test/TestComponent'
 import VNFLayout from '../layout/vnfs/VNFLayout'
 import VNFDashboard from '../pages/vnfs/VNFDashboard'
 import DockerDashboard from '../pages/vnfs/docker/dockerdashboard'
+import Blank from '@/components/Blank'
 import DockerContainer from '../pages/vnfs/docker/dockercontainer'
 const dockerRoutes = [
   {
@@ -12,14 +13,19 @@ const dockerRoutes = [
     name: 'dockerdashboard',
     component: DockerDashboard,
     // redirect: '/vnfs/home',
-    children: [
-      {
-        path: 'dockercontainer/:id',
-        name: 'dockercontainer',
-        component: DockerContainer
-      },
-    ]
+    // children: [
+    //   {
+    //       path: 'dockercontainer',
+    //       name: 'dockercontainer',
+    //       component: DockerContainer
+    //   }
+    // ]
   },
+  {
+      path: 'dockercontainer',
+      name: 'dockercontainer',
+      component: DockerContainer
+  }
 ];
 
 /**
