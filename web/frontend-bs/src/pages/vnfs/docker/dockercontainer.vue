@@ -126,10 +126,10 @@ export default {
               }
           }).then(response => {
               console.log(response)
-              // var res = JSON.parse(response.data.result)['return']
-              // var status = res.substring(res.indexOf('[')+1, res.indexOf(']'))
-              // console.log(status)
-              // this.status = status
+              var res = JSON.parse(response.data.result)['return']
+              var status = res.substring(res.indexOf('[')+1, res.indexOf(']'))
+              console.log(status)
+              this.status = status
           })
       }
   }

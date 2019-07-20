@@ -226,7 +226,7 @@ def pull_image_message(repo, tag, func):
 def change_status_message(id_name, curStatus, func):
     message = {
         'function': f'<{func.__name__}>',
-        'success message': f'Status of container {id_name} changed to {change_to}!',
+        'success message': f'Status of container {id_name} changed to {curStatus}!',
         'return': f'Current status - [{curStatus}].'
     }
     return json_str(message)
