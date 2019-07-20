@@ -4,11 +4,11 @@
     <font-awesome-icon :icon="['fas', 'cogs']" size=lg color='rgb(0, 0, 0)' /> <strong> Actions</strong>
 
     <hr>
-    <button type="button" class="btn btn-success btn-sm">
+    <button type="button" class="btn btn-success btn-sm" @click="changeStatus('running')">
       <font-awesome-icon :icon="['fas', 'play']" size=sm color='rgb(255,255,255)' />
       Start
     </button>
-    <button type="button" class="btn btn-danger btn-sm" @click="changeStatus('sotp')">
+    <button type="button" class="btn btn-danger btn-sm" @click="changeStatus('exited')">
       <font-awesome-icon :icon="['fas', 'square']" size=sm color='rgb(255, 255, 255)' />
       Stop
     </button>
@@ -16,11 +16,11 @@
       <font-awesome-icon :icon="['fas', 'skull-crossbones']" size=sm color='rgb(255, 255, 255)' />
       Kill
     </button>
-    <button type="button" class="btn btn-primary btn-sm">
+    <button type="button" class="btn btn-primary btn-sm" @click="changeStatus('restart')">
       <font-awesome-icon :icon="['fas', 'sync-alt']" size=sm color='rgb(255, 255, 255)' />
       Restart
     </button>
-    <button type="button" class="btn btn-primary btn-sm">
+    <button type="button" class="btn btn-primary btn-sm" @click="changeStatus('paused')">
       <font-awesome-icon :icon="['fas', 'pause']" size=sm color='rgb(255, 255, 255)' />
       Pause
     </button>
