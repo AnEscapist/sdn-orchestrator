@@ -5,18 +5,20 @@
       <font-awesome-icon :icon="['fas', 'database']" size=lg color='rgb(0, 0, 0)' /> <strong> Containers</strong>
       <hr>
 
-      <table>
-        <th>Name</th>
-        <th>Status</th>
-        <!-- {{state}} -->
-        <!-- {{inspect(containers[0].trim().slice(1, -1))}} -->
-        <tr v-for='(container,i) in containers' :key="container">
+      <table width="100%">
+        <tr>
+          <th>Name</th>
+          <th>Images</th>
+          <th>Status</th>
+        </tr>
+
+
+        <tr v-for='(container,i) in containers' :key="container" id='containerInfoCard'>
           <router-link :to="{ name: 'dockercontainer', params: {id: container} }">
             <td>{{container}}</td>
           </router-link>
-
+          <td>{{images[i]}}</td>
           <td>{{status[i]}}</td>
-          <hr>
         </tr>
       </table>
 
@@ -58,7 +60,7 @@ export default {
       // this.containers = containers
       var i;
       for (i = 0; i < containers.length; i++) {
-          // console.log(containers[i].trim().slice(1, -1))
+        // console.log(containers[i].trim().slice(1, -1))
         this.containers.push(containers[i].trim().slice(1, -1))
       }
 
@@ -67,9 +69,9 @@ export default {
     this.axios.get('/api/docker/containers_status').then(response => {
       // console.log(JSON.parse(response.data.result)['return'])
       var res = JSON.parse(response.data.result)['return']
-      var regex2 = /\[(.+?)\]/g;
+      var regex = /\[(.+?)\]/g;
       // console.log(res.match(regex2));
-      var status = res.match(regex2);
+      var status = res.match(regex);
       var i;
       for (i = 0; i < status.length; i++) {
         this.status.push(status[i].substring(status[i].indexOf('[') + 1, status[i].indexOf(']')))
@@ -82,10 +84,14 @@ export default {
     //   this.images = images
     // });
 
-    this.axios.get('api/docker/containers_images').then(response =>{
-        console.log('abc === ')
-        console.log(response.data)
-
+    this.axios.get('api/docker/containers_images').then(response => {
+      var res = JSON.parse(response.data.result)['return']
+      var regex = /\<(.+?)\>/g;
+      var images = res.match(regex)
+      var i;
+      for (i = 0; i < images.length; i++) {
+        this.images.push(images[i].substring(images[i].indexOf(':') + 3, images[i].indexOf('>') - 1))
+      }
     })
 
     this.axios.get("/api/docker/client_info").then(response => {
@@ -146,6 +152,25 @@ export default {
   /*background: rgb(240, 240, 240);*/
   text-align: left;
   ;
+}
+
+a {
+  color: rgb(38, 138, 255);
+}
+
+#containerInfoCard {
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  background-color: rgb(219, 219, 219);
+  border-bottom: 2px solid white;
+  height: 25px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+
+}
+
+#containerInfoCard:hover {
+  background-color: rgb(158, 158, 158);
 }
 
 /*todo: consider making this global*/
