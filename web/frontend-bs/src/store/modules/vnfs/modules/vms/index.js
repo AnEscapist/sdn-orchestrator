@@ -8,12 +8,9 @@ const state = {
 const mutations = {
   SET_VM_LIST(state, payload){
     state.vmList = payload;
-    console.log('mutated');
-    console.log(state.vmList);
   },
   SET_VM_INFO(state, payload){
-    state.vmInfo = payload
-    console.log(vmInfo)
+    state.vmInfo = payload;
   }
 };
 

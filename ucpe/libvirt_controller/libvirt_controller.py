@@ -146,8 +146,7 @@ def _construct_info_dict(domain):
     info_dict = {"name": domain.name(), "state": VMState(state).name.capitalize(),
                  "memory allocated": filesize.size(kilobytes_to_bytes(maxmem), system=alternative), "memory": mem,
                  "cpus": cpus,
-                 "cpu time": str(datetime.timedelta(seconds=int(
-                     cpu_time)))}  # by default it seems mem == maxmem, cpu time reported in nanoseconds
+                 "cpu time": cpu_time}  # by default it seems mem == maxmem, cpu time reported in nanoseconds
     if VMState(state) == VMState.RUNNING:
         memory_stats = domain.memoryStats()  # this line only works for running domains
         info_dict['memory'] = memory_stats[
@@ -445,37 +444,38 @@ def _call_function(func, **kwargs):
     return return_dict
 
 
-# test:
-UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
-# define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH)
-# define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
-# start_vm(DEFAULT_UCPE, "test")
-# shutdown_vm(DEFAULT_UCPE, "test")
-# destroy_vm(DEFAULT_UCPE, "test")
-# suspend_vm(DEFAULT_UCPE, "test")
-# resume_vm(DEFAULT_UCPE, "test")
-# save_vm(DEFAULT_UCPE, "test", "/home/potato/test_savepath.img")
-# restore_vm(DEFAULT_UCPE, "test", "/home/potato/test_savepath.img")
-# set_vm_autostart(DEFAULT_UCPE, "test", True)
-# print(get_vm_autostart(DEFAULT_UCPE, "test"))
-# print(get_vm_state(DEFAULT_UCPE, "test"))
-# print(get_vm_info(DEFAULT_UCPE, "test"))
-# print(get_all_vm_states(DEFAULT_UCPE))
-# print(get_vm_vnc_port(DEFAULT_UCPE, "test"))
-# print(get_vm_interfaces(DEFAULT_UCPE, "test"))
+if __name__ == '__main__':
+    # test:
+    UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
+    # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH)
+    # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
+    # start_vm(DEFAULT_UCPE, "test")
+    # shutdown_vm(DEFAULT_UCPE, "test")
+    # destroy_vm(DEFAULT_UCPE, "test")
+    # suspend_vm(DEFAULT_UCPE, "test")
+    # resume_vm(DEFAULT_UCPE, "test")
+    # save_vm(DEFAULT_UCPE, "test", "/home/potato/test_savepath.img")
+    # restore_vm(DEFAULT_UCPE, "test", "/home/potato/test_savepath.img")
+    # set_vm_autostart(DEFAULT_UCPE, "test", True)
+    # print(get_vm_autostart(DEFAULT_UCPE, "test"))
+    # print(get_vm_state(DEFAULT_UCPE, "test"))
+    # print(get_vm_info(DEFAULT_UCPE, "test"))
+    # print(get_all_vm_states(DEFAULT_UCPE))
+    # print(get_vm_vnc_port(DEFAULT_UCPE, "test"))
+    # print(get_vm_interfaces(DEFAULT_UCPE, "test"))
 
-# print(LibvirtController.libvirt_controller_define_vm_from_params(**DEFAULT_KWARGS))
-# print(LibvirtController.libvirt_controller_start_vm(**DEFAULT_KWARGS))
-# print(LibvirtController.libvirt_controller_shutdown_vm(**DEFAULT_KWARGS))
-# print(LibvirtController.libvirt_controller_get_vm_state(**DEFAULT_KWARGS))
-# print(LibvirtController.libvirt_controller_get_vm_xml(**DEFAULT_KWARGS))
-# print(LibvirtController.libvirt_controller_get_vm_autostart(**DEFAULT_KWARGS))
-# LibvirtController.libvirt_controller_set_vm_autostart(**DEFAULT_KWARGS)
-# LibvirtController.libvirt_controller_suspend_vm(**DEFAULT_KWARGS)
-# LibvirtController.libvirt_controller_resume_vm(**DEFAULT_KWARGS)
-# LibvirtController.libvirt_controller_save_vm(**DEFAULT_KWARGS)
-# LibvirtController.libvirt_controller_restore_vm(**DEFAULT_KWARGS)
-# print(LibvirtController.libvirt_controller_get_vm_info(**DEFAULT_KWARGS))
-print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
-# print(LibvirtController.libvirt_controller_destroy_vm(**DEFAULT_KWARGS))
-# LibvirtController.libvirt_controller_undefine_vm(**DEFAULT_KWARGS)
+    # print(LibvirtController.libvirt_controller_define_vm_from_params(**DEFAULT_KWARGS))
+    # print(LibvirtController.libvirt_controller_start_vm(**DEFAULT_KWARGS))
+    # print(LibvirtController.libvirt_controller_shutdown_vm(**DEFAULT_KWARGS))
+    # print(LibvirtController.libvirt_controller_get_vm_state(**DEFAULT_KWARGS))
+    # print(LibvirtController.libvirt_controller_get_vm_xml(**DEFAULT_KWARGS))
+    # print(LibvirtController.libvirt_controller_get_vm_autostart(**DEFAULT_KWARGS))
+    # LibvirtController.libvirt_controller_set_vm_autostart(**DEFAULT_KWARGS)
+    # LibvirtController.libvirt_controller_suspend_vm(**DEFAULT_KWARGS)
+    # LibvirtController.libvirt_controller_resume_vm(**DEFAULT_KWARGS)
+    # LibvirtController.libvirt_controller_save_vm(**DEFAULT_KWARGS)
+    # LibvirtController.libvirt_controller_restore_vm(**DEFAULT_KWARGS)
+    # print(LibvirtController.libvirt_controller_get_vm_info(**DEFAULT_KWARGS))
+    print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
+    # print(LibvirtController.libvirt_controller_destroy_vm(**DEFAULT_KWARGS))
+    # LibvirtController.libvirt_controller_undefine_vm(**DEFAULT_KWARGS)

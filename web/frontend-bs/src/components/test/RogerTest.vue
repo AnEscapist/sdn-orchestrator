@@ -6,29 +6,23 @@
       <h2>VNF List: {{vnfList}}</h2>
       <h2>VM List: {{vmList}}</h2>
       <h2>VM Info: {{vmInfo}}</h2>
-      <LTable class="table-hover"
-               :columns="vmTableColumns"
-               :data="Object.values(vmInfo)">
-      </LTable>
+      <VMTableOld></VMTableOld>
+      <VMTableNew></VMTableNew>
     </card>
   </div>
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
-  import LTable from '../../components/Table.vue'
+  import VMTableOld from '../Tables/vms/VMTableOld'
+  import VMTableNew from '../Tables/vms/VMTableNew'
 
   export default {
     name: "RogerTest",
     components: {
-      LTable
+      VMTableOld, VMTableNew
     },
-    data() {
-      return {
-        vmTableColumns: ['Name', 'State', 'Memory Usage', 'Memory Allocated', 'CPUs'] //todo: figure out how to implement running time
-      }
-    },
-    created() {
+   created() {
       this.$store.dispatch('updateContainerList');
       this.$store.dispatch('updateVMList');
       this.$store.dispatch('updateVMInfo');
