@@ -60,7 +60,7 @@ def containers_images(all=True):
         container_list = dcli.containers.list(all=all)
     except OSError as ose:
         return ose_error(ose, func)
-    for container in container__list:
+    for container in container_list:
         images.append(container.image)
     return containers_images_message(images, func)
 

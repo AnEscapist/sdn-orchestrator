@@ -83,7 +83,8 @@ export default {
     // });
 
     this.axios.get('api/docker/containers_images').then(response =>{
-        console.log(response.data.result)
+        console.log('abc === ')
+        console.log(response.data)
 
     })
 
