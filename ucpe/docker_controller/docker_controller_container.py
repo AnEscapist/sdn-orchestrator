@@ -183,7 +183,12 @@ def change_status(id_name, change_to):
             container.restart()
         else:
             return invalid_input_warning(input=change_to, func=func)
-    return change_status_message(id_name, change_to, func)
+        try:
+            container = dcli.containers.get(id_name)
+        except requests.exceptions.HTTPError:
+            return cnf_error(id_name, func)
+        curStatus = container.status
+    return change_status_message(id_name, curStatus, func)
 
 
 #======================docker container end============================

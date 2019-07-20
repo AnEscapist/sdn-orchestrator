@@ -81,11 +81,11 @@ def pull_error(re, func):
 
 
 #=========================Warning===============================#
-def change_status_warning(id_name, status, func):
+def change_status_warning(id_name, curStatus, func):
     warning = {
         'function': f'<{func.__name__}>',
-        'waring message': f'Container {id_name} is already {status}!',
-        'return': f'Current status - [{status}].'
+        'waring message': f'Container {id_name} is already {curStatus}!',
+        'return': f'Current status - [{curStatus}].'
     }
     return json_str(warning)
 def invalid_input_warning(input, func):
@@ -223,11 +223,11 @@ def pull_image_message(repo, tag, func):
     return json_str(message)
 
 
-def change_status_message(id_name, change_to, func):
+def change_status_message(id_name, curStatus, func):
     message = {
         'function': f'<{func.__name__}>',
         'success message': f'Status of container {id_name} changed to {change_to}!',
-        'return': f'Current status - [{change_to}].'
+        'return': f'Current status - [{curStatus}].'
     }
     return json_str(message)
 
