@@ -39,6 +39,15 @@ def containers_images():
 
     return jsonify(call_ucpe_function(messagedata))
 
+@docker_routes.routes('docker/change_status')
+def change_status():
+    change_to = request.args.get('change_to')
+    id_name = request.args.get('id_name')
+    messagedata = {"method": "docker_controller_inspect_container", "params": {
+        "body": {"change_to": chaneg_to, 'id_name': id_name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))
+
 
 @docker_routes.route('/docker/list_images')
 def list_images():
@@ -55,8 +64,8 @@ def client_info():
 
 @docker_routes.route('/docker/inspect_container')
 def inspect_container():
-    id = request.args.get('id')
+    id_name = request.args.get('id_name')
     messagedata = {"method": "docker_controller_inspect_container", "params": {
-        "body": {"id_name": id, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+        "body": {"id_name": id_name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
