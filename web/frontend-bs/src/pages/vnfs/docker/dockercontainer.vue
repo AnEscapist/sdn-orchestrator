@@ -118,16 +118,16 @@ export default {
       });
   },
   methods: {
-      changeStatus(change_to){
-          this.axios.get("/api/docker/change_status", {
-              params: {
-                  id_name: this.name,
-                  change_to: change_to
-              }
-          }).then(response => {
-              console.log(response)
-          })
-      }
+      // changeStatus(change_to){
+      //     this.axios.get("/api/docker/change_status", {
+      //         params: {
+      //             id_name: this.name,
+      //             change_to: change_to
+      //         }
+      //     }).then(response => {
+      //         console.log(response)
+      //     })
+      // }
   }
 
 }

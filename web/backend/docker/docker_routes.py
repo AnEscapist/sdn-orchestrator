@@ -39,7 +39,7 @@ def containers_images():
 
     return jsonify(call_ucpe_function(messagedata))
 
-@docker_routes.routes('docker/change_status')
+@docker_routes.route('docker/change_status')
 def change_status():
     change_to = request.args.get('change_to')
     id_name = request.args.get('id_name')
