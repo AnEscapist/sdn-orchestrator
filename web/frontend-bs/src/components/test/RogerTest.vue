@@ -25,7 +25,7 @@
     },
     data() {
       return {
-        vmTableColumns: ['Name', 'State', 'Memory Usage', 'Memory Allocated', 'CPUs', 'CPU Time']
+        vmTableColumns: ['Name', 'State', 'Memory Usage', 'Memory Allocated', 'CPUs'] //todo: figure out how to implement running time
       }
     },
     created() {

@@ -13,6 +13,7 @@ const mutations = {
   },
   SET_VM_INFO(state, payload){
     state.vmInfo = payload
+    console.log(vmInfo)
   }
 };
 

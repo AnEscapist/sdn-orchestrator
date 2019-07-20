@@ -19,6 +19,7 @@ import ucpe.libvirt_controller.grpc.libvirt_pb2 as libvirt_pb2
 import ucpe.libvirt_controller.grpc.libvirt_pb2_grpc as libvirt_pb2_grpc
 
 import hurry.filesize as filesize
+from hurry.filesize import alternative
 import datetime
 
 
@@ -137,14 +138,23 @@ def get_all_vm_info(ucpe):
 
 def _construct_info_dict(domain):
     state, maxmem, mem, cpus, cpu_time = domain.info()
-    info_dict = {"name": domain.name(), "state": VMState(state).name.capitalize(), "memory allocated": filesize.size(maxmem), "memory": mem, "cpus": cpus,
-                 "cpu time": str(datetime.timedelta(seconds=int(cpu_time/10**9)))} # by default it seems mem == maxmem, cpu time reported in nanoseconds
+
+    def kilobytes_to_bytes(bytes):
+        BYTES_IN_KILOBYTE = 1024
+        return bytes * BYTES_IN_KILOBYTE
+
+    info_dict = {"name": domain.name(), "state": VMState(state).name.capitalize(),
+                 "memory allocated": filesize.size(kilobytes_to_bytes(maxmem), system=alternative), "memory": mem,
+                 "cpus": cpus,
+                 "cpu time": str(datetime.timedelta(seconds=int(
+                     cpu_time)))}  # by default it seems mem == maxmem, cpu time reported in nanoseconds
     if VMState(state) == VMState.RUNNING:
-        memory_stats = domain.memoryStats() # this line only works for running domains
-        info_dict['memory'] = memory_stats['rss'] #todo: beware of magic string 'rss' (resident state memory - basically RAM usage)
+        memory_stats = domain.memoryStats()  # this line only works for running domains
+        info_dict['memory'] = memory_stats[
+            'rss']  # todo: beware of magic string 'rss' (resident state memory - basically RAM usage)
     else:
         info_dict['memory'] = 0
-    info_dict['memory usage'] = "{:.2%}".format(info_dict['memory']/maxmem)
+    info_dict['memory usage'] = "{:.2%}".format(info_dict['memory'] / maxmem)
     return info_dict
 
 
@@ -257,7 +267,7 @@ def set_vm_autostart(ucpe, vm_name, autostart, verbose=True):
     fail_message = f"Failed to set autostart of {vm_name} to {str(autostart)}"
     operation_name = virDomain.setAutostart.__name__
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose,
-                            operation_name=operation_name)
+                                   operation_name=operation_name)
 
 
 def shutdown_vm(ucpe, vm_name, verbose=True):
@@ -294,7 +304,7 @@ def save_vm(ucpe, vm_name, save_path, verbose=True):
     fail_message = f"Failed to restore virtual machine \"{vm_name}\" from path \"{save_path}\""
     operation_name = virDomain.save.__name__
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose,
-                            operation_name=operation_name)
+                                   operation_name=operation_name)
 
 
 def restore_vm(ucpe, save_path, verbose=True):
@@ -303,10 +313,12 @@ def restore_vm(ucpe, save_path, verbose=True):
     fail_message = f"Failed to restore virtual machine from path \"{save_path}\""
     operation_name = virConnect.restore.__name__
     return _libvirt_connection_call(func, ucpe, success_message, fail_message, verbose=verbose,
-                             operation_name=operation_name)
+                                    operation_name=operation_name)
+
 
 def snap_vm_from_xml(ucpe, vm_name, xml):
     pass
+
 
 def _blockpull(ucpe, vm_name, save_path, base_path):
     channel = grpc.insecure_channel(ucpe.hostname)
@@ -318,10 +330,11 @@ def _blockpull(ucpe, vm_name, save_path, base_path):
         raise OperationFailedError(name="blockpull")
     return response.out
 
+
 def _libvirt_domain_mutator(libvirt_domain_func, ucpe, vm_name, success_message, fail_message, verbose=True,
                             operation_name=None):
     # operation_name = libvirt_domain_func.__name__ if operation_name is None else operation_name
-    #todo: factor out the outer try/catch
+    # todo: factor out the outer try/catch
     return_dict = {}
     try:
         with get_domain(ucpe, vm_name) as domain:
@@ -342,8 +355,9 @@ def _libvirt_domain_mutator(libvirt_domain_func, ucpe, vm_name, success_message,
         return_dict["traceback"] = tb.format_exc()
     return return_dict
 
+
 def _libvirt_domain_observer(libvirt_domain_func, ucpe, vm_name):
-    #todo: factor out the outer try/catch
+    # todo: factor out the outer try/catch
     return_dict = {}
     try:
         with get_domain(ucpe, vm_name) as domain:
@@ -360,28 +374,32 @@ def _libvirt_domain_observer(libvirt_domain_func, ucpe, vm_name):
         return_dict["traceback"] = tb.format_exc()
     return return_dict
 
+
 def _libvirt_all_domains_observer(libvirt_domain_func, ucpe):
-    #todo: factor out the outer try/catch
+    # todo: factor out the outer try/catch
     return_dict = {}
     try:
         with open_connection(ucpe) as conn:
             try:
-                value = {domain.name(): libvirt_domain_func(domain) for domain in conn.listAllDomains()}  # oom unlikely here
+                value = {domain.name(): libvirt_domain_func(domain) for domain in
+                         conn.listAllDomains()}  # oom unlikely here
                 return_dict["return"] = value
             except Exception as e:
                 return_dict["fail_message"] = format_exception(e)
                 return_dict["traceback"] = tb.format_exc()
             else:
-                return_dict["success_message"] = f"{libvirt_domain_func.__name__} called successfully for all virtual machines."
+                return_dict[
+                    "success_message"] = f"{libvirt_domain_func.__name__} called successfully for all virtual machines."
     except ConnectionRefusedError as e:
         return_dict["fail_message"] = format_exception(e)
         return_dict["traceback"] = tb.format_exc()
     return return_dict
 
+
 def _libvirt_connection_call(libvirt_conn_func, ucpe, success_message, fail_message, verbose=True,
                              operation_name=None):
     # connfunc: connection --> domain
-    #todo: factor out the outer try/catch
+    # todo: factor out the outer try/catch
     operation_name = libvirt_conn_func.__name__ if operation_name is None else operation_name
     return_dict = {}
     try:
@@ -405,6 +423,7 @@ def _libvirt_connection_call(libvirt_conn_func, ucpe, success_message, fail_mess
         return_dict["traceback"] = tb.format_exc()
     return return_dict
 
+
 def _call_function(func, **kwargs):
     body = kwargs["body"]  # todo: bad
     ucpe = UCPE.from_kwargs(**body)
@@ -424,6 +443,7 @@ def _call_function(func, **kwargs):
     caller_name = get_caller_function_name()
     return_dict["function"] = caller_name
     return return_dict
+
 
 # test:
 UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
