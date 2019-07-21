@@ -90,7 +90,7 @@ def dpdk_get_devices():
         device_dict['current_driver'] = dd["Driver_str"]
         device_dict['drivers'] = list()
         device_dict['drivers'].append(dd["Driver_str"])
-        for i in dd.["Module_str"].split(','):
+        for i in dd["Module_str"].split(','):
             device_dict['drivers'].append(i)
         if dd["Driver_str"] in drivers:
             device_dict['driver_type'] = 'DPDK'
