@@ -24,7 +24,8 @@ const dockerRoutes = [
   {
       path: 'dockercontainer',
       name: 'dockercontainer',
-      component: DockerContainer
+      component: DockerContainer,
+      
   }
 ];
 
