@@ -1,23 +1,5 @@
 <template>
   <div class="content">
-    <div class="container-fluid">
-      <div class="row">
-
-        <div class="col-12">
-          <card class="strpied-tabled-with-hover"
-                body-classes="table-full-width table-responsive">
-            <template slot="header">
-              <h4 class="card-title">Network Devices</h4>
-              <p class="card-category">List of NICs and details</p>
-            </template>
-            <l-table class="table-hover table-striped table-sm"
-                     :columns="columns" :data="data">
-            </l-table>
-          </card>
-        </div>
-      </div>
-    </div>
-    
     <div class="mt-2">
       <AgGridVue style="width: 1000px; height: 300px;"
                  class="ag-theme-balham"
@@ -30,16 +12,12 @@
   </div>
 </template>
 <script>
-    import LTable from "../../components/Table.vue"
-    import Card from "../../components/Cards/Card.vue"
     import {AgGridVue} from "ag-grid-vue";
 
     const tableColumns = ['Slot', 'Device Name', 'Interface', 'Driver', 'Unused', 'Driver Type']
     export default {
         name: "HostInfoNetworkDevices",
         components: {
-          LTable,
-          Card,
           AgGridVue
         },
         data () {
