@@ -39,16 +39,32 @@ const actions = {
     commit('SET_VM_SELECTION', newSelection)
   },
   startSelectedVMs({commit, dispatch}){
-    axios.post(getURL('start_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
+    axios.post(getURL('start_or_resume_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
       dispatch('updateVMInfo')
     });
-  }
+  },
+  pauseSelectedVMs({commit, dispatch}){
+    axios.post(getURL('pause_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
+      dispatch('updateVMInfo')
+    });
+  },
+  killSelectedVMs({commit, dispatch}){
+    axios.post(getURL('kill_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
+      dispatch('updateVMInfo')
+    });
+  },
+  deleteSelectedVMs({commit, dispatch}){
+    axios.post(getURL('delete_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
+      dispatch('updateVMInfo')
+    });
+  },
 };
 
 const getters = {
   vmList: state => state.vmList,
   vmInfo: state => state.vmInfo,
-  vmSelection: state => state.vmSelection
+  vmSelection: state => state.vmSelection,
+  vmState: (state, vmName) => state.vmInfo[vmName]["state"]
 };
 
 function getURL(endpoint){
