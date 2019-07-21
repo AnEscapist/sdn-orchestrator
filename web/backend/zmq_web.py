@@ -17,7 +17,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 port_pub = "5559"
 port_sub = "5570"
-TIMEOUT = 5  # todo: decide
+TIMEOUT = 15  # todo: decide
 CONTROLLER_ID = "test-id"
 BROKER_IP = "10.10.81.200"  # todo: make this not global
 UCPE_LIST = ["test-sn"]  # serial numbers of ucpes this controller controls
@@ -255,5 +255,3 @@ if __name__ == "__main__":
     #  "params": {"body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test"}}, "jsonrpc": "2.0",
     #  "id": 0}
     # call_ucpe_function(messagedata)
-
-
