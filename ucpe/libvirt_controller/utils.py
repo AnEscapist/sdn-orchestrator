@@ -100,7 +100,7 @@ def get_domain(ucpe, vm_name, verbose=False):
 
 
 def state(libvirt_domain):
-    return VMState(libvirt_domain.state()[0]).name
+    return VMState(libvirt_domain.state()[0])
 
 def get_caller_function_name():
     return sys._getframe().f_back.f_back.f_code.co_name

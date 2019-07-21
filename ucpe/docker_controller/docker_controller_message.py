@@ -235,7 +235,7 @@ def inspect_container_message(id_name, inspection, func):
     message = {
         'function': f'<{func.__name__}>',
         'success message': f'Container {id_name} inspected.',
-        'return': inspection
+        'return': json_str(inspection)
     }
     return json_str(message)
 

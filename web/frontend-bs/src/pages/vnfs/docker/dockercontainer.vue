@@ -37,49 +37,98 @@
     <div>
       <table width='100%'>
         <tr>
-          <td width='20%'><h6>ID</h6></td>
-          <td><h6>{{id}}</h6></td>
+          <td width='20%'>
+            <h6>ID</h6>
+          </td>
+          <td>
+            <h6>{{id}}</h6>
+          </td>
         </tr>
       </table>
       <hr>
       <table width='100%'>
         <tr>
-            <td width='20%'><h6>IP address</h6></td>
-            <td v-if="ip == ''"><h6> - </h6></td>
-            <td v-else><h6>{{ip}}</h6></td>
+          <td width='20%'>
+            <h6>IP address</h6>
+          </td>
+          <td v-if="ip == ''">
+            <h6> - </h6>
+          </td>
+          <td v-else>
+            <h6>{{ip}}</h6>
+          </td>
         </tr>
       </table>
       <hr>
       <table width='100%'>
         <tr>
-            <td width='20%'><h6>Status</h6></td>
-            <td v-if="status == 'running' "><h5><span class="badge badge-success">{{status}}</span></h5></td>
-            <td v-else-if="status == 'exited' "><h5><span class="badge badge-danger">{{status}}</span></h5></td>
-            <td v-else><h5><span class="badge badge-primary">{{status}}</span></h5></td>
+          <td width='20%'>
+            <h6>Status</h6>
+          </td>
+          <td v-if="status == 'running' ">
+            <h5><span class="badge badge-success">{{status}}</span></h5>
+          </td>
+          <td v-else-if="status == 'exited' ">
+            <h5><span class="badge badge-danger">{{status}}</span></h5>
+          </td>
+          <td v-else>
+            <h5><span class="badge badge-primary">{{status}}</span></h5>
+          </td>
         </tr>
       </table>
       <hr>
       <table width='100%'>
         <tr>
-            <td width='20%'><h6>Created</h6></td>
-            <td><h6>{{createTime}}</h6></td>
+          <td width='20%'>
+            <h6>Created</h6>
+          </td>
+          <td>
+            <h6>{{createTime}}</h6>
+          </td>
         </tr>
       </table>
-
+      <hr>
+      <table>
+        <tr id='containerLinks'>
+          <button type="button" class="btn btn-link">
+            <td>
+              <font-awesome-icon :icon="['fas', 'file-alt']" size=sm coler="#1b7fbd" />
+              <font size='2px'> Logs</font>
+            </td>
+          </button>
+          <button type="button" class="btn btn-link" @click='showInspect()'>
+            <td>
+              <font-awesome-icon :icon="['fas', 'info-circle']" size=sm coler="#1b7fbd" />
+              <font size='2px'> Inspect</font>
+            </td>
+          </button>
+          <button type="button" class="btn btn-link">
+            <td>
+              <font-awesome-icon :icon="['fas', 'chart-area']" size=sm coler="#1b7fbd" />
+              <font size='2px'> Stats</font>
+            </td>
+          </button>
+          <button type="button" class="btn btn-link">
+            <td>
+              <font-awesome-icon :icon="['fas', 'terminal']" size=sm coler="#1b7fbd" />
+              <font size='2px'> Console</font>
+            </td>
+          </button>
+        </tr>
+      </table>
     </div>
     <div>
     </div>
+  </div>
+
+  <div class="container-fluid" v-if="showIns == true">
+    <font-awesome-icon :icon="['fas', 'info-circle']" size=lg color='rgb(0, 0, 0)' /> <strong> Inspect</strong>
+    <hr>
+    {{inspect}}
+
 
   </div>
 </div>
-<!-- <div height='100%'>
-
-    <div id='action'>
-        <font-awesome-icon :icon="['fas', 'cogs']" size=lg color='rgb(0, 0, 0)' /> <strong> Actions</strong>
-        <hr>
-
-    </div>
-</div> -->
 </template>
 
 <script>
@@ -92,6 +141,8 @@ export default {
       ip: '',
       id: '',
       createTime: '',
+      inspect: '',
+      showIns: false,
     }
 
 
@@ -101,37 +152,55 @@ export default {
 
   },
   mounted() {
-      this.axios.get("/api/docker/inspect_container", {
-        params: {
-          id_name: this.name
-        }
-      }).then(response => {
-        var status = JSON.parse(response.data.result)['return']['State']['Status']
-        this.status = status
-        // console.log(JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress)
-        var ip = JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress
-        this.ip = ip
-        var id = JSON.parse(response.data.result)['return']['Id']
-        this.id = id
-        var createTime = JSON.parse(response.data.result)['return']['Created']
-        this.createTime = createTime
-      });
+    this.axios.get("/api/docker/inspect_container", {
+      params: {
+        id_name: this.name
+      }
+    }).then(response => {
+      var inspect = JSON.parse(response.data.result)['return']
+      // console.log(inspect)
+      this.inspect = inspect
+      var status = JSON.parse(response.data.result)['return']['State']['Status']
+      this.status = status
+      // console.log(JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress)
+      var ip = JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress
+      this.ip = ip
+      var id = JSON.parse(response.data.result)['return']['Id']
+      this.id = id
+      var createTime = JSON.parse(response.data.result)['return']['Created']
+      this.createTime = createTime
+    });
   },
   methods: {
-      changeStatus(change_to){
-          this.axios.get("/api/docker/change_status", {
-              params: {
-                  id_name: this.name,
-                  change_to: change_to
-              }
-          }).then(response => {
-              console.log(response)
-              var res = JSON.parse(response.data.result)['return']
-              var status = res.substring(res.indexOf('[')+1, res.indexOf(']'))
-              console.log(status)
-              this.status = status
-          })
-      }
+    changeStatus(change_to) {
+      this.axios.get("/api/docker/change_status", {
+        params: {
+          id_name: this.name,
+          change_to: change_to
+        }
+      }).then(response => {
+        var res = JSON.parse(response.data.result)['return']
+        var status = res.substring(res.indexOf('[') + 1, res.indexOf(']'))
+
+        //after hit the button, re-render the status and ip address
+        this.axios.get("/api/docker/inspect_container", {
+          params: {
+            id_name: this.name
+          }
+        }).then(response => {
+          var status = JSON.parse(response.data.result)['return']['State']['Status']
+          this.status = status
+          // console.log(JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress)
+          var ip = JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress
+          this.ip = ip
+        });
+
+      });
+
+    },
+    showInspect() {
+      this.showIns = !this.showIns;
+    }
   }
 
 }
@@ -144,17 +213,25 @@ export default {
   padding-bottom: 13px;
 }
 
+a {
+  color: #1b7fbd;
+}
+
+font {
+  font-weight: bold;
+}
+
 #textR {
   text-align: right;
 }
-h6{
-    text-transform: none;
+
+h6 {
+  text-transform: none;
 }
 
-hr{
-    padding-top: 0;
-    margin-top: 0px;
+hr {
+  padding-top: 0;
+  margin-top: 0px;
 
 }
-
 </style>

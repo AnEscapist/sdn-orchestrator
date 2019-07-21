@@ -21,13 +21,7 @@
           <td>{{status[i]}}</td>
         </tr>
       </table>
-
-      <!-- <LTable class="table-hover"
-               :columns="containerCol"
-               :data="Object.values(containerInfo)">
-           </LTable> -->
     </card>
-    <!--      todo: notifications fo VNF status changes-->
   </div>
 </div>
 </template>
