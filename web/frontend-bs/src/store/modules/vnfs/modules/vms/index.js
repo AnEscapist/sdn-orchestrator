@@ -20,7 +20,8 @@ const mutations = {
 
 const controller_id = "test-id";
 const ucpe_sn = "test-sn";
-const URL_PREFIX = '/api/vms';
+const URL_PREFIX = `/api/vms/`;
+const URL_SUFFIX = `/${controller_id}/${ucpe_sn}`
 
 const actions = {
   updateVMList({commit}, token){
@@ -30,15 +31,17 @@ const actions = {
     // commit('SET_VM_LIST', methods.requestVMList()) //todo: make this a promise
   },
   updateVMInfo({commit}, token){
-      axios.get(`${URL_PREFIX}/all_vm_info/${controller_id}/${ucpe_sn}`).then((response) => {
+      axios.get(getURL('all_vm_info')).then((response) => {
         commit('SET_VM_INFO', response.data.result.return)}
       )
   },
   updateVMSelection({commit}, newSelection){
     commit('SET_VM_SELECTION', newSelection)
   },
-  startSelectedVMs({commit}){;
-    axios.post(`${URL_PREFIX}/start_selected_vms`, {'vm_names': state.vmSelection});
+  startSelectedVMs({commit, dispatch}){
+    axios.post(getURL('start_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
+      dispatch('updateVMInfo')
+    });
   }
 };
 
@@ -48,13 +51,11 @@ const getters = {
   vmSelection: state => state.vmSelection
 };
 
+function getURL(endpoint){
+  return `${URL_PREFIX}/${endpoint}/${URL_SUFFIX}`;
+}
 
 const methods = {
-  // requestVMList()  {
-  //     axios.get('/api/all_vm_info/' + controller_id + '/' + ucpe_sn).then((response) => {
-  //       commit('SET_VM_LIST', response.data)
-  //     });
-  // },
 };
 
 const vmModule = {

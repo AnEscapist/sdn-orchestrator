@@ -32,11 +32,13 @@ def test_post():
     print("received post", data['vm_names'])
     return "good job\n"
 
-@vm_routes.route('/start_selected_vms', methods=['POST'])
-def start_selected_vms():
-    method = ''
+@vm_routes.route('/start_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
+def start_selected_vms(controller_id, ucpe_sn):
+    method = 'start_vms'
+    data = request.get_json()
     body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
     data = request.get_json()
     message_data = get_message_data(method, body)
-    response = call_ucpe_function(message_data, con)
+    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
+    return jsonify(response)
 
