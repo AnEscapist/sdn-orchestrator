@@ -17,8 +17,7 @@
         </div>
       </div>
     </div>
-  </div>
-  <div>
+    
     <div class="mt-2">
       <AgGridVue style="width: 1000px; height: 300px;"
                  class="ag-theme-balham"
