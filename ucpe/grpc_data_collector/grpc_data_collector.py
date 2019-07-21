@@ -48,7 +48,7 @@ class gRPCDataCollector(object):
 
     @staticmethod
     def grpc_get_dpdk_devices(**kwargs):
-        return json.loads(get_execute(func_name(), "dpdk devices", **kwargs))
+        return get_execute(func_name(), "dpdk devices", **kwargs)
 
     @staticmethod
     def grpc_get_sriov_totalvfs(**kwargs):

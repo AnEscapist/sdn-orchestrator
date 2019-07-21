@@ -4,38 +4,11 @@
       <div class="row">
 
         <div class="col-12">
-          <card class="striped-tabled-with-hover"
-                body-classes="table-full-width table-responsive">
-            <template slot="header">
-              <h4 class="card-title">Network Devices</h4>
-              <p class="card-category">A list of NICs and their details</p>
-            </template>
-            <l-table class="table-hover table-striped"
-                     :columns="columns" :data="data">
-            </l-table>
-          </card>
-        </div>
-
-        <div class="col-12">
-          <card class="card-plain">
-            <template slot="header">
-              <h4 class="card-title">Table on Plain Background</h4>
-              <p class="card-category">Here is a subtitle for this table</p>
-            </template>
-            <div class="table-responsive">
-              <l-table class="table-hover"
-                       :columns="columns" :data="data">
-              </l-table>
-            </div>
-          </card>
-        </div>
-
-        <div class="col-12">
           <card class="strpied-tabled-with-hover"
                 body-classes="table-full-width table-responsive">
             <template slot="header">
-              <h4 class="card-title">Small table</h4>
-              <p class="card-category">Here is a subtitle for this table</p>
+              <h4 class="card-title">Network Devices</h4>
+              <p class="card-category">List of NICs and details</p>
             </template>
             <l-table class="table-hover table-striped table-sm"
                      :columns="columns" :data="data">
@@ -45,25 +18,51 @@
       </div>
     </div>
   </div>
+  <div>
+    <div class="mt-2">
+      <AgGridVue style="width: 1000px; height: 300px;"
+                 class="ag-theme-balham"
+                 :columnDefs="columnDefs"
+                 :rowData="data"
+                 :gridOptions="gridOptions"
+      >
+      </AgGridVue>
+    </div>
+  </div>
 </template>
 <script>
     import LTable from "../../components/Table.vue"
     import Card from "../../components/Cards/Card.vue"
+    import {AgGridVue} from "ag-grid-vue";
 
-    const tableColumns = ['slot', 'device_name', 'interface', 'driver', 'unused', 'driver_type']
+    const tableColumns = ['Slot', 'Device Name', 'Interface', 'Driver', 'Unused', 'Driver Type']
     export default {
         name: "HostInfoNetworkDevices",
         components: {
           LTable,
-          Card
+          Card,
+          AgGridVue
         },
         data () {
           return {
             columns: [...tableColumns],
-            data: []
+            columnDefs: [
+              { headerName: 'Slot', field: 'slot', sortable: true, checkboxSelection: true },
+              { headerName: 'Device Name', field: 'device_name', sortable: true },
+              { headerName: 'Interface', field: 'interface', sortable: true },
+              { headerName: 'Driver', field: 'driver', sortable: true },
+              { headerName: 'Unused', field: 'unused', sortable: true },
+              { headerName: 'Driver Type', field: 'driver_type', sortable: true }
+            ],
+            data: [],
+            gridOptions: {
+              suppressCellSelection: true
+            },
           }
         },
         mounted() {
+          this.gridApi = this.gridOptions.api;
+          this.gridColumnApi = this.gridOptions.api;
           this.getDevices()
         },
         methods: {
