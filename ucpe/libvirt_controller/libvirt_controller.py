@@ -41,6 +41,11 @@ class LibvirtController():
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def libvirt_controller_delete_vms(**kwargs):
+        func = delete_vms
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def libvirt_controller_get_vm_state(**kwargs):
         func = get_vm_state
         return _call_function(func, **kwargs)
@@ -274,6 +279,11 @@ def undefine_vm(ucpe, vm_name, verbose=True):
     fail_message = f"Failed to undefine virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
 
+def delete_vms(ucpe, vm_names, verbose=True):
+    func = _delete_domain
+    success_message = f"Deleted all vms in {vm_names}"
+    fail_message = f"Failed to delete all vms in {vm_names}"
+    return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
 def start_vm(ucpe, vm_name, verbose=True):
     func = virDomain.create
@@ -381,6 +391,12 @@ def _start_or_resume_domain(domain):
         VMState.SHUTOFF: virDomain.create
     }
     return function_map[state(domain)](domain)
+
+def _delete_domain(domain):
+    #todo: this will fail as soon as we add any snapshots. snapshots must be deleted first.
+    if state(domain) != VMState.SHUTOFF:
+        virDomain.destroy(domain)
+    virDomain.undefine(domain)
 
 def _blockpull(ucpe, vm_name, save_path, base_path):
     channel = grpc.insecure_channel(ucpe.hostname)
@@ -546,6 +562,7 @@ if __name__ == '__main__':
     # print(start_or_resume_vms(DEFAULT_UCPE, ["test", "cloud2"]))
     # shutdown_vm(DEFAULT_UCPE, "test")
     # destroy_vm(DEFAULT_UCPE, "test")
+    destroy_vms(DEFAULT_UCPE, ["test", "cloud2"])
     # suspend_vm(DEFAULT_UCPE, "test")
     # suspend_vms(DEFAULT_UCPE, ["test", "cloud2"])
     # resume_vm(DEFAULT_UCPE, "test")
