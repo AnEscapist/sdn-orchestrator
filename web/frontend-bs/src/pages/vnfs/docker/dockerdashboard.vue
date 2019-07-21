@@ -22,6 +22,7 @@
         </tr>
       </table>
     </card>
+
   </div>
 </div>
 </template>
@@ -45,6 +46,7 @@ export default {
       client: '',
       info: '',
       status: [],
+      all_img: [],
     }
   },
   mounted() {
@@ -70,13 +72,13 @@ export default {
       for (i = 0; i < status.length; i++) {
         this.status.push(status[i].substring(status[i].indexOf('[') + 1, status[i].indexOf(']')))
       }
-    })
+    });
 
-    // this.axios.get("/api/docker/list_images").then(response => {
-    //   var res = JSON.parse(response.data.result)['return']
-    //   var images = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
-    //   this.images = images
-    // });
+    this.axios.get("/api/docker/list_images").then(response => {
+      var res = JSON.parse(response.data.result)['return']
+      var all_img = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
+      this.all_img = all_img
+    });
 
     this.axios.get('api/docker/containers_images').then(response => {
       var res = JSON.parse(response.data.result)['return']

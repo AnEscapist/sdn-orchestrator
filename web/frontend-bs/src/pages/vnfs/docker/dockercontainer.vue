@@ -124,9 +124,7 @@
   <div class="container-fluid" v-if="showIns == true">
     <font-awesome-icon :icon="['fas', 'info-circle']" size=lg color='rgb(0, 0, 0)' /> <strong> Inspect</strong>
     <hr>
-    {{inspect}}
-
-
+    <pre><span class="inner-pre">{{inspect}}</span></pre>
   </div>
 </div>
 </template>
@@ -158,8 +156,8 @@ export default {
       }
     }).then(response => {
       var inspect = JSON.parse(response.data.result)['return']
-      // console.log(inspect)
-      this.inspect = inspect
+      this.inspect = JSON.stringify(inspect, null, 4)
+
       var status = JSON.parse(response.data.result)['return']['State']['Status']
       this.status = status
       // console.log(JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress)
@@ -219,6 +217,12 @@ a {
 
 font {
   font-weight: bold;
+}
+
+.inner-pre{
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 12px;
 }
 
 #textR {
