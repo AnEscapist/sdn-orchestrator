@@ -1,8 +1,8 @@
 <template>
   <div class="content">
     <div class="container-fluid">
-      <VNFSummaryPanel></VNFSummaryPanel>
-      <ZhengqiTest></ZhengqiTest>
+<!--      <VNFSummaryPanel></VNFSummaryPanel>-->
+<!--      <ZhengqiTest></ZhengqiTest>-->
       <RogerTest></RogerTest>
       <SampleCard></SampleCard>
 <!--      todo: notifications fo VNF status changes-->

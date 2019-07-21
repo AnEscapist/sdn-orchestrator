@@ -66,6 +66,11 @@ class LibvirtController():
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def libvirt_controller_start_vms(**kwargs):
+        func = start_vms
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def libvirt_controller_shutdown_vm(**kwargs):
         func = shutdown_vm
         return _call_function(func, **kwargs)
@@ -254,6 +259,11 @@ def start_vm(ucpe, vm_name, verbose=True):
     fail_message = f"Failed to start virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
 
+def start_vms(ucpe, vm_names, verbose=True):
+    func = virDomain.create
+    success_message = f"Sent start signal to vms {vm_names}"
+    fail_message = f"Failed to send start signal to all vms in {vm_names}"
+    return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
 def get_vm_autostart(ucpe, vm_name):
     func = virDomain.autostart
@@ -332,8 +342,8 @@ def _blockpull(ucpe, vm_name, save_path, base_path):
 
 def _libvirt_domain_mutator(libvirt_domain_func, ucpe, vm_name, success_message, fail_message, verbose=True,
                             operation_name=None):
-    # operation_name = libvirt_domain_func.__name__ if operation_name is None else operation_name
     # todo: factor out the outer try/catch
+    operation_name = libvirt_domain_func.__name__ if operation_name is None else operation_name
     return_dict = {}
     try:
         with get_domain(ucpe, vm_name) as domain:
@@ -352,6 +362,35 @@ def _libvirt_domain_mutator(libvirt_domain_func, ucpe, vm_name, success_message,
     except ConnectionRefusedError:
         return_dict["fail_message"] = fail_message
         return_dict["traceback"] = tb.format_exc()
+    return return_dict
+
+def _libvirt_multiple_domain_mutator(libvirt_domain_func, ucpe, vm_names, success_message, fail_message, verbose=True, operation_name=None):
+    # todo: factor out the outer try/catch
+    operation_name = libvirt_domain_func.__name__ if operation_name is None else operation_name
+    return_dict = {}
+    failed_list = []
+    try:
+        with open_connection(ucpe) as conn:
+            for vm_name in vm_names:
+                try:
+                    domain = conn.lookupByName(vm_name)
+                    status = libvirt_domain_func(domain)
+                    if status < 0:
+                        raise OperationFailedError(name=operation_name)
+                except Exception:
+                    success = False
+                    failed_list.append(vm_name)
+                    return_dict["traceback"] = tb.format_exc() # todo: find a way to get all tracebacks, not just last one
+    except ConnectionRefusedError:
+        failed_list = vm_names
+        return_dict["traceback"] = tb.format_exc()
+    if not failed_list:
+        return_dict["success_message"] = success_message
+        if verbose:
+            print(success_message)
+    else:
+        return_dict["fail_message"] = f"{fail_message}\nFailed for VMs {failed_list}"
+        return_dict["warning"] = "Traceback is only available for the last VM for which the operation fails"
     return return_dict
 
 
@@ -450,6 +489,7 @@ if __name__ == '__main__':
     # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH)
     # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
     # start_vm(DEFAULT_UCPE, "test")
+    print(start_vms(DEFAULT_UCPE, ["test", "cloud"]))
     # shutdown_vm(DEFAULT_UCPE, "test")
     # destroy_vm(DEFAULT_UCPE, "test")
     # suspend_vm(DEFAULT_UCPE, "test")
@@ -476,6 +516,6 @@ if __name__ == '__main__':
     # LibvirtController.libvirt_controller_save_vm(**DEFAULT_KWARGS)
     # LibvirtController.libvirt_controller_restore_vm(**DEFAULT_KWARGS)
     # print(LibvirtController.libvirt_controller_get_vm_info(**DEFAULT_KWARGS))
-    print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
+    # print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
     # print(LibvirtController.libvirt_controller_destroy_vm(**DEFAULT_KWARGS))
     # LibvirtController.libvirt_controller_undefine_vm(**DEFAULT_KWARGS)

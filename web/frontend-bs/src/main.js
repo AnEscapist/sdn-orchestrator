@@ -21,6 +21,10 @@ import {far} from '@fortawesome/free-regular-svg-icons'
 import {fab} from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText} from '@fortawesome/vue-fontawesome'
 
+// ag-grid (for tables)
+import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham.css";
+
 library.add(fas, far, fab, faUserSecret);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('font-awesome-layers', FontAwesomeLayers);

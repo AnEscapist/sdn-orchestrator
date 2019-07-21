@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort,jsonify
+from flask import Blueprint, request, render_template, abort,jsonify
 from jinja2 import TemplateNotFound
 from web.backend.zmq_web import call_ucpe_function
 
@@ -24,3 +24,19 @@ def vm_info(controller_id, ucpe_sn):
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
     print(type(response['result']['return']))
     return jsonify(response)
+
+@vm_routes.route('/post', methods=['POST'])
+def test_post():
+    print(request.is_json)
+    data = request.get_json()
+    print("received post", data['vm_names'])
+    return "good job\n"
+
+@vm_routes.route('/start_selected_vms', methods=['POST'])
+def start_selected_vms():
+    method = ''
+    body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
+    data = request.get_json()
+    message_data = get_message_data(method, body)
+    response = call_ucpe_function(message_data, con)
+

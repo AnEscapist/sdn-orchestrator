@@ -9,7 +9,7 @@ from web.backend.grpc.grpc_routes import grpc_routes
 import web.backend.zmq_web as zmq_web
 
 app = Flask(__name__)
-app.register_blueprint(vm_routes)
+app.register_blueprint(vm_routes, url_prefix='/vms')
 app.register_blueprint(docker_routes)
 app.register_blueprint(grpc_routes)
 

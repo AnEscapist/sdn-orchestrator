@@ -6,8 +6,9 @@
       <h2>VNF List: {{vnfList}}</h2>
       <h2>VM List: {{vmList}}</h2>
       <h2>VM Info: {{vmInfo}}</h2>
-      <VMTableOld></VMTableOld>
-      <VMTableNew></VMTableNew>
+      <VMTableOld/>
+      <AgTableExample/>
+      <VMTableNew/>
     </card>
   </div>
 </template>
@@ -16,10 +17,12 @@
   import { mapGetters, mapActions } from 'vuex'
   import VMTableOld from '../Tables/vms/VMTableOld'
   import VMTableNew from '../Tables/vms/VMTableNew'
+  import AgTableExample from '../Tables/AgTableExample'
 
   export default {
     name: "RogerTest",
     components: {
+      AgTableExample,
       VMTableOld, VMTableNew
     },
    created() {
