@@ -71,6 +71,11 @@ class LibvirtController():
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def libvirt_controller_start_or_resume_vms(**kwargs):
+        func = start_or_resume_vms
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def libvirt_controller_shutdown_vm(**kwargs):
         func = shutdown_vm
         return _call_function(func, **kwargs)
@@ -81,13 +86,28 @@ class LibvirtController():
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def libvirt_controller_destroy_vms(**kwargs):
+        func = destroy_vms
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def libvirt_controller_suspend_vm(**kwargs):
         func = suspend_vm
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def libvirt_controller_suspend_vms(**kwargs):
+        func = suspend_vms
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def libvirt_controller_resume_vm(**kwargs):
         func = resume_vm
+        return _call_function(func, **kwargs)
+
+    @staticmethod
+    def libvirt_controller_resume_vms(**kwargs):
+        func = resume_vms
         return _call_function(func, **kwargs)
 
     @staticmethod
@@ -117,18 +137,20 @@ class LibvirtController():
 
 
 def get_vm_state(ucpe, vm_name):
-    func = state
+    func = _state_str_from_domain
     return _libvirt_domain_observer(func, ucpe, vm_name)
 
+def get_all_vm_states(ucpe):
+    func = _state_str_from_domain
+    return _libvirt_all_domains_observer(func, ucpe)
+
+def _state_str_from_domain(domain):
+    return state(domain).name
 
 def get_vm_xml(ucpe, vm_name):
     func = lambda domain: virDomain.XMLDesc(domain, 0)
     return _libvirt_domain_observer(func, ucpe, vm_name)
 
-
-def get_all_vm_states(ucpe):
-    func = state
-    return _libvirt_all_domains_observer(func, ucpe)
 
 
 def get_vm_info(ucpe, vm_name):
@@ -265,10 +287,15 @@ def start_vms(ucpe, vm_names, verbose=True):
     fail_message = f"Failed to send start signal to all vms in {vm_names}"
     return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
+def start_or_resume_vms(ucpe, vm_names, verbose=True):
+    func = _start_or_resume_domain
+    success_message = f"Sent start/resume signal to vms {vm_names}"
+    fail_message = f"Failed to send start signal to all vms in {vm_names}"
+    return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
+
 def get_vm_autostart(ucpe, vm_name):
     func = virDomain.autostart
     return _libvirt_domain_observer(func, ucpe, vm_name)
-
 
 def set_vm_autostart(ucpe, vm_name, autostart, verbose=True):
     func = lambda domain: virDomain.setAutostart(domain, int(autostart))
@@ -278,13 +305,17 @@ def set_vm_autostart(ucpe, vm_name, autostart, verbose=True):
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose,
                                    operation_name=operation_name)
 
-
 def shutdown_vm(ucpe, vm_name, verbose=True):
     func = virDomain.shutdown
     success_message = f"Sent shutdown signal to virtual machine \"{vm_name}\". \nWarning: This does not guarantee shutdown."
     fail_message = f"Failed to shutdown virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
 
+def shutdowm_vms(ucpe, vm_names, verbose=True):
+    func = virDomain.shutdown
+    success_message = f"Sent shutdown signal to vms {vm_names}"
+    fail_message = f"Failed to send shutdown signal to all vms in {vm_names}"
+    return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
 def destroy_vm(ucpe, vm_name, verbose=True):
     func = virDomain.destroy
@@ -292,6 +323,11 @@ def destroy_vm(ucpe, vm_name, verbose=True):
     fail_message = f"Failed to destroy virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
 
+def destroy_vms(ucpe, vm_names, verbose=True):
+    func = virDomain.destroy
+    success_message = f"Sent destroy signal to vms {vm_names}"
+    fail_message = f"Failed to send destroy signal to all vms in {vm_names}"
+    return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
 def suspend_vm(ucpe, vm_name, verbose=True):
     func = virDomain.suspend
@@ -299,6 +335,11 @@ def suspend_vm(ucpe, vm_name, verbose=True):
     fail_message = f"Failed to suspend virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
 
+def suspend_vms(ucpe, vm_names, verbose=True):
+    func = virDomain.suspend
+    success_message = f"Sent suspend signal to vms {vm_names}"
+    fail_message = f"Failed to send suspend signal to all vms in {vm_names}"
+    return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
 def resume_vm(ucpe, vm_name, verbose=True):
     func = virDomain.resume
@@ -306,6 +347,11 @@ def resume_vm(ucpe, vm_name, verbose=True):
     fail_message = f"Failed to resume virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
 
+def resume_vms(ucpe, vm_names, verbose=True):
+    func = virDomain.resume
+    success_message = f"Sent suspend signal to vms {vm_names}"
+    fail_message = f"Failed to send suspend signal to all vms in {vm_names}"
+    return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
 def save_vm(ucpe, vm_name, save_path, verbose=True):
     func = lambda domain: virDomain.save(domain, save_path)
@@ -328,6 +374,13 @@ def restore_vm(ucpe, save_path, verbose=True):
 def snap_vm_from_xml(ucpe, vm_name, xml):
     pass
 
+def _start_or_resume_domain(domain):
+    function_map = {
+        VMState.RUNNING: lambda domain: 0, # empty function returning statuscode 0 (working)
+        VMState.PAUSED: virDomain.resume,
+        VMState.SHUTOFF: virDomain.create
+    }
+    return function_map[state(domain)](domain)
 
 def _blockpull(ucpe, vm_name, save_path, base_path):
     channel = grpc.insecure_channel(ucpe.hostname)
@@ -489,10 +542,12 @@ if __name__ == '__main__':
     # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH)
     # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
     # start_vm(DEFAULT_UCPE, "test")
-    print(start_vms(DEFAULT_UCPE, ["test", "cloud"]))
+    # print(start_vms(DEFAULT_UCPE, ["test", "cloud"]))
+    # print(start_or_resume_vms(DEFAULT_UCPE, ["test", "cloud2"]))
     # shutdown_vm(DEFAULT_UCPE, "test")
     # destroy_vm(DEFAULT_UCPE, "test")
     # suspend_vm(DEFAULT_UCPE, "test")
+    # suspend_vms(DEFAULT_UCPE, ["test", "cloud2"])
     # resume_vm(DEFAULT_UCPE, "test")
     # save_vm(DEFAULT_UCPE, "test", "/home/potato/test_savepath.img")
     # restore_vm(DEFAULT_UCPE, "test", "/home/potato/test_savepath.img")
