@@ -32,9 +32,51 @@ def test_post():
     print("received post", data['vm_names'])
     return "good job\n"
 
+#TODO: DRY up the below
+
 @vm_routes.route('/start_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
 def start_selected_vms(controller_id, ucpe_sn):
     method = 'start_vms'
+    data = request.get_json()
+    body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
+    data = request.get_json()
+    message_data = get_message_data(method, body)
+    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
+    return jsonify(response)
+
+@vm_routes.route('/start_or_resume_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
+def start_or_resume_selected_vms(controller_id, ucpe_sn):
+    method = 'start_or_resume_vms'
+    data = request.get_json()
+    body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
+    data = request.get_json()
+    message_data = get_message_data(method, body)
+    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
+    return jsonify(response)
+
+@vm_routes.route('/pause_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
+def pause_selected_vms(controller_id, ucpe_sn):
+    method = 'suspend_vms'
+    data = request.get_json()
+    body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
+    data = request.get_json()
+    message_data = get_message_data(method, body)
+    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
+    return jsonify(response)
+
+@vm_routes.route('/kill_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
+def kill_selected_vms(controller_id, ucpe_sn):
+    method = 'destroy_vms'
+    data = request.get_json()
+    body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
+    data = request.get_json()
+    message_data = get_message_data(method, body)
+    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
+    return jsonify(response)
+
+@vm_routes.route('/delete_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
+def delete_selected_vms(controller_id, ucpe_sn):
+    method = 'delete_vms'
     data = request.get_json()
     body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
     data = request.get_json()

@@ -15,13 +15,82 @@
 
         <tr v-for='(container,i) in containers' :key="container" id='containerInfoCard'>
           <router-link :to="{path: 'dockercontainer', params: {name: container}, query: {name: container}}">
-            <td>{{container}}</td>
+            <td width='10%'>{{container}}</td>
           </router-link>
           <td>{{images[i]}}</td>
-          <td>{{status[i]}}</td>
+          <td v-if="status[i] == 'running' ">
+            <h6><span class="badge badge-pill badge-success">{{status[i]}}</span></h6>
+          </td>
+          <td v-else-if="status[i] == 'exited' ">
+            <h6><span class="badge badge-pill badge-danger">{{status[i]}}</span></h6>
+          </td>
+          <td v-else>
+            <h6><span class="badge badge-pill badge-primary">{{status[i]}}</span></h6>
+          </td>
         </tr>
       </table>
     </card>
+    <card>
+
+      <font-awesome-icon :icon="['fas', 'clone']" size=lg color='rgb(0, 0, 0)' /> <strong> Images</strong>
+      <hr>
+
+      <table width="100%">
+        <tr>
+          <th>Name</th>
+          <th>Images</th>
+          <th>Status</th>
+        </tr>
+
+
+        <tr v-for='(img,i) in all_img' id='containerInfoCard'>
+          <router-link :to="{path: 'dockercontainer', params: {name: img}, query: {name: img}}">
+            <td width='10%'>{{img}}</td>
+          </router-link>
+          <td>----------------------------------------------------</td>
+          <td>====</td>
+        </tr>
+      </table>
+      <hr>
+      <div class="pullimage">
+        <font-awesome-icon :icon="['fas', 'download']" size=lg />
+        <strong> Pull image</strong>
+        <hr>
+        <div class="pull-choice">
+          <table>
+            <tr>
+              <td>
+                <form class="form-inline">
+                  <strong style="font-size:15px">Image: &nbsp</strong>
+                  <input type="text" placeholder="e.g. name:tag" v-model="name_tag">
+                </form>
+              </td>
+
+              <td>
+                <form class="form-inline">
+                  <strong style="font-size:15px">&nbsp Repository: &nbsp</strong>
+                  <input type="text" placeholder="docker hub">
+                </form>
+              </td>
+            </tr>
+          </table>
+          <br>
+          <p class="note">
+            <font-awesome-icon :icon="['fas', 'exclamation-triangle']" size=sm color='rgb(249, 194, 0)' />
+            Note: if you don't specify the tag of the image, <span class="badge badge-pill badge-info">latest</span> will be used.
+          </p>
+        </div>
+        <button type="button" class="btn btn-primary" @click="pullImg(name_tag)">
+          <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=sm /> <strong style="font-size:13px"> PULL</strong>
+        </button>
+
+
+
+      </div>
+    </card>
+
+
+
   </div>
 </div>
 </template>
@@ -45,6 +114,8 @@ export default {
       client: '',
       info: '',
       status: [],
+      all_img: [],
+      name_tag: '',
     }
   },
   mounted() {
@@ -70,13 +141,17 @@ export default {
       for (i = 0; i < status.length; i++) {
         this.status.push(status[i].substring(status[i].indexOf('[') + 1, status[i].indexOf(']')))
       }
-    })
+    });
 
-    // this.axios.get("/api/docker/list_images").then(response => {
-    //   var res = JSON.parse(response.data.result)['return']
-    //   var images = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
-    //   this.images = images
-    // });
+    this.axios.get("/api/docker/list_images").then(response => {
+      var res = JSON.parse(response.data.result)['return']
+      var regex = /\<(.+?)\>/g;
+      var imgs = res.match(regex)
+      var i;
+      for (i = 0; i < imgs.length; i++) {
+        this.all_img.push(imgs[i].substring(imgs[i].indexOf(':') + 3, imgs[i].indexOf('>') - 1))
+      }
+    });
 
     this.axios.get('api/docker/containers_images').then(response => {
       var res = JSON.parse(response.data.result)['return']
@@ -113,23 +188,42 @@ export default {
         type: this.type[color]
       })
     },
-    get_status(containers) {
-
-      var i;
-      for (i = 0; i < containers.length; i++) {
-        this.axios.get("/api/docker/inspect_container", {
-          params: {
-            id: containers[i].trim().slice(1, -1)
-          }
+    pullImg(name_tag){
+        if (name_tag.includes(':')){
+            var name = name_tag.split(':')[0]
+            var tag = name_tag.split(':')[1]
+        } else {
+            var name = name_tag
+            var tag = 'latest'
+        }
+        this.axios.get('/api/docker/pull_image', {
+            params: {
+                name: name,
+                tag: tag,
+                timeout: 1000
+            }
         }).then(response => {
-          var x = JSON.parse(response.data.result)['return']['State']['Status']
-          console.log('x', x)
-          this.state.push(x)
-          console.log(this.state, '======')
-          console.log(JSON.parse(response.data.result)['return']['State']['Status'])
-        });
-      }
-    },
+            console.log(JSON.parse(response.data.result))
+        })
+
+    }
+    // get_status(containers) {
+    //
+    //   var i;
+    //   for (i = 0; i < containers.length; i++) {
+    //     this.axios.get("/api/docker/inspect_container", {
+    //       params: {
+    //         id: containers[i].trim().slice(1, -1)
+    //       }
+    //     }).then(response => {
+    //       var x = JSON.parse(response.data.result)['return']['State']['Status']
+    //       console.log('x', x)
+    //       this.state.push(x)
+    //       console.log(this.state, '======')
+    //       console.log(JSON.parse(response.data.result)['return']['State']['Status'])
+    //     });
+    //   }
+    // },
 
 
   }
@@ -150,12 +244,28 @@ export default {
 
 a {
   color: rgb(38, 138, 255);
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 13px;
 }
+
+input {
+
+  border: 2px solid rgb(200, 200, 200);
+  border-radius: 4px;
+  padding-left: 8px;
+}
+
+p {
+    font-size: 12px;
+    font-weight: bold;
+}
+
 
 #containerInfoCard {
   font-family: Arial, sans-serif;
   font-size: 15px;
-  background-color: rgb(219, 219, 219);
+  background-color: rgb(248, 248, 248);
   border-bottom: 2px solid white;
   height: 25px;
   padding-top: 3px;
@@ -164,7 +274,7 @@ a {
 }
 
 #containerInfoCard:hover {
-  background-color: rgb(158, 158, 158);
+  background-color: rgb(233, 233, 233);
 }
 
 /*todo: consider making this global*/

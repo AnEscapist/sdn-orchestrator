@@ -124,9 +124,7 @@
   <div class="container-fluid" v-if="showIns == true">
     <font-awesome-icon :icon="['fas', 'info-circle']" size=lg color='rgb(0, 0, 0)' /> <strong> Inspect</strong>
     <hr>
-    {{inspect}}
-
-
+    <pre><span class="inner-pre">{{inspect}}</span></pre>
   </div>
 </div>
 </template>
@@ -158,16 +156,14 @@ export default {
       }
     }).then(response => {
       var inspect = JSON.parse(response.data.result)['return']
-      // console.log(inspect)
       this.inspect = inspect
-      var status = JSON.parse(response.data.result)['return']['State']['Status']
+      var status = inspect['State']['Status']
       this.status = status
-      // console.log(JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress)
-      var ip = JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress
+      var ip = inspect['NetworkSettings'].IPAddress
       this.ip = ip
-      var id = JSON.parse(response.data.result)['return']['Id']
+      var id = inspect['Id']
       this.id = id
-      var createTime = JSON.parse(response.data.result)['return']['Created']
+      var createTime = inspect['Created']
       this.createTime = createTime
     });
   },
@@ -188,10 +184,11 @@ export default {
             id_name: this.name
           }
         }).then(response => {
-          var status = JSON.parse(response.data.result)['return']['State']['Status']
+          var inspect = JSON.parse(response.data.result)['return']
+          // inspect = JSON.parse(inspect)
+          var status = inspect['State']['Status']
           this.status = status
-          // console.log(JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress)
-          var ip = JSON.parse(response.data.result)['return']['NetworkSettings'].IPAddress
+          var ip = inspect['NetworkSettings'].IPAddress
           this.ip = ip
         });
 
@@ -219,6 +216,12 @@ a {
 
 font {
   font-weight: bold;
+}
+
+.inner-pre {
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 #textR {
