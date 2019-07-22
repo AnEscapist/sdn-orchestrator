@@ -185,7 +185,7 @@ export default {
           }
         }).then(response => {
           var inspect = JSON.parse(response.data.result)['return']
-          inspect = JSON.parse(inspect)
+          // inspect = JSON.parse(inspect)
           var status = inspect['State']['Status']
           this.status = status
           var ip = inspect['NetworkSettings'].IPAddress
