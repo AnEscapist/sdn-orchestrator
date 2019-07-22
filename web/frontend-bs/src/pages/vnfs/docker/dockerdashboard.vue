@@ -198,11 +198,12 @@ export default {
         }
         this.axios.get('/api/docker/pull_image', {
             params: {
-                name: name
-                tag: tag
+                name: name,
+                tag: tag,
+                timeout: 1000
             }
         }).then(response => {
-            console.log(response)
+            console.log(JSON.parse(response.data.result))
         })
 
     }

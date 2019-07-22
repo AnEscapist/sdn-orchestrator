@@ -17,7 +17,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 port_pub = "5559"
 port_sub = "5570"
-TIMEOUT = 15  # todo: decide
+#TIMEOUT = 15  # todo: decide  #MOVED IT AS A PARAMETER OF CALL_UCPE_FUNCTION
 CONTROLLER_ID = "test-id"
 BROKER_IP = "10.10.81.200"  # todo: make this not global
 UCPE_LIST = ["test-sn"]  # serial numbers of ucpes this controller controls
@@ -33,7 +33,7 @@ max_id = 0
 max_id_lock = threading.Lock()
 
 
-def call_ucpe_function(messagedata, controller_id='test-id', ucpe_sn='test-sn'):
+def call_ucpe_function(messagedata, controller_id='test-id', ucpe_sn='test-sn', TIMEOUT=15):
     print(messagedata,'\n', controller_id,'\n', ucpe_sn)
     if not request_ids.empty():
         print('ids', request_ids.queue)
