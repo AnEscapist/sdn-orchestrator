@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const AGENT_NAME = 'agent';
+
 const state = {
   vmList: [],
   vmInfo: {},
@@ -25,7 +27,7 @@ const mutations = {
 const controller_id = "test-id";
 const ucpe_sn = "test-sn";
 const URL_PREFIX = `/api/vms/`;
-const URL_SUFFIX = `/${controller_id}/${ucpe_sn}`
+const URL_SUFFIX = `/${controller_id}/${ucpe_sn}`;
 
 const actions = {
   updateVMList({commit}, token){
@@ -36,8 +38,18 @@ const actions = {
   },
   updateVMInfo({commit}, token){
       axios.get(getURL('all_vm_info')).then((response) => {
-        commit('SET_VM_INFO', response.data.result.return)}
-      )
+        let vmInfo = response.data.result.return;
+        commit('SET_VM_INFO', Object.keys(vmInfo)
+          .filter(vmName => vmName !== AGENT_NAME)
+          .reduce((obj, vmName) => {
+            return {
+              ...obj,
+              [vmName]: vmInfo[vmName]
+            }
+          }, {})
+        )}
+      ).catch(err => console.log(err))
+    // https://stackoverflow.com/questions/38750705/filter-object-properties-by-key-in-es6
   },
   updateVMSelection({commit}, newSelection){
     commit('SET_VM_SELECTION', newSelection)
@@ -81,10 +93,6 @@ function getURL(endpoint){
 }
 
 const methods = {
-};
-
-const vm_constants = {
-  AGENT_NAME : 'agent'
 };
 
 const vmModule = {

@@ -1,9 +1,13 @@
 <template>
   <div class="centered-table mt-2">
     <div>
+      <div class="btn-toolbar justify-content-between"
+           role="toolbar"
+           aria-label="Actions Toolbar"
+      >
       <div class="block btn-group mt-2"
            role="group"
-           aria-label="Actions">
+           aria-label="State Changes">
         <button type="button"
                 class="btn btn-success btn-sm"
                 @click="startSelectedVMs">
@@ -44,6 +48,19 @@
                              color='rgb(255, 255, 255)'/>
           Remove
         </button>
+      </div>
+        <div class="block btn-group mt-2"
+             role="group"
+             aria-label="Create VNF">
+        <button type="button"
+                class="btn btn-secondary btn-sm"
+                @click="deleteSelectedVMs">
+          <font-awesome-icon :icon="['fas', 'plus-circle']"
+                             size=sm
+                             color='rgb(255, 255, 255)'/>
+          New VNF
+        </button>
+        </div>
       </div>
       <div>
         <input type="text"
@@ -132,5 +149,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .btn-secondary {
+    background-color: #4a148c;
   }
 </style>
