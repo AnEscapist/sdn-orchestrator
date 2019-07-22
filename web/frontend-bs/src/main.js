@@ -8,6 +8,10 @@ import store from './store';
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
 
+// Bootstrap and Bootstrap-Vue
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import BootstrapVue from 'bootstrap-vue'
+
 // router setup
 import routes from './routes/routes'
 import './registerServiceWorker'
@@ -33,6 +37,7 @@ Vue.component('font-awesome-layers-text', FontAwesomeLayersText);
 // plugin setup
 Vue.use(VueRouter);
 Vue.use(LightBootstrap);
+Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
 
 // configure router

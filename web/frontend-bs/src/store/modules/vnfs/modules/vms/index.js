@@ -1,10 +1,13 @@
 import axios from 'axios';
 
+const AGENT_NAME = 'agent';
+
 const state = {
   vmList: [],
   vmInfo: {},
   vmSelection: [], //list of vms selected in vm table in vnfs/home
-  vmFilterText: ''
+  vmFilterText: '',
+  atLeastOneVMSelected: false
 };
 
 const mutations = {
@@ -19,13 +22,16 @@ const mutations = {
   },
   SET_VM_FILTER_TEXT(state, payload){
     state.vmFilter = payload
+  },
+  SET_AT_LEAST_ONE_VM_SELECTED(state, payload){
+    state.atLeastOneVMSelected = payload
   }
 };
 
 const controller_id = "test-id";
 const ucpe_sn = "test-sn";
 const URL_PREFIX = `/api/vms/`;
-const URL_SUFFIX = `/${controller_id}/${ucpe_sn}`
+const URL_SUFFIX = `/${controller_id}/${ucpe_sn}`;
 
 const actions = {
   updateVMList({commit}, token){
@@ -36,11 +42,22 @@ const actions = {
   },
   updateVMInfo({commit}, token){
       axios.get(getURL('all_vm_info')).then((response) => {
-        commit('SET_VM_INFO', response.data.result.return)}
-      )
+        let vmInfo = response.data.result.return;
+        commit('SET_VM_INFO', Object.keys(vmInfo)
+          .filter(vmName => vmName !== AGENT_NAME)
+          .reduce((obj, vmName) => {
+            return {
+              ...obj,
+              [vmName]: vmInfo[vmName]
+            }
+          }, {})
+        )}
+      ).catch(err => console.log(err))
+    // https://stackoverflow.com/questions/38750705/filter-object-properties-by-key-in-es6
   },
   updateVMSelection({commit}, newSelection){
     commit('SET_VM_SELECTION', newSelection)
+    commit('SET_AT_LEAST_ONE_VM_SELECTED', !!newSelection.length) //!! is a trick to cast to truthiness value bool
   },
   updateVMFilterText({commit}, newFilterText){
     commit('SET_VM_FILTER_TEXT', newFilterText)
@@ -74,6 +91,7 @@ const getters = {
   // vmState: (state, vmName) => state.vmInfo[vmName]["state"]
   vmFilterText: state => state.vmFilterText,
   vmStateFromName: state => (name) => state.vmInfo[name].state,
+  vmAtLeastOneSelected: state => state.atLeastOneVMSelected
 };
 
 function getURL(endpoint){
@@ -81,10 +99,6 @@ function getURL(endpoint){
 }
 
 const methods = {
-};
-
-const vm_constants = {
-  AGENT_NAME : 'agent'
 };
 
 const vmModule = {

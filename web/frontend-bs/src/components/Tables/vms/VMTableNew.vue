@@ -1,49 +1,23 @@
 <template>
   <div class="centered-table mt-2">
     <div>
-      <div class="block btn-group mt-2"
-           role="group"
-           aria-label="Actions">
-        <button type="button"
-                class="btn btn-success btn-sm"
-                @click="startSelectedVMs">
-          <font-awesome-icon :icon="['fas', 'play']"
-                             size=sm
-                             color='rgb(255,255,255)'/>
-          Start
-        </button>
-        <!--      <button type="button" class="btn btn-danger btn-sm" @click="changeStatus('exited')">-->
-        <!--        <font-awesome-icon :icon="['fas', 'square']" size=sm color='rgb(255, 255, 255)' />-->
-        <!--        Stop-->
-        <!--      </button>-->
-        <button type="button"
-                class="btn btn-primary btn-sm"
-                @click="pauseSelectedVMs">
-          <font-awesome-icon :icon="['fas', 'pause']"
-                             size=sm
-                             color='rgb(255, 255, 255)'/>
-          Pause
-        </button>
-        <button type="button"
-                class="btn btn-danger btn-sm"
-                @click="killSelectedVMs">
-          <font-awesome-icon :icon="['fas', 'skull-crossbones']"
-                             size=sm
-                             color='rgb(255, 255, 255)'/>
-          Kill
-        </button>
-        <!--      <button type="button" class="btn btn-primary btn-sm" @click="changeStatus('restart')">-->
-        <!--        <font-awesome-icon :icon="['fas', 'sync-alt']" size=sm color='rgb(255, 255, 255)' />-->
-        <!--        Restart-->
-        <!--      </button>-->
-        <button type="button"
-                class="btn btn-dark btn-sm"
-                @click="deleteSelectedVMs">
-          <font-awesome-icon :icon="['fas', 'trash-alt']"
-                             size=sm
-                             color='rgb(255, 255, 255)'/>
-          Remove
-        </button>
+      <div class="btn-toolbar justify-content-between"
+           role="toolbar"
+           aria-label="Actions Toolbar"
+      >
+        <VMActionsButtonGroup/>
+        <div class="block btn-group mt-2"
+             role="group"
+             aria-label="Create VNF">
+          <button type="button"
+                  class="btn btn-secondary btn-sm"
+                  @click="deleteSelectedVMs">
+            <font-awesome-icon :icon="['fas', 'plus-circle']"
+                               size=sm
+                               color='rgb(255, 255, 255)'/>
+            New VNF
+          </button>
+        </div>
       </div>
       <div>
         <input type="text"
@@ -63,24 +37,35 @@
                  @selection-changed="onSelectionChanged"
       >
       </AgGridVue>
+      <!-- Using value -->
+      <b-button v-b-modal="'my-modal'">Show Modal</b-button>
+
+      <!-- The modal -->
+      <b-modal id="my-modal">Hello From My Modal!</b-modal>
     </div>
-<!--        <h3>Agent State: {{vmStateFromName('agent')}}</h3>-->
+    <!--        <h3>Agent State: {{vmStateFromName('agent')}}</h3>-->
   </div>
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import { AgGridVue } from "ag-grid-vue"
+  import VMActionsButtonGroup from '../../Buttons/vnfs/vms/VMActionsButtonGroup'
 
   const AGENT_NAME = 'agent'; //todo: this is bad
 
   export default {
     name: "VMTableNew",
-    components: { AgGridVue },
+    components: { AgGridVue, VMActionsButtonGroup },
     data() {
       return {
         vmTableColumns: [
-          { headerName: 'Name', field: 'name', sortable: true, checkboxSelection: params => params.data.name !== AGENT_NAME }, //todo: find better way to do this
+          {
+            headerName: 'Name',
+            field: 'name',
+            sortable: true,
+            checkboxSelection: params => params.data.name !== AGENT_NAME
+          }, //todo: find better way to do this
           { headerName: 'State', field: 'state', sortable: true },
           { headerName: 'Memory Usage', field: 'memory usage', sortable: true },
           { headerName: 'Memory Allocated', field: 'memory allocated', sortable: true },
@@ -98,7 +83,7 @@
     },
     computed: {
       ...mapGetters([
-        'vnfList', 'vnfCount', 'vmList', 'vmInfo', 'vmSelection', 'vmFilterText', 'vmStateFromName'
+        'vnfList', 'vnfCount', 'vmList', 'vmInfo', 'vmSelection', 'vmFilterText', 'vmStateFromName', 'vmAtLeastOneSelected'
       ]),
     },
     mounted() {
@@ -115,7 +100,7 @@
       },
     },
     watch: {
-      filterText: function(){
+      filterText: function () {
         this.gridApi.setQuickFilter(this.filterText)
       }
     }
@@ -127,5 +112,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .btn-secondary {
+    background-color: #4a148c;
   }
 </style>
