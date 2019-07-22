@@ -32,7 +32,15 @@
   </div>
   <hr>
   <div class="container-fluid">
-    <font-awesome-icon :icon="['fas', 'question-circle']" size=lg color='rgb(0, 0, 0)' /> <strong> Container: {{name}}</strong>
+    <font-awesome-icon :icon="['fas', 'question-circle']" size=lg color='rgb(0, 0, 0)' />
+    <strong> Container: {{name}} </strong>
+    <button class="renameBtn" @click="showEdit = !showEdit">
+      <font-awesome-icon :icon="['fas', 'edit']" size=sm color='#1b7fbd' v-if='showEdit' />
+    </button>
+    <span v-if='!showEdit'>
+      <font-awesome-icon :icon="['fas', 'chevron-right']" size=sm color='rgb(0, 0, 0)' />
+      <input type="text" placeholder="new name" @keyup.enter='showEdit = !showEdit'>
+    </span>
     <hr>
     <div>
       <table width='100%'>
@@ -141,6 +149,7 @@ export default {
       createTime: '',
       inspect: '',
       showIns: false,
+      showEdit: true,
     }
 
 
@@ -216,6 +225,22 @@ a {
 
 font {
   font-weight: bold;
+}
+
+input {
+  height: 18px;
+  /* background-color: red; */
+  background-color: rgb(247, 247, 247);
+  border: none;
+  border-bottom: 1px solid rgb(89, 89, 89);
+  padding-left: 3px;
+  margin-bottom: 0px;
+}
+
+.renameBtn {
+  background-color: white;
+  border: none;
+  padding: 0;
 }
 
 .inner-pre {
