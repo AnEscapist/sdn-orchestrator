@@ -146,6 +146,7 @@ export default {
       status: '',
       ip: '',
       id: '',
+      name: '',
       createTime: '',
       inspect: '',
       showIns: false,
@@ -156,32 +157,29 @@ export default {
 
   },
   created() {
-    this.name = this.$route.query.name
+    this.short_id = this.$route.query.short_id
 
   },
   mounted() {
     this.axios.get("/api/docker/inspect_container", {
       params: {
-        id_name: this.name
+        id_name: this.short_id
       }
     }).then(response => {
       var inspect = JSON.parse(response.data.result)['return']
       this.inspect = inspect
-      var status = inspect['State']['Status']
-      this.status = status
-      var ip = inspect['NetworkSettings'].IPAddress
-      this.ip = ip
-      var id = inspect['Id']
-      this.id = id
-      var createTime = inspect['Created']
-      this.createTime = createTime
+      this.status = inspect['State']['Status']
+      this.ip = inspect['NetworkSettings'].IPAddress
+      this.id = inspect['Id']
+      this.name = inspect['Name'].slice(1, inspect['Name'].legth)
+      this.createTime = inspect['Created']
     });
   },
   methods: {
     changeStatus(change_to) {
       this.axios.get("/api/docker/change_status", {
         params: {
-          id_name: this.name,
+          id_name: this.id,
           change_to: change_to
         }
       }).then(response => {
@@ -191,7 +189,7 @@ export default {
         //after hit the button, re-render the status and ip address
         this.axios.get("/api/docker/inspect_container", {
           params: {
-            id_name: this.name
+            id_name: this.id
           }
         }).then(response => {
           var inspect = JSON.parse(response.data.result)['return']
@@ -209,15 +207,15 @@ export default {
       this.showIns = !this.showIns;
     },
     renameContainer(newName) {
-        this.showEdit = !this.showEdit
-        this.axios.get('/api/docker/rename_container', {
-            params: {
-                id_name: this.name,
-                newName: newName
-            }
-        }).then(response => {
-            console.log(response)
-        })
+      this.showEdit = !this.showEdit
+      this.axios.get('/api/docker/rename_container', {
+        params: {
+          id_name: this.id,
+          newName: newName
+        }
+      }).then(response => {
+        this.name = JSON.parse(response.data.result)['return']
+      })
     }
   }
 

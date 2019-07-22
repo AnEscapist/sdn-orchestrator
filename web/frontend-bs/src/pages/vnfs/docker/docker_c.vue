@@ -14,7 +14,7 @@
 
 
         <tr v-for='(container,i) in containers' :key="container" id='containerInfoCard'>
-          <router-link :to="{path: 'dockercontainer', params: {name: container}, query: {name: container}}">
+          <router-link :to="{path: 'dockercontainer', query: {short_id: containers_id[i]}}">
             <td width='10%'>{{container}}</td>
           </router-link>
           <td>{{images[i]}}</td>
@@ -49,6 +49,7 @@ export default {
   data() {
     return {
       containers: [],
+      containers_id: [],
       images: [],
       client: '',
       info: '',
@@ -60,6 +61,7 @@ export default {
   mounted() {
     this.axios.get("/api/docker/list_containers").then(response => {
       var res = JSON.parse(response.data.result)['return']
+      // console.log(res)
       var containers = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
       // this.containers = containers
       var i;
@@ -71,7 +73,14 @@ export default {
     });
 
     this.axios.get('/api/docker/containers_id').then(response => {
-        console.log(JSON.parse(response.data.result)['return'])
+        // console.log(JSON.parse(response.data.result)['return'])
+        var res = JSON.parse(response.data.result)["return"]
+        var containers_id = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
+        var i;
+        for (i = 0; i < containers_id.length; i++) {
+          // console.log(containers[i].trim().slice(1, -1))
+          this.containers_id.push(containers_id[i].trim().slice(1, -1))
+        }
     })
 
     this.axios.get('/api/docker/containers_status').then(response => {
