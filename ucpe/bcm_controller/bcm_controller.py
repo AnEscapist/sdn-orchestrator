@@ -3,8 +3,6 @@ from inspect import signature, Parameter
 
 from ucpe.libvirt_controller.utils import get_caller_function_name
 
-from ucpe.ucpe import UCPE
-
 import ucpe.bcm_controller.grpc.autobcm_pb2 as autobcm_pb2
 import ucpe.bcm_controller.grpc.autobcm_pb2_grpc as autobcm_pb2_grpc
 
@@ -49,8 +47,8 @@ class BCMController:
         return _call_function(func, **kwargs)
 
 
-def create_vlan(ucpe, vlanid, pbm='', ubm=''):
-    channel = grpc.insecure_channel(ucpe.hostname)
+def create_vlan(hostname, vlanid, pbm='', ubm=''):
+    channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid, pbm=pbm, ubm=ubm)
     rv = ''
@@ -62,48 +60,48 @@ def create_vlan(ucpe, vlanid, pbm='', ubm=''):
     return rv
 
 
-def destroy_vlan(ucpe, vlanid):
-    channel = grpc.insecure_channel(ucpe.hostname)
+def destroy_vlan(hostname, vlanid):
+    channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid)
     response = stub.DestroyVLAN(request)
     return response.message
 
 
-def show_vlans(ucpe):
-    channel = grpc.insecure_channel(ucpe.hostname)
+def show_vlans(hostname):
+    channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest()
     response = stub.ShowVLANs(request)
     return response.message
 
 
-def add_ports(ucpe, vlanid, pbm, ubm=''):
-    channel = grpc.insecure_channel(ucpe.hostname)
+def add_ports(hostname, vlanid, pbm, ubm=''):
+    channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid, pbm=pbm, ubm=ubm)
     response = stub.AddPorts(request)
     return response.message
 
 
-def rem_ports(ucpe, vlanid, pbm):
-    channel = grpc.insecure_channel(ucpe.hostname)
+def rem_ports(hostname, vlanid, pbm):
+    channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid, pbm=pbm)
     response = stub.AddPorts(request)
     return response.message
 
 
-def set_pvlan(ucpe, vlanid, pbm):
-    channel = grpc.insecure_channel(ucpe.hostname)
+def set_pvlan(hostname, vlanid, pbm):
+    channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid, pbm=pbm)
     response = stub.SetPVLAN(request)
     return response.message
 
 
-def show_pvlans(ucpe):
-    channel = grpc.insecure_channel(ucpe.hostname)
+def show_pvlans(hostname):
+    channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest()
     response = stub.ShowPVLANs(request)
@@ -112,12 +110,9 @@ def show_pvlans(ucpe):
 
 def _call_function(func, **kwargs):
     body = kwargs["body"]  # todo: bad
-    ucpe = UCPE.from_kwargs(**body)
     params = signature(func).parameters  # get the function arguments
-    relevant_kwargs = {"ucpe": ucpe}  # todo: this is REALLY bad
+    relevant_kwargs = {}  # todo: this is REALLY bad
     for param in params:
-        if param == "ucpe":
-            continue
         if params[param].default == Parameter.empty:
             try:
                 relevant_kwargs[param] = body[param]
