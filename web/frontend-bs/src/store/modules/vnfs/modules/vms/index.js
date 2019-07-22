@@ -3,7 +3,8 @@ import axios from 'axios';
 const state = {
   vmList: [],
   vmInfo: {},
-  vmSelection: [] //list of vms selected in vm table in vnfs/home
+  vmSelection: [], //list of vms selected in vm table in vnfs/home
+  vmFilterText: ''
 };
 
 const mutations = {
@@ -15,6 +16,9 @@ const mutations = {
   },
   SET_VM_SELECTION(state, payload){
     state.vmSelection = payload
+  },
+  SET_VM_FILTER_TEXT(state, payload){
+    state.vmFilter = payload
   }
 };
 
@@ -37,6 +41,9 @@ const actions = {
   },
   updateVMSelection({commit}, newSelection){
     commit('SET_VM_SELECTION', newSelection)
+  },
+  updateVMFilterText({commit}, newFilterText){
+    commit('SET_VM_FILTER_TEXT', newFilterText)
   },
   startSelectedVMs({commit, dispatch}){
     axios.post(getURL('start_or_resume_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
@@ -64,7 +71,9 @@ const getters = {
   vmList: state => state.vmList,
   vmInfo: state => state.vmInfo,
   vmSelection: state => state.vmSelection,
-  vmState: (state, vmName) => state.vmInfo[vmName]["state"]
+  // vmState: (state, vmName) => state.vmInfo[vmName]["state"]
+  vmFilterText: state => state.vmFilterText,
+  vmStateFromName: state => (name) => state.vmInfo[name].state,
 };
 
 function getURL(endpoint){
@@ -72,6 +81,10 @@ function getURL(endpoint){
 }
 
 const methods = {
+};
+
+const vm_constants = {
+  AGENT_NAME : 'agent'
 };
 
 const vmModule = {

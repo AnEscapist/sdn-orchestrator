@@ -74,7 +74,7 @@ def kill_selected_vms(controller_id, ucpe_sn):
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
     return jsonify(response)
 
-@vm_routes.route('/kill_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
+@vm_routes.route('/delete_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
 def delete_selected_vms(controller_id, ucpe_sn):
     method = 'delete_vms'
     data = request.get_json()

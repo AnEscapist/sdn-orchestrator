@@ -7,8 +7,8 @@
       <h2>VM List: {{vmList}}</h2>
       <h2>VM Info: {{vmInfo}}</h2>
       <VMTableOld/>
-      <AgTableExample/>
-      <VMTableNew/>
+      <AgTableExample class="centered-table"/>
+      <VMTableNew class="centered-table"/>
     </card>
   </div>
 </template>
@@ -25,7 +25,7 @@
       AgTableExample,
       VMTableOld, VMTableNew
     },
-   created() {
+    created() {
       this.$store.dispatch('updateContainerList');
       this.$store.dispatch('updateVMList');
       this.$store.dispatch('updateVMInfo');
@@ -44,5 +44,9 @@
 </script>
 
 <style scoped>
-
+  .centered-table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 </style>
