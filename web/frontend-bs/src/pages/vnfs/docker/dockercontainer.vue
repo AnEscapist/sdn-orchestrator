@@ -4,27 +4,27 @@
     <font-awesome-icon :icon="['fas', 'cogs']" size=lg color='rgb(0, 0, 0)' /> <strong> Actions</strong>
 
     <hr>
-    <button type="button" class="btn btn-success btn-sm" @click="changeStatus('running')">
+    <button type="button" id='start' class="btn btn-success btn-sm" @click="changeStatus('running')">
       <font-awesome-icon :icon="['fas', 'play']" size=sm color='rgb(255,255,255)' />
       Start
     </button>
-    <button type="button" class="btn btn-danger btn-sm" @click="changeStatus('exited')">
+    <button type="button" id='stop' class="btn btn-danger btn-sm" @click="changeStatus('exited')">
       <font-awesome-icon :icon="['fas', 'square']" size=sm color='rgb(255, 255, 255)' />
       Stop
     </button>
-    <button type="button" class="btn btn-danger btn-sm">
+    <button type="button" id='kill' class="btn btn-danger btn-sm">
       <font-awesome-icon :icon="['fas', 'skull-crossbones']" size=sm color='rgb(255, 255, 255)' />
       Kill
     </button>
-    <button type="button" class="btn btn-primary btn-sm" @click="changeStatus('restart')">
+    <button type="button" id='restart' class="btn btn-primary btn-sm" @click="changeStatus('restart')">
       <font-awesome-icon :icon="['fas', 'sync-alt']" size=sm color='rgb(255, 255, 255)' />
       Restart
     </button>
-    <button type="button" class="btn btn-primary btn-sm" @click="changeStatus('paused')">
+    <button type="button" id='pause' class="btn btn-primary btn-sm" @click="changeStatus('paused')">
       <font-awesome-icon :icon="['fas', 'pause']" size=sm color='rgb(255, 255, 255)' />
       Pause
     </button>
-    <button type="button" class="btn btn-danger btn-sm">
+    <button type="button" id='remove' class="btn btn-danger btn-sm">
       <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
       Remove
     </button>
@@ -169,11 +169,13 @@ export default {
       var inspect = JSON.parse(response.data.result)['return']
       this.inspect = inspect
       this.status = inspect['State']['Status']
+      this.setBtn(this.status)
       this.ip = inspect['NetworkSettings'].IPAddress
       this.id = inspect['Id']
       this.name = inspect['Name'].slice(1, inspect['Name'].legth)
       this.createTime = inspect['Created']
     });
+
   },
   methods: {
     changeStatus(change_to) {
@@ -198,6 +200,8 @@ export default {
           this.status = status
           var ip = inspect['NetworkSettings'].IPAddress
           this.ip = ip
+          this.setBtn(status)
+
         });
 
       });
@@ -208,15 +212,62 @@ export default {
     },
     renameContainer(newName) {
       this.showEdit = !this.showEdit
+      var tmp = this.name
       this.axios.get('/api/docker/rename_container', {
         params: {
           id_name: this.id,
           newName: newName
         }
       }).then(response => {
-        this.name = JSON.parse(response.data.result)['return']
+        var res = JSON.parse(response.data.result)['return']
+        if (res) {
+          this.name = JSON.parse(response.data.result)['return']
+        } else {
+          this.name = tmp
+        }
       })
-    }
+    },
+
+    setBtn(status){
+        if (status == 'exited'){
+            document.getElementById("start").removeAttribute("disabled");
+            document.getElementById("stop").removeAttribute("disabled");
+            document.getElementById("kill").removeAttribute("disabled");
+            document.getElementById("restart").removeAttribute("disabled");
+            document.getElementById("pause").removeAttribute("disabled");
+            document.getElementById("remove").removeAttribute("disabled");
+
+            document.getElementById("stop").setAttribute("disabled", true);
+            document.getElementById("kill").setAttribute("disabled", true);
+            document.getElementById("restart").setAttribute("disabled", true);
+            document.getElementById("pause").setAttribute("disabled", true);
+
+        }
+        else if (status == 'running') {
+            document.getElementById("start").removeAttribute("disabled");
+            document.getElementById("stop").removeAttribute("disabled");
+            document.getElementById("kill").removeAttribute("disabled");
+            document.getElementById("restart").removeAttribute("disabled");
+            document.getElementById("pause").removeAttribute("disabled");
+
+            document.getElementById("start").setAttribute("disabled", true);
+            document.getElementById("restart").setAttribute("disabled", true);
+            document.getElementById("remove").setAttribute("disabled", true);
+        }
+        else if (status == 'paused') {
+            document.getElementById("start").removeAttribute("disabled");
+            document.getElementById("stop").removeAttribute("disabled");
+            document.getElementById("kill").removeAttribute("disabled");
+            document.getElementById("restart").removeAttribute("disabled");
+            document.getElementById("pause").removeAttribute("disabled");
+            
+            document.getElementById("start").setAttribute("disabled", true);
+            document.getElementById("pause").setAttribute("disabled", true);
+            document.getElementById("remove").setAttribute("disabled", true);
+
+        }
+    },
+
   }
 
 }
@@ -249,7 +300,12 @@ input {
 
 .renameBtn {
   background-color: white;
-  border: none;
+  border: 0px solid black;
+  padding: 0;
+}
+
+.renameBtn:active {
+  outline: none;
   padding: 0;
 }
 
