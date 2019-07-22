@@ -156,7 +156,6 @@ export default {
       }
     }).then(response => {
       var inspect = JSON.parse(response.data.result)['return']
-      inspect = JSON.parse(inspect)
       this.inspect = inspect
       var status = inspect['State']['Status']
       this.status = status
