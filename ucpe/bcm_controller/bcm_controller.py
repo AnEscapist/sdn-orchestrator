@@ -1,7 +1,7 @@
 
 from inspect import signature, Parameter
 
-from ucpe.libvirt_controller.utils import get_caller_function_name
+from ucpe.bcm_controller.utils import get_caller_function_name
 
 import ucpe.bcm_controller.grpc.autobcm_pb2 as autobcm_pb2
 import ucpe.bcm_controller.grpc.autobcm_pb2_grpc as autobcm_pb2_grpc
