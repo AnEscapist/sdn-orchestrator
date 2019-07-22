@@ -69,3 +69,12 @@ def inspect_container():
         "body": {"id_name": id_name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
+
+@docker_route.route('/docker/pull_image')
+def pull_image():
+    name = request.args.get('name')
+    tag = request.args.get('tag')
+    messagedata = {"method": "docker_controller_pull_image", "params": {
+        "body": {"repo": name, "tag": tag, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))
