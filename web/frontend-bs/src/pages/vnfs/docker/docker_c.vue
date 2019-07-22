@@ -14,7 +14,7 @@
 
 
         <tr v-for='(container,i) in containers' :key="container" id='containerInfoCard'>
-          <router-link :to="{path: 'dockercontainer', params: {name: container}, query: {name: container}}">
+          <router-link :to="{path: 'dockercontainer', query: {short_id: containers_id[i]}}">
             <td width='10%'>{{container}}</td>
           </router-link>
           <td>{{images[i]}}</td>
@@ -30,67 +30,6 @@
         </tr>
       </table>
     </card>
-    <card>
-
-      <font-awesome-icon :icon="['fas', 'clone']" size=lg color='rgb(0, 0, 0)' /> <strong> Images</strong>
-      <hr>
-
-      <table width="100%">
-        <tr>
-          <th>Name</th>
-          <th>Images</th>
-          <th>Status</th>
-        </tr>
-
-
-        <tr v-for='(img,i) in all_img' id='containerInfoCard'>
-          <router-link :to="{path: 'dockercontainer', params: {name: img}, query: {name: img}}">
-            <td width='10%'>{{img}}</td>
-          </router-link>
-          <td>----------------------------------------------------</td>
-          <td>====</td>
-        </tr>
-      </table>
-      <hr>
-      <div class="pullimage">
-        <font-awesome-icon :icon="['fas', 'download']" size=lg />
-        <strong> Pull image</strong>
-        <hr>
-        <div class="pull-choice">
-          <table>
-            <tr>
-              <td>
-                <form class="form-inline">
-                  <strong style="font-size:15px">Image: &nbsp</strong>
-                  <input type="text" placeholder="e.g. name:tag" v-model="name_tag">
-                </form>
-              </td>
-
-              <td>
-                <form class="form-inline">
-                  <strong style="font-size:15px">&nbsp Repository: &nbsp</strong>
-                  <input type="text" placeholder="docker hub">
-                </form>
-              </td>
-            </tr>
-          </table>
-          <br>
-          <p class="note">
-            <font-awesome-icon :icon="['fas', 'exclamation-triangle']" size=sm color='rgb(249, 194, 0)' />
-            Note: if you don't specify the tag of the image, <span class="badge badge-pill badge-info">latest</span> will be used.
-          </p>
-        </div>
-        <button type="button" class="btn btn-primary" @click="pullImg(name_tag)">
-          <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=sm /> <strong style="font-size:13px"> PULL</strong>
-        </button>
-
-
-
-      </div>
-    </card>
-
-
-
   </div>
 </div>
 </template>
@@ -101,7 +40,7 @@ import Card from '../../../components/Cards/Card.vue'
 // import LTable from '@/components/Table.vue'
 
 export default {
-  name: 'DockerDashboard',
+  name: 'DockerC',
 
   components: {
     Card,
@@ -110,6 +49,7 @@ export default {
   data() {
     return {
       containers: [],
+      containers_id: [],
       images: [],
       client: '',
       info: '',
@@ -121,6 +61,7 @@ export default {
   mounted() {
     this.axios.get("/api/docker/list_containers").then(response => {
       var res = JSON.parse(response.data.result)['return']
+      // console.log(res)
       var containers = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
       // this.containers = containers
       var i;
@@ -130,6 +71,17 @@ export default {
       }
 
     });
+
+    this.axios.get('/api/docker/containers_id').then(response => {
+        // console.log(JSON.parse(response.data.result)['return'])
+        var res = JSON.parse(response.data.result)["return"]
+        var containers_id = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
+        var i;
+        for (i = 0; i < containers_id.length; i++) {
+          // console.log(containers[i].trim().slice(1, -1))
+          this.containers_id.push(containers_id[i].trim().slice(1, -1))
+        }
+    })
 
     this.axios.get('/api/docker/containers_status').then(response => {
       // console.log(JSON.parse(response.data.result)['return'])
@@ -250,7 +202,6 @@ a {
 }
 
 input {
-
   border: 2px solid rgb(200, 200, 200);
   border-radius: 4px;
   padding-left: 8px;

@@ -41,6 +41,11 @@ class DockerController(object):
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def docker_controller_containers_id(**kwargs):
+        func = containers_id
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def docker_controller_containers_images(**kwargs):
         func = containers_images
         return _call_function(func, **kwargs)
@@ -53,6 +58,11 @@ class DockerController(object):
     @staticmethod
     def docker_controller_containers_status(**kwargs):
         func = containers_status
+        return _call_function(func, **kwargs)
+
+    @staticmethod
+    def docker_controller_rename_container(**kwargs):
+        func = rename_container
         return _call_function(func, **kwargs)
 
     @staticmethod
