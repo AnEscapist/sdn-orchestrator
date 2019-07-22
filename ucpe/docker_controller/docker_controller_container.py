@@ -24,7 +24,7 @@ def list_containers(all=True):
     except OSError as ose:
         return ose_error(ose,func)
 
-def containers_id():
+def containers_id(all=True):
     func = containers_id
     id_list = []
     try:
