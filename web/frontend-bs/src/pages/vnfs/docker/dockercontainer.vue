@@ -208,7 +208,8 @@ export default {
     showInspect() {
       this.showIns = !this.showIns;
     },
-    renameContainerl(newName) {
+    renameContainer(newName) {
+        this.showEdit = !this.showEdit
         this.axios.get('/api/docker/rename_container', {
             params: {
                 id_name: this.name,
