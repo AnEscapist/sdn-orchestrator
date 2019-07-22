@@ -189,10 +189,17 @@ export default {
       })
     },
     pullImg(name_tag){
+        if (name_tag.includes(':')){
+            var name = name_tag.split(':')[0]
+            var tag = name_tag.split(':')[1]
+        } else {
+            var name = name_tag
+            var tag = 'latest'
+        }
         this.axios.get('/api/docker/pull_image', {
             params: {
-                name: name_tag.split(':')[0],
-                tag: name_tag.split(':')[1]
+                name: name
+                tag: tag
             }
         }).then(response => {
             console.log(response)
