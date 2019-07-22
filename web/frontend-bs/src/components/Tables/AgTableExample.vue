@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div>
   <AgGridVue style="width: 500px; height: 150px;"
              class="ag-theme-balham"
              :columnDefs="columnDefs"
@@ -8,13 +9,15 @@
              @selection-changed="onSelectionChanged"
   >
   </AgGridVue>
+    </div>
+    <div>
   <h3>Selected: {{selected}}</h3>
+    </div>
   </div>
 </template>
 
 <script>
   import {AgGridVue} from "ag-grid-vue"
-  import {mapGetters, mapActions} from 'vuex'
 
   export default {
     name: "AgTableExample",
@@ -47,9 +50,6 @@
       this.gridColumnApi = this.gridOptions.columnApi;
   },
     methods: {
-      ...mapActions([
-        'updateVMSelection'
-      ]),
       onSelectionChanged(){
         let selection = this.gridApi.getSelectedRows();
         this.selected = selection

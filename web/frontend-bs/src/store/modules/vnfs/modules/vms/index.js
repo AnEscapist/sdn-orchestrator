@@ -6,7 +6,8 @@ const state = {
   vmList: [],
   vmInfo: {},
   vmSelection: [], //list of vms selected in vm table in vnfs/home
-  vmFilterText: ''
+  vmFilterText: '',
+  atLeastOneVMSelected: false
 };
 
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
   },
   SET_VM_FILTER_TEXT(state, payload){
     state.vmFilter = payload
+  },
+  SET_AT_LEAST_ONE_VM_SELECTED(state, payload){
+    state.atLeastOneVMSelected = payload
   }
 };
 
@@ -53,6 +57,7 @@ const actions = {
   },
   updateVMSelection({commit}, newSelection){
     commit('SET_VM_SELECTION', newSelection)
+    commit('SET_AT_LEAST_ONE_VM_SELECTED', !!newSelection.length) //!! is a trick to cast to truthiness value bool
   },
   updateVMFilterText({commit}, newFilterText){
     commit('SET_VM_FILTER_TEXT', newFilterText)
@@ -86,6 +91,7 @@ const getters = {
   // vmState: (state, vmName) => state.vmInfo[vmName]["state"]
   vmFilterText: state => state.vmFilterText,
   vmStateFromName: state => (name) => state.vmInfo[name].state,
+  vmAtLeastOneSelected: state => state.atLeastOneVMSelected
 };
 
 function getURL(endpoint){
