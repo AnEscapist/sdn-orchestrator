@@ -56,6 +56,11 @@ class DockerController(object):
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def docker_controller_rename_container(**kwargs):
+        func = containers_status
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def docker_controller_containers_info(**kwargs):
         func = containers_info
         return _call_function(func, **kwargs)

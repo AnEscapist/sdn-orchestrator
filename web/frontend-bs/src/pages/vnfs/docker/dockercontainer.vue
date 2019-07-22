@@ -39,7 +39,7 @@
     </button>
     <span v-if='!showEdit'>
       <font-awesome-icon :icon="['fas', 'chevron-right']" size=sm color='rgb(0, 0, 0)' />
-      <input type="text" placeholder="new name" @keyup.enter='showEdit = !showEdit'>
+      <input type="text" placeholder="new name" v-model='newName' @keyup.enter='renameContainer(newName)'>
     </span>
     <hr>
     <div>
@@ -150,6 +150,7 @@ export default {
       inspect: '',
       showIns: false,
       showEdit: true,
+      newName: '',
     }
 
 
@@ -206,6 +207,16 @@ export default {
     },
     showInspect() {
       this.showIns = !this.showIns;
+    },
+    renameContainerl(newName) {
+        this.axios.get('/api/docker/rename_container', {
+            params: {
+                id_name: this.name,
+                newName: newName
+            }
+        }).then(response => {
+            console.log(response)
+        })
     }
   }
 

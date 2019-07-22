@@ -191,4 +191,19 @@ def change_status(id_name, change_to):
     return change_status_message(id_name, curStatus, func)
 
 
+def rename_container(id_name, newName):
+    func = rename_container
+    try:
+        container = dcli.containers.get(id_name)
+    except requests.exceptions.HTTPError:
+        return cnf_error(id_name, func)
+
+    try:
+        container.rename(newName)
+        return rename_container_message(id_name, newName, func)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+
+
+
 #======================docker container end============================
