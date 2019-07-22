@@ -1,0 +1,3 @@
+/usr/local/bin/ovs-docker add-port PDH_bridge2 ub_eth0 ubuntu-ty 110 --ipaddress="10.10.110.1/24"
+###### /usr/local/bin/ovs-docker add-port <ovs bridge> <interface name> <container name or id> <port num>
+
