@@ -75,6 +75,7 @@ def dpdk_get_devices():
 
     dpdk.check_modules()
     dpdk.clear_data()
+    print(devices)
     dpdk.get_device_details(dpdk.network_devices)
 
     device_list = dict()
