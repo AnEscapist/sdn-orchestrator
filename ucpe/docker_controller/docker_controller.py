@@ -57,7 +57,7 @@ class DockerController(object):
 
     @staticmethod
     def docker_controller_rename_container(**kwargs):
-        func = containers_status
+        func = rename_container
         return _call_function(func, **kwargs)
 
     @staticmethod
