@@ -88,7 +88,7 @@ def rem_ports(hostname, vlanid, pbm):
     channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid, pbm=pbm)
-    response = stub.AddPorts(request)
+    response = stub.RemovePorts(request)
     return response.message
 
 
