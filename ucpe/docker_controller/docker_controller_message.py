@@ -143,6 +143,21 @@ def container_list_message(list, all, func):
         }
     return json_str(message)
 
+def containers_id_message(list, all, func):
+    if all:
+        message = {
+            'function': f'<{func.__name__}>',
+            'success message': 'All containers id are listed!',
+            'return': f'LIST: {list}'
+        }
+    else:
+        message = {
+            'function': f'<{func.__name__}>',
+            'success message': 'All running containers id are listed!',
+            'return': f'LIST: {list}'
+        }
+    return json_str(message)
+
 def rename_container_message(id_name, newName, func):
     message = {
         'function': f'<{func.__name__}>',

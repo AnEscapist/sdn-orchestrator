@@ -24,6 +24,22 @@ def list_containers(all=True):
     except OSError as ose:
         return ose_error(ose,func)
 
+def containers_id():
+    func = containers_id
+    id_list = []
+    try:
+        if all == True:
+            container_list = dcli.containers.list(all=all)
+        else:
+            container_list = dcli.containers.list()
+
+        for container in container_list:
+            id_list.append(container.short_id)
+        return containers_id_message(list=id_list, all=all, func=func)
+    except OSError as ose:
+        return ose_error(ose,func)
+
+
 def containers_status(path='ContainerStatus.json', all=False, id_name=None):
     func = containers_status
     status = {}
