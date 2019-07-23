@@ -166,6 +166,14 @@ def rename_container_message(id_name, newName, func):
     }
     return json_str(message)
 
+def remove_container_message(id_name, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Container {id_name} removed successfully.',
+        'return': f'{id_name} removed.'
+    }
+    return json_str(message)
+
 def image_list_message(list, name, all, func):
     if name:
         message = {

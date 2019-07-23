@@ -12,6 +12,7 @@ sys.path.append('/home/att/projects/sdn-orchestrator/')
 from ucpe.libvirt_controller.libvirt_controller import *
 from ucpe.docker_controller.docker_controller import *
 from ucpe.grpc_data_collector.grpc_data_collector import *
+from ucpe.bcm_controller.bcm_controller import *
 
 import signal
 
@@ -74,6 +75,7 @@ def server_routine():
     d.build_method_map(LibvirtController)
     d.build_method_map(gRPCDataCollector)
     d.build_method_map(DockerController)
+    d.build_method_map(BCMController)
 
     print("Collecting updates from server...")
     socket_sub.connect("tcp://localhost:%s" % port_sub)

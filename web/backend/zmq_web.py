@@ -33,7 +33,7 @@ max_id = 0
 max_id_lock = threading.Lock()
 
 
-def call_ucpe_function(messagedata, controller_id='test-id', ucpe_sn='test-sn', TIMEOUT=15):
+def call_ucpe_function(messagedata, controller_id='test-id', ucpe_sn='test-sn', TIMEOUT=120):
     print(messagedata,'\n', controller_id,'\n', ucpe_sn)
     if not request_ids.empty():
         print('ids', request_ids.queue)

@@ -1,13 +1,23 @@
 <template>
-  <div class="content">
-    <div class="mt-2">
-      <AgGridVue style="width: 1220px; height: 300px;"
-                 class="ag-theme-balham"
-                 :columnDefs="columnDefs"
-                 :rowData="rowData"
-                 :gridOptions="gridOptions"
-      >
-      </AgGridVue>
+  <div>
+    <div class="content">
+      <div class="mt-2">
+        <AgGridVue style="width: 1220px; height: 300px;"
+                   class="ag-theme-balham"
+                   :columnDefs="columnDefs"
+                   :rowData="rowData"
+                   :gridOptions="gridOptions"
+        >
+        </AgGridVue>
+      </div>
+      <div class="text-center">
+        <button type="button" class="btn btn-primary" @click="adjustValues">
+          Submit
+        </button>
+      </div>
+      <div>
+
+      </div>
     </div>
   </div>
 </template>
@@ -22,6 +32,7 @@
         },
         data () {
           return {
+            length: 0,
             rowData: [],
             data: [],
             columns: [...tableColumns],
@@ -41,15 +52,15 @@
         mounted() {
           this.gridApi = this.gridOptions.api;
           this.gridColumnApi = this.gridOptions.api;
-          this.getDevices()
+          this.updateData()
         },
         methods: {
-          getDevices(){
+          updateData(){
             this.axios.get("/api/grpc/get_net_devices").then(response => {
               let res = JSON.parse(response.data.result.return)
               let tmp_list = [];
-              this.data = res
-              console.log(this.data)
+              this.data = res;
+              // console.log(this.data);
               Object.values(res).forEach(function(i) {
                 let tmp_dict = {
                   'slot': i.slot,
@@ -61,10 +72,32 @@
                 };
                 tmp_list.push(tmp_dict)
               });
+              console.log(tmp_list);
+              this.length = tmp_list.length;
               this.rowData = tmp_list;
-              console.log(this.rowData)
+              // console.log(this.rowData)
             });
           },
+          bindDevice(slot, driver){
+            this.axios.get('/api/grpc/dpdk_bind', {
+              params: {
+                slot: slot,
+                current_driver: driver
+              }
+            }).then(response => {
+              var res = JSON.parse(response.data.result.return);
+            })
+            // console.log("hello2")
+          },
+          adjustValues(){
+            var i;
+            let rowlist = this.rowData;
+            for (i = 0; i < this.length; i++){
+              let rowdata = this.gridApi.getDisplayedRowAtIndex(i)['data'];
+              this.bindDevice(rowdata.slot, rowdata.current_driver);
+            }
+            this.updateData();
+          }
         }
     }
 </script>
