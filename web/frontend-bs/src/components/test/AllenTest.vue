@@ -1,0 +1,30 @@
+<template>
+  <div id='example-3'>
+    <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+    <label for="jack">Jack</label>
+    <input type="checkbox" id="john" value="John" v-model="checkedNames">
+    <label for="john">John</label>
+    <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+    <label for="mike">Mike</label>
+    <br>
+    <span>Checked names: {{ checkedNames }}</span>
+    <h1>{{test}}</h1>
+  </div>
+</template>
+<script>
+  import axios from 'axios';
+    export default {
+        el: '#example-3',
+        data () {
+            return{
+            checkedNames: [],
+                test: ""
+            }
+        },
+        mounted(){
+            axios.get('/api/bcm/show_vlans').then((response) => {
+                this.test = response.data.result
+            })
+        }
+    }
+</script>

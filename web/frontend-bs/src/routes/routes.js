@@ -1,4 +1,5 @@
 import sampleRoutes from './sampleRoutes'
+import bcmRoutes from "./bcmRoutes";
 import grpcRoutes from './grpcRoutes'
 import vnfRoutes from './vnfRoutes'
 import ucpeRoutes from './ucpeRoutes'
@@ -18,6 +19,7 @@ const routes = [
   ...ucpeRoutes,
   // ...vnfRoutes,
   ...sampleRoutes,
+  ...bcmRoutes,
 
   { path: '*', component: NotFound }
 ];
