@@ -41,6 +41,15 @@ def hugepage_free_mem():
     return jsonify(call_ucpe_function(messagedata))
 
 
+@grpc_routes.route('/grpc/cpu_total')
+def cpu_total():
+    messagedata = {'method': 'grpc_get_totalcpus', 'params': {
+        'body': {'hostname': '10.10.81.100', 'port': '50051'}},
+        'jsonprc': '2.0', 'id': 0
+    }
+    return jsonify(call_ucpe_function(messagedata))
+
+
 @grpc_routes.route('/grpc/get_net_devices')
 def get_net_devices():
     messagedata = {"method": "grpc_get_dpdk_devices", "params": {
