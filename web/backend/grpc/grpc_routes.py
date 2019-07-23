@@ -24,7 +24,7 @@ def avail_mem():
 
 
 @grpc_routes.route('/grpc/hugepage_total_mem')
-def hugepage_total_mem:
+def hugepage_total_mem():
     messagedata = {"method": "grpc_get_hugepages_totalmem", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051"}},
         "jsonrpc": "2.0", "id": 0
@@ -33,7 +33,7 @@ def hugepage_total_mem:
 
 
 @grpc_routes.route('/grpc/hugepage_free_mem')
-def hugepage_free_mem:
+def hugepage_free_mem():
     messagedata = {"method": "grpc_get_hugepages_freemem", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051"}},
         "jsonrpc": "2.0", "id": 0
