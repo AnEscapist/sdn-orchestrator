@@ -40,6 +40,15 @@ def images_info(path='ImagesInfo.json', name=None, all=True):
     # return json_file_message(path, func)
     return images_info_message(imageInfo, path, func)
 
+def image_attr(name):
+    func = image_attr
+    try:
+        image = dcli.images.get(name)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+    imageAttr = image.attrs
+    return image_attr_message(imageAttr, func)
+
 
 def save_image(image_name, local_path, remote_path, local_save=False, chunk_size=2097152):
     func = save_image

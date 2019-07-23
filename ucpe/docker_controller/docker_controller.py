@@ -85,10 +85,10 @@ class DockerController(object):
         func = images_info
         return _call_function(func, **kwargs)
 
-    # @staticmethod
-    # def docker_controller_image_id(**kwargs):
-    #     func = image_id
-    #     return _call_function(func, **kwargs)
+    @staticmethod
+    def docker_controller_image_attr(**kwargs):
+        func = image_attr
+        return _call_function(func, **kwargs)
 
     @staticmethod
     def docker_controller_commit(**kwargs):

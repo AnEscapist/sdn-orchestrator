@@ -197,6 +197,14 @@ def images_info_message(imageInfo, path, func):
     }
     return json_str(message)
 
+def image_attr_message(imageAttr, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Image attr retrieved successfully!',
+        'return': f'{imageAttr}'
+    }
+    return json_str(message)
+
 def commit_message(id_name, repo, tag, author, func):
     if not author:
         author = 'Unknown'

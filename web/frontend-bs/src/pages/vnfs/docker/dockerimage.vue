@@ -39,7 +39,7 @@ export default {
     //   this.name = inspect['Name'].slice(1, inspect['Name'].legth)
     //   this.createTime = inspect['Created']
     // });
-    this.axios.get('/api/docker/images_info', {
+    this.axios.get('/api/docker/image_attr', {
         params: {
             name: this.name
         }
@@ -48,7 +48,9 @@ export default {
         console.log(JSON.parse(response.data.result)['return'])
         var image_info = JSON.parse(response.data.result)['return']
         this.image_info = image_info
-        console.log(typeof(this.image_info))
+        // console.log(typeof(this.image_info))
+        console.log(this.image_info.slice(12,-2))
+        console.lgo(JSON.parse(this.image_info.slice(12, -2)))
         // res = JSON.parse(image_info)
 
     })
