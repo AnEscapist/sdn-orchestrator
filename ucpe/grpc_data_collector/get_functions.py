@@ -71,17 +71,13 @@ def dpdk_get_devices():
             print("'lspci' not found - please install 'pciutils'")
             sys.exit(1)
 
-    devices1 = dpdk.devices
-
-    dpdk.clear_data()
-    dpdk.status_flag = True
-    dpdk.status_dev = "all"
+    # devices1 = dpdk.devices
 
     dpdk.check_modules()
     dpdk.clear_data()
     dpdk.get_device_details(dpdk.network_devices)
 
-    # devices1 = dpdk.devices
+    devices1 = dpdk.devices
     # tmp = devices
 
     device_list = dict()
