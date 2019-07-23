@@ -75,10 +75,10 @@ def dpdk_get_devices():
 
     dpdk.check_modules()
     dpdk.clear_data()
-    # tmp = devices
+    devices = {}
     dpdk.get_device_details(dpdk.network_devices)
 
-    tmp = devices
+    # tmp = devices
 
     device_list = dict()
     for d in devices.keys():
@@ -101,7 +101,7 @@ def dpdk_get_devices():
 
         device_list[dd["Slot"]] = device_dict
 
-    # tmp = device_list
+    tmp = device_list
 
     return tmp
 
