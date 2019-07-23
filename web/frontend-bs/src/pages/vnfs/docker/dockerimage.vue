@@ -4,6 +4,7 @@
     <font-awesome-icon :icon="['fas', 'clone']" size=lg color='rgb(0, 0, 0)' /> <strong> Image details - </strong>
     {{name}}
     <hr>
+    <pre>{{image_info}}</pre>
   </div>
 </div>
 </template>
@@ -14,7 +15,7 @@ export default {
   name: "DockerImage",
   data: function() {
     return {
-
+        image_info: ''
     }
 
 
@@ -43,7 +44,13 @@ export default {
             name: this.name
         }
     }).then(response => {
-        console.log(response)
+        console.log(typeof(response.data.result))
+        console.log(JSON.parse(response.data.result)['return'])
+        var image_info = JSON.parse(response.data.result)['return']
+        this.image_info = image_info
+        console.log(typeof(this.image_info))
+        // res = JSON.parse(image_info)
+
     })
 
   },

@@ -19,7 +19,8 @@ def images_info(path='ImagesInfo.json', name=None, all=True):
     func = images_info
     imageInfo = {}
     imageInfo['Images'] = []
-
+    if name:
+        all = False
     try:
         image_list = dcli.images.list(name=name, all=all)
     except OSError as ose:
