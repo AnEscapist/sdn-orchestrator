@@ -8,12 +8,12 @@
                   {{name}}
               </td>
               <td>
-                  <!-- <router-link to="docker_i"> -->
+                  <router-link to="docker_i">
                     <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeImage()'>
                       <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
                       Remove
                     </button>
-                  <!-- </router-link> -->
+                  </router-link>
               </td>
           </tr>
       </table>
@@ -89,12 +89,12 @@
       <hr>
       <table>
         <tr id='containerLinks'>
-          <button type="button" class="btn btn-link">
-            <td>
-              <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm coler="#1b7fbd" />
-              <font size='2px'> Delete</font>
-            </td>
-          </button>
+            <button type="button" class="btn btn-link">
+              <td>
+                <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm coler="#1b7fbd" />
+                <font size='2px'> Delete</font>
+              </td>
+            </button>
           <button type="button" class="btn btn-link" @click='showInspect()'>
             <td>
               <font-awesome-icon :icon="['fas', 'info-circle']" size=sm coler="#1b7fbd" />
@@ -171,7 +171,7 @@ export default {
                 name: this.name
             }
         }).then(response => {
-            console.log(response)
+            // console.log(response)
         })
     }
   }
