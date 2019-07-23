@@ -129,7 +129,7 @@
     </div>
   </div>
 
-  <div class="container-fluid" v-if="showIns == true">
+  <div class="container-fluid" v-show="showIns">
     <font-awesome-icon :icon="['fas', 'info-circle']" size=lg color='rgb(0, 0, 0)' /> <strong> Inspect</strong>
     <hr>
     <pre><span class="inner-pre">{{inspect}}</span></pre>
@@ -260,7 +260,7 @@ export default {
             document.getElementById("kill").removeAttribute("disabled");
             document.getElementById("restart").removeAttribute("disabled");
             document.getElementById("pause").removeAttribute("disabled");
-            
+
             document.getElementById("start").setAttribute("disabled", true);
             document.getElementById("pause").setAttribute("disabled", true);
             document.getElementById("remove").setAttribute("disabled", true);
