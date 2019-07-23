@@ -26,6 +26,7 @@
 
     const tableColumns = ['Slot', 'Device Name', 'Interface', 'Driver', 'Driver Type']
     export default {
+        inject: ['reload'],
         name: "HostInfoNetworkDevices",
         components: {
           AgGridVue
@@ -56,6 +57,8 @@
         },
         methods: {
           updateData(){
+            this.rowData = [];
+            this.data = [];
             this.axios.get("/api/grpc/get_net_devices").then(response => {
               let res = JSON.parse(response.data.result.return)
               let tmp_list = [];
@@ -72,10 +75,10 @@
                 };
                 tmp_list.push(tmp_dict)
               });
-              console.log(tmp_list);
+              // console.log(tmp_list);
               this.length = tmp_list.length;
               this.rowData = tmp_list;
-              // console.log(this.rowData)
+              console.log(this.rowData)
             });
           },
           bindDevice(slot, driver){
@@ -86,8 +89,8 @@
               }
             }).then(response => {
               var res = JSON.parse(response.data.result.return);
+              // this.updateData();
             })
-            // console.log("hello2")
           },
           adjustValues(){
             var i;

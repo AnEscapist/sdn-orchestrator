@@ -78,9 +78,10 @@ def dpdk_get_devices():
     # tmp = devices
     dpdk.get_device_details(dpdk.network_devices)
 
+    tmp = devices
+
     device_list = dict()
     for d in devices.keys():
-
 
         device_dict = dict()
         dd = devices[d]
@@ -100,7 +101,9 @@ def dpdk_get_devices():
 
         device_list[dd["Slot"]] = device_dict
 
-    return device_list
+    # tmp = device_list
+
+    return tmp
 
 
 def get_linux_bridges_list():
