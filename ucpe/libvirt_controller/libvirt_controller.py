@@ -222,6 +222,12 @@ def define_vm_from_xml(ucpe, xml, verbose=True):
 
 
 def define_vm_from_params(ucpe, vm_name, image_path, vm_memory=4, use_hugepages=False, vm_vcpu_count=1, verbose=True):
+    image_file_name = os.path.basename(image_path)
+    channel = grpc.insecure_channel('10.10.81.100:50061')
+    stub = libvirt_pb2_grpc.LibvirtStub(channel)
+    request = libvirt_pb2.CopyRequest(vm_name="vm_name", image_file_name=image_file_name)
+    response = stub.CopyImage(request)
+    #todo: error handling
     xml = _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, use_hugepages=use_hugepages, vm_vcpu_count=1,
                                verbose=True)
     return define_vm_from_xml(ucpe, xml, verbose=verbose)

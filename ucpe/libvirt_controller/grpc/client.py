@@ -1,6 +1,7 @@
 import grpc
 import ucpe.libvirt_controller.grpc.libvirt_pb2 as libvirt_pb2
 import ucpe.libvirt_controller.grpc.libvirt_pb2_grpc as libvirt_pb2_grpc
+import os
 
 # channel = grpc.insecure_channel('10.10.81.100:50061')
 # stub = libvirt_pb2_grpc.LibvirtStub(channel)
