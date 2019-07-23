@@ -5,13 +5,13 @@ import BCMdash from '../pages/bcm/BCMdash.vue'
 
 const bcmRoutes = [
   {
-    path: '/broadcom',
+    path: '/bcm',
     component: DashboardLayout,
-    redirect: '/broadcom/overview',
+    redirect: '/bcm/overview',
     children: [
       {
         path: 'overview',
-        name: 'Overview',
+        name: 'BCMOverview',
         component: BCMdash
       }
     ]
