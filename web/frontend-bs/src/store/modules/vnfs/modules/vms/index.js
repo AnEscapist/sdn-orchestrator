@@ -8,10 +8,11 @@ const state = {
   vmSelection: [], //list of vms selected in vm table in vnfs/home
   vmFilterText: '',
   atLeastOneVMSelected: false,
+  imagesAvailable: [],
   vmCreateForm: {
     vCPUsAvailable: 0,
     memoryAvailable: 0,
-    hugepageMemoryAvailable: 0
+    hugepageMemoryAvailable: 0,
   }
 };
 
@@ -40,6 +41,9 @@ const mutations = {
   SET_HUGEPAGE_MEMORY_AVAILABLE(state, payload){
     state.vmCreateForm.hugepageMemoryAvailable = payload
   },
+  SET_IMAGES_AVAILABLE(state, payload){
+    state.imagesAvailable = payload
+  }
 };
 
 const controller_id = "test-id";
@@ -99,19 +103,24 @@ const actions = {
       dispatch('updateVMInfo')
     });
   },
-  updateVCPUsAvailable({commit}){
+  updateVMVCPUsAvailable({commit}){
     return axios.get('/api/grpc/cpu_total').then((response) => {
       commit('SET_VCPUS_AVAILABLE', parseInt(response.data.result.return))
     })
   },
-  updateMemoryAvailable({commit}){
+  updateVMMemoryAvailable({commit}){
     return axios.get('/api/grpc/avail_mem').then((response) => {
       commit('SET_MEMORY_AVAILABLE', parseMemoryInt(response.data.result.return))
     })
   },
-  updateHugepageMemoryAvailable({commit}){
+  updateVMHugepageMemoryAvailable({commit}){
     return axios.get('/api/grpc/hugepage_free_mem').then((response) => {
       commit('SET_HUGEPAGE_MEMORY_AVAILABLE', parseMemoryInt(response.data.result.return))
+    })
+  },
+  updateVMImagesAvailable({commit}){
+    return axios.get(getURL('/images')).then((response) => {
+      commit('SET_IMAGES_AVAILABLE', response.data.images)
     })
   }
 };
@@ -127,7 +136,8 @@ const getters = {
   vmCreateForm: state => state.vmCreateForm,
   vmVCPUOptions: state => getOneToNArray(state.vmCreateForm.vCPUsAvailable),
   vmMemoryOptions: state => getOneToNArray(state.vmCreateForm.memoryAvailable),
-  vmHugepageMemoryOptions: state => getOneToNArray(state.vmCreateForm.hugepageMemoryAvailable)
+  vmHugepageMemoryOptions: state => getOneToNArray(state.vmCreateForm.hugepageMemoryAvailable),
+  vmImagesAvailable: state => state.imagesAvailable
 };
 
 function getURL(endpoint){
