@@ -156,7 +156,7 @@ export default {
       this.dockerVersion = inspect['DockerVersion']
       this.os = inspect['Os']
       this.architecture = inspect['Architecture']
-      this.cmd = inspect['ContainerConfig']['Cmd'][0]
+      this.cmd = inspect['Config']['Cmd'][0]
       this.env = inspect['Config']['Env'][0]
     })
 
