@@ -240,25 +240,7 @@ export default {
         type: this.type[color]
       })
     },
-    pullImg(name_tag) {
-      if (name_tag.includes(':')) {
-        var name = name_tag.split(':')[0]
-        var tag = name_tag.split(':')[1]
-      } else {
-        var name = name_tag
-        var tag = 'latest'
-      }
-      this.axios.get('/api/docker/pull_image', {
-        params: {
-          name: name,
-          tag: tag,
-          timeout: 1000
-        }
-      }).then(response => {
-        console.log(JSON.parse(response.data.result))
-      })
-
-    },
+    
 
     create_container(create_name, create_image, create_port) {
       this.axios.get('/api/docker/create_container', {

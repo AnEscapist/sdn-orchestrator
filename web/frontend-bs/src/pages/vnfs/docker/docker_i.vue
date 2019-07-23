@@ -8,14 +8,14 @@
 
         <table width="100%">
           <tr>
-            <th>Name</th>
+            <th>Name:tag</th>
             <th>Images</th>
             <th>Status</th>
           </tr>
 
 
           <tr v-for='(img,i) in all_img' id='containerInfoCard'>
-            <router-link :to="{path: 'dockercontainer', params: {name: img}, query: {name: img}}">
+            <router-link :to="{path: 'dockerimage', params: {name: img}, query: {name: img}}">
               <td width='10%'>{{img}}</td>
             </router-link>
             <td>----------------------------------------------------</td>
