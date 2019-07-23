@@ -144,7 +144,7 @@ def image_info():
     return jsonify(call_ucpe_function(messagedata))
 
 @docker_routes.route('/docker/image_attr')
-def image_info():
+def image_attr():
     name = request.args.get('name')
     messagedata = {"method": "docker_controller_image_attr", "params": {
         "body": {"name": name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
