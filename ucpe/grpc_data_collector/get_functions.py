@@ -64,15 +64,16 @@ def get_network_interfaces():
 
 
 def dpdk_get_devices():
-    global devices
-    dpdk.status_flag = True
-    dpdk.status_dev = "all"
     with open(os.devnull, 'w') as devnull:
         ret = subprocess.call(['which', 'lspci'],
                               stdout=devnull, stderr=devnull)
         if ret != 0:
             print("'lspci' not found - please install 'pciutils'")
             sys.exit(1)
+
+    dpdk.clear_data()
+    dpdk.status_flag = True
+    dpdk.status_dev = "all"
 
     dpdk.check_modules()
     dpdk.clear_data()
