@@ -19,7 +19,8 @@ def images_info(path='ImagesInfo.json', name=None, all=True):
     func = images_info
     imageInfo = {}
     imageInfo['Images'] = []
-
+    if name:
+        all = False
     try:
         image_list = dcli.images.list(name=name, all=all)
     except OSError as ose:
@@ -29,14 +30,24 @@ def images_info(path='ImagesInfo.json', name=None, all=True):
         os.remove(path)
     for i in range(len(image_list)):
         imageInfo['Images'].append(image_list[i].attrs)
-
+        # return images_info_message(imageInfo, func)
     json_str = json.dumps(imageInfo, indent=4)
     try:
         with open(path, 'a') as json_file:
             json_file.write(json_str)
     except FileNotFoundError:
         return fnf_error(path, func)
-    return json_file_message(path, func)
+    # return json_file_message(path, func)
+    return images_info_message(imageInfo, path, func)
+
+def inspect_image(name):
+    func = inspect_image
+    try:
+        inspection = api_cli.inspect_image(name)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+
+    return inspect_image_message(name, inspection, func)
 
 
 def save_image(image_name, local_path, remote_path, local_save=False, chunk_size=2097152):

@@ -1,7 +1,10 @@
 <template>
 <div class="content">
   <div class="container-fluid">
-    <h1>hello</h1>
+    <font-awesome-icon :icon="['fas', 'clone']" size=lg color='rgb(0, 0, 0)' /> <strong> Image details - </strong>
+    {{name}}
+    <hr>
+    <pre><span class="inner-pre">{{image_info}}</span></pre>
   </div>
 </div>
 </template>
@@ -12,7 +15,7 @@ export default {
   name: "DockerImage",
   data: function() {
     return {
-
+        image_info: ''
     }
 
 
@@ -36,6 +39,15 @@ export default {
     //   this.name = inspect['Name'].slice(1, inspect['Name'].legth)
     //   this.createTime = inspect['Created']
     // });
+    this.axios.get('/api/docker/inspect_image', {
+        params: {
+            name: this.name
+        }
+    }).then(response => {
+        var image_info = JSON.parse(response.data.result)['return']
+        // console.log(typeof(JSON.parse(image_info)))
+        this.image_info = image_info
+    })
 
   },
   methods: {

@@ -189,6 +189,23 @@ def image_list_message(list, name, all, func):
         }
     return json_str(message)
 
+def images_info_message(imageInfo, path, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Image information retrieved successfully and json file {path} created!',
+        'return': f'{imageInfo}'
+    }
+    return json_str(message)
+
+def inspect_image_message(name, inspection, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Image {name} inspected.',
+        'return': inspection
+    }
+    return json_str(message)
+
+
 def commit_message(id_name, repo, tag, author, func):
     if not author:
         author = 'Unknown'
