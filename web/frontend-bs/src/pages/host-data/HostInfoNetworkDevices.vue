@@ -32,6 +32,7 @@
         },
         data () {
           return {
+            length: 0,
             rowData: [],
             data: [],
             columns: [...tableColumns],
@@ -58,8 +59,8 @@
             this.axios.get("/api/grpc/get_net_devices").then(response => {
               let res = JSON.parse(response.data.result.return)
               let tmp_list = [];
-              this.data = res
-              console.log(this.data)
+              this.data = res;
+              // console.log(this.data);
               Object.values(res).forEach(function(i) {
                 let tmp_dict = {
                   'slot': i.slot,
@@ -71,28 +72,31 @@
                 };
                 tmp_list.push(tmp_dict)
               });
+              console.log(tmp_list);
+              this.length = tmp_list.length;
               this.rowData = tmp_list;
-              console.log(this.rowData)
+              // console.log(this.rowData)
             });
           },
-          adjustValues(){
-
-            this.updateData();
-          },
-          bindDevice(node){
-            this.axios.get('/api/grpc/dpdk_bind/', {
+          bindDevice(slot, driver){
+            this.axios.get('/api/grpc/dpdk_bind', {
               params: {
-                slot: node.data.slot,
-                current_driver: node.current_driver
+                slot: slot,
+                current_driver: driver
               }
             }).then(response => {
-              console.log(JSON.parse(response.data.result.return));
-              const sleep = (milliseconds) => {
-                return new Promise(resolve => setTimeout(resolve, milliseconds))
-              };
-              sleep(1000).then(() => {})
+              var res = JSON.parse(response.data.result.return);
             })
             // console.log("hello2")
+          },
+          adjustValues(){
+            var i;
+            let rowlist = this.rowData;
+            for (i = 0; i < this.length; i++){
+              let rowdata = this.gridApi.getDisplayedRowAtIndex(i)['data'];
+              this.bindDevice(rowdata.slot, rowdata.current_driver);
+            }
+            this.updateData();
           }
         }
     }
