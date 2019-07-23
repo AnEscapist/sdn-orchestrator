@@ -8,12 +8,12 @@
                   {{name}}
               </td>
               <td>
-                  <router-link to="docker_i">
+                  <!-- <router-link to="docker_i"> -->
                     <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeImage()'>
                       <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
                       Remove
                     </button>
-                  </router-link>
+                  <!-- </router-link> -->
               </td>
           </tr>
       </table>
