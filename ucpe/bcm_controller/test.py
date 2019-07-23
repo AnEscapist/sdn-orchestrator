@@ -14,7 +14,7 @@ import time
 # set_pvlan("135.91.120.243:50051", 100, "ge4")
 # print(show_pvlans("135.91.120.243:50051"))
 
-DEFAULT_KWARGS = {"body": {"vlanid": 100, "hostname": "135.91.120.243:50051", "pbm": "ge4,ge9,xe9", "ubm": "ge9", "vm_name": "test", "autostart": 1, "save_path": "/home/potato/save_path.test", "image_path": "/var/third-party/ubuntu_16_roger.qcow2"}}
+DEFAULT_KWARGS = {"vlanid": 100, "pbm": "ge4,ge9,xe9", "ubm": "ge9"}
 # BCMController.bcm_controller_destroy_vlan(**DEFAULT_KWARGS)
 # return_dict = BCMController.bcm_controller_show_pvlans(**DEFAULT_KWARGS)
 # print(return_dict["result"])

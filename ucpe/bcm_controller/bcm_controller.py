@@ -8,6 +8,7 @@ import ucpe.bcm_controller.grpc.autobcm_pb2_grpc as autobcm_pb2_grpc
 
 import grpc
 
+hostname = "10.10.81.250:50051"
 
 class BCMController:
 
@@ -47,7 +48,7 @@ class BCMController:
         return _call_function(func, **kwargs)
 
 
-def create_vlan(hostname, vlanid, pbm='', ubm=''):
+def create_vlan(vlanid, pbm='', ubm=''):
     channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid, pbm=pbm, ubm=ubm)
@@ -60,7 +61,7 @@ def create_vlan(hostname, vlanid, pbm='', ubm=''):
     return rv
 
 
-def destroy_vlan(hostname, vlanid):
+def destroy_vlan(vlanid):
     channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid)
@@ -68,7 +69,7 @@ def destroy_vlan(hostname, vlanid):
     return response.message
 
 
-def show_vlans(hostname):
+def show_vlans():
     channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest()
@@ -76,7 +77,7 @@ def show_vlans(hostname):
     return response.message
 
 
-def add_ports(hostname, vlanid, pbm, ubm=''):
+def add_ports(vlanid, pbm, ubm=''):
     channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid, pbm=pbm, ubm=ubm)
@@ -84,7 +85,7 @@ def add_ports(hostname, vlanid, pbm, ubm=''):
     return response.message
 
 
-def rem_ports(hostname, vlanid, pbm):
+def rem_ports(vlanid, pbm):
     channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid, pbm=pbm)
@@ -92,7 +93,7 @@ def rem_ports(hostname, vlanid, pbm):
     return response.message
 
 
-def set_pvlan(hostname, vlanid, pbm):
+def set_pvlan(vlanid, pbm):
     channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid, pbm=pbm)
@@ -100,7 +101,7 @@ def set_pvlan(hostname, vlanid, pbm):
     return response.message
 
 
-def show_pvlans(hostname):
+def show_pvlans():
     channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest()
