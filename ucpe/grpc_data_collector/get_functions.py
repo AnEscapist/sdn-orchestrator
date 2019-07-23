@@ -103,9 +103,7 @@ def dpdk_get_devices():
 
         device_list[dd["Slot"]] = device_dict
 
-    tmp = device_list
-
-    return tmp
+    return device_list
 
 
 def get_linux_bridges_list():
