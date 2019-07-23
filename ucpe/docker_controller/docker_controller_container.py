@@ -221,5 +221,16 @@ def rename_container(id_name, newName):
         return api_error(ae, func)
 
 
+def remove_container(id_name):
+    func = remove_container
+    try:
+        container = dcli.containers.get(id_name)
+    except requests.exceptions.HTTPError:
+        return cnf_error(id_name, func)
+    try:
+        container.remove()
+        return remove_container_message(id_name, func)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
 
 #======================docker container end============================

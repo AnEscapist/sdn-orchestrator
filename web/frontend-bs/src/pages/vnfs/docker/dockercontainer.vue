@@ -24,7 +24,7 @@
       <font-awesome-icon :icon="['fas', 'pause']" size=sm color='rgb(255, 255, 255)' />
       Pause
     </button>
-    <button type="button" id='remove' class="btn btn-danger btn-sm">
+    <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeContainer()'>
       <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
       Remove
     </button>
@@ -226,6 +226,16 @@ export default {
           this.name = tmp
         }
       })
+    },
+
+    removeContainer() {
+        this.axios.get('/api/docker/remove_container', {
+            params: {
+                id_name: this.id,
+            }
+        }).then(response => {
+            console.log(response.data.result)
+        })
     },
 
     setBtn(status){
