@@ -7,6 +7,7 @@ import DockerC from '../pages/vnfs/docker/docker_c'
 import DockerI from '../pages/vnfs/docker/docker_i'
 import Blank from '@/components/Blank'
 import DockerContainer from '../pages/vnfs/docker/dockercontainer'
+import DockerImage from '../pages/vnfs/docker/dockerimage'
 const dockerRoutes = [
   {
     path: 'docker_c',
@@ -32,7 +33,12 @@ const dockerRoutes = [
       name: 'dockercontainer',
       component: DockerContainer,
 
-  }
+  },
+  {
+      path: 'dockerimage',
+      name: 'dockerimage',
+      component: DockerImage
+  },
 ];
 
 /**

@@ -2,6 +2,8 @@
                 version="1.0">
     <xsl:output omit-xml-declaration="yes" indent="yes"/>
     <xsl:strip-space elements="*"/>
+    <!--6-26-19: do not set the hugepages_memory variable here.  it will be overwritten. -->
+    <xsl:variable name="hugepages_memory">HUGEPAGES_MEMORY</xsl:variable>
     <xsl:template match="/">
         <domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm">
             <name>NAME</name>
@@ -92,6 +94,13 @@
                     <alias name="balloon0"/>
                 </memballoon>
             </devices>
+            <qemu:commandline>
+                <qemu:arg value="-object"/>
+                <qemu:arg value="memory-backend-file,id=mem,size={$hugepages_memory},mem-path=/dev/hugepages,share=on"/>
+                <qemu:arg value="-numa"/>
+                <qemu:arg value="node,memdev=mem"/>
+                <qemu:arg value="-mem-prealloc"/>
+            </qemu:commandline>
         </domain>
     </xsl:template>
 </xsl:stylesheet>
