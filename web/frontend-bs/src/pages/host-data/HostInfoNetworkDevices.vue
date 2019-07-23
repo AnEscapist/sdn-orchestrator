@@ -53,10 +53,10 @@
         mounted() {
           this.gridApi = this.gridOptions.api;
           this.gridColumnApi = this.gridOptions.api;
-          this.updateData()
+          this.getData()
         },
         methods: {
-          updateData(){
+          getData(){
             this.rowData = [];
             this.data = [];
             this.axios.get("/api/grpc/get_net_devices").then(response => {
@@ -78,28 +78,26 @@
               // console.log(tmp_list);
               this.length = tmp_list.length;
               this.rowData = tmp_list;
-              console.log(this.rowData)
+              // console.log('hello1')
+              // console.log(this.rowData)
             });
-          },
-          bindDevice(slot, driver){
-            this.axios.get('/api/grpc/dpdk_bind', {
-              params: {
-                slot: slot,
-                current_driver: driver
-              }
-            }).then(response => {
-              var res = JSON.parse(response.data.result.return);
-              // this.updateData();
-            })
           },
           adjustValues(){
             var i;
-            let rowlist = this.rowData;
+            let res = "";
             for (i = 0; i < this.length; i++){
-              let rowdata = this.gridApi.getDisplayedRowAtIndex(i)['data'];
-              this.bindDevice(rowdata.slot, rowdata.current_driver);
+              let paramData = this.gridApi.getDisplayedRowAtIndex(i).data;
+              // console.log('hello2')
+              // console.log(paramData.current_driver);
+                this.axios.get('/api/grpc/dpdk_bind', {
+                    params: {
+                        slot: paramData.slot,
+                        current_driver: paramData.current_driver
+                    }
+                }).then();
             }
-            this.updateData();
+            this.gridApi.refreshCells();
+            this.reload();
           }
         }
     }
