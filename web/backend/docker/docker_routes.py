@@ -143,10 +143,10 @@ def image_info():
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
 
-@docker_routes.route('/docker/image_attr')
-def image_attr():
+@docker_routes.route('/docker/inspect_image')
+def inspect_image():
     name = request.args.get('name')
-    messagedata = {"method": "docker_controller_image_attr", "params": {
+    messagedata = {"method": "docker_controller_inspect_image", "params": {
         "body": {"name": name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))

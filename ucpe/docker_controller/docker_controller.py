@@ -86,8 +86,8 @@ class DockerController(object):
         return _call_function(func, **kwargs)
 
     @staticmethod
-    def docker_controller_image_attr(**kwargs):
-        func = image_attr
+    def docker_controller_inspect_image(**kwargs):
+        func = inspect_image
         return _call_function(func, **kwargs)
 
     @staticmethod

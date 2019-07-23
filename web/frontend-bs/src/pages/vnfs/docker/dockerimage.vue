@@ -4,7 +4,7 @@
     <font-awesome-icon :icon="['fas', 'clone']" size=lg color='rgb(0, 0, 0)' /> <strong> Image details - </strong>
     {{name}}
     <hr>
-    <pre>{{image_info}}</pre>
+    <pre><span class="inner-pre">{{image_info}}</span></pre>
   </div>
 </div>
 </template>
@@ -39,20 +39,14 @@ export default {
     //   this.name = inspect['Name'].slice(1, inspect['Name'].legth)
     //   this.createTime = inspect['Created']
     // });
-    this.axios.get('/api/docker/image_attr', {
+    this.axios.get('/api/docker/inspect_image', {
         params: {
             name: this.name
         }
     }).then(response => {
-        console.log(typeof(response.data.result))
-        console.log(JSON.parse(response.data.result)['return'])
         var image_info = JSON.parse(response.data.result)['return']
+        // console.log(typeof(JSON.parse(image_info)))
         this.image_info = image_info
-        // console.log(typeof(this.image_info))
-        console.log(this.image_info.slice(12,-2))
-        console.lgo(JSON.parse(this.image_info.slice(12, -2)))
-        // res = JSON.parse(image_info)
-
     })
 
   },
