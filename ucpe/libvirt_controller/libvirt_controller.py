@@ -145,17 +145,19 @@ def get_vm_state(ucpe, vm_name):
     func = _state_str_from_domain
     return _libvirt_domain_observer(func, ucpe, vm_name)
 
+
 def get_all_vm_states(ucpe):
     func = _state_str_from_domain
     return _libvirt_all_domains_observer(func, ucpe)
 
+
 def _state_str_from_domain(domain):
     return state(domain).name
+
 
 def get_vm_xml(ucpe, vm_name):
     func = lambda domain: virDomain.XMLDesc(domain, 0)
     return _libvirt_domain_observer(func, ucpe, vm_name)
-
 
 
 def get_vm_info(ucpe, vm_name):
@@ -219,13 +221,14 @@ def define_vm_from_xml(ucpe, xml, verbose=True):
     return _libvirt_connection_call(func, ucpe, success_message, fail_message, verbose=verbose)
 
 
-def define_vm_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_vcpu_count=1, verbose=True):
-    xml = _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_vcpu_count=1, verbose=True)
+def define_vm_from_params(ucpe, vm_name, image_path, vm_memory=4, use_hugepages=False, vm_vcpu_count=1, verbose=True):
+    xml = _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, use_hugepages=use_hugepages, vm_vcpu_count=1,
+                               verbose=True)
     return define_vm_from_xml(ucpe, xml, verbose=verbose)
 
 
-def _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_vcpu_count=1, verbose=True):
-    xsl = _get_modified_xsl(vm_name, image_path, vm_memory, vm_vcpu_count)
+def _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, use_hugepages=False, vm_vcpu_count=1, verbose=True):
+    xsl = _get_modified_xsl(vm_name, image_path, vm_memory, use_hugepages, vm_vcpu_count)
     BLANK_XML = "<blank></blank>"  # xsl contains the entire xml text
     dom = LET.fromstring(BLANK_XML)
     xslt = LET.fromstring(xsl)
@@ -235,16 +238,21 @@ def _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_vcpu_count=1
     return xml
 
 
-def _get_modified_xsl(vm_name, image_path, vm_memory, vm_vcpu_count):
+def _get_modified_xsl(vm_name, image_path, vm_memory, use_hugepages, vm_vcpu_count):
     dirname = os.path.dirname(__file__)
     xsl_path = os.path.join(dirname, "template.xsl")  # todo: possibly stick this in a constant
+
+    if use_hugepages:  # todo: clean up
+        xsl_path = os.path.join(dirname, "template_hugepages.xsl")
+
     namespaces = _register_all_namespaces(xsl_path)
     basepath = "xsl:template/domain/"
     tree = ET.parse(xsl_path)  # todo: consider storing the template in text
     root = tree.getroot()
 
-    hugepages = root.find('xsl:variable[@name="hugepages_memory"]', namespaces)
-    hugepages.text = str(vm_memory) + "G"  # todo: hardcoding the unit might be bad
+    if use_hugepages:
+        hugepages = root.find('xsl:variable[@name="hugepages_memory"]', namespaces)
+        hugepages.text = str(vm_memory) + "G"  # todo: hardcoding the unit might be bad
 
     name = root.find(basepath + 'name', namespaces)
     name.text = vm_name
@@ -279,11 +287,13 @@ def undefine_vm(ucpe, vm_name, verbose=True):
     fail_message = f"Failed to undefine virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
 
+
 def delete_vms(ucpe, vm_names, verbose=True):
     func = _delete_domain
     success_message = f"Deleted all vms in {vm_names}"
     fail_message = f"Failed to delete all vms in {vm_names}"
     return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
+
 
 def start_vm(ucpe, vm_name, verbose=True):
     func = virDomain.create
@@ -291,11 +301,13 @@ def start_vm(ucpe, vm_name, verbose=True):
     fail_message = f"Failed to start virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
 
+
 def start_vms(ucpe, vm_names, verbose=True):
     func = virDomain.create
     success_message = f"Sent start signal to vms {vm_names}"
     fail_message = f"Failed to send start signal to all vms in {vm_names}"
     return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
+
 
 def start_or_resume_vms(ucpe, vm_names, verbose=True):
     func = _start_or_resume_domain
@@ -303,9 +315,11 @@ def start_or_resume_vms(ucpe, vm_names, verbose=True):
     fail_message = f"Failed to send start signal to all vms in {vm_names}"
     return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
+
 def get_vm_autostart(ucpe, vm_name):
     func = virDomain.autostart
     return _libvirt_domain_observer(func, ucpe, vm_name)
+
 
 def set_vm_autostart(ucpe, vm_name, autostart, verbose=True):
     func = lambda domain: virDomain.setAutostart(domain, int(autostart))
@@ -315,11 +329,13 @@ def set_vm_autostart(ucpe, vm_name, autostart, verbose=True):
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose,
                                    operation_name=operation_name)
 
+
 def shutdown_vm(ucpe, vm_name, verbose=True):
     func = virDomain.shutdown
     success_message = f"Sent shutdown signal to virtual machine \"{vm_name}\". \nWarning: This does not guarantee shutdown."
     fail_message = f"Failed to shutdown virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
+
 
 def shutdowm_vms(ucpe, vm_names, verbose=True):
     func = virDomain.shutdown
@@ -327,11 +343,13 @@ def shutdowm_vms(ucpe, vm_names, verbose=True):
     fail_message = f"Failed to send shutdown signal to all vms in {vm_names}"
     return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
+
 def destroy_vm(ucpe, vm_name, verbose=True):
     func = virDomain.destroy
     success_message = f"Destroyed virtual machine \"{vm_name}\""
     fail_message = f"Failed to destroy virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
+
 
 def destroy_vms(ucpe, vm_names, verbose=True):
     func = virDomain.destroy
@@ -339,11 +357,13 @@ def destroy_vms(ucpe, vm_names, verbose=True):
     fail_message = f"Failed to send destroy signal to all vms in {vm_names}"
     return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
+
 def suspend_vm(ucpe, vm_name, verbose=True):
     func = virDomain.suspend
     success_message = f"Suspended virtual machine \"{vm_name}\""
     fail_message = f"Failed to suspend virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
+
 
 def suspend_vms(ucpe, vm_names, verbose=True):
     func = virDomain.suspend
@@ -351,17 +371,20 @@ def suspend_vms(ucpe, vm_names, verbose=True):
     fail_message = f"Failed to send suspend signal to all vms in {vm_names}"
     return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
 
+
 def resume_vm(ucpe, vm_name, verbose=True):
     func = virDomain.resume
     success_message = f"Resumed virtual machine \"{vm_name}\""
     fail_message = f"Failed to resume virtual machine \"{vm_name}\""
     return _libvirt_domain_mutator(func, ucpe, vm_name, success_message, fail_message, verbose=verbose)
 
+
 def resume_vms(ucpe, vm_names, verbose=True):
     func = virDomain.resume
     success_message = f"Sent suspend signal to vms {vm_names}"
     fail_message = f"Failed to send suspend signal to all vms in {vm_names}"
     return _libvirt_multiple_domain_mutator(func, ucpe, vm_names, success_message, fail_message, verbose=verbose)
+
 
 def save_vm(ucpe, vm_name, save_path, verbose=True):
     func = lambda domain: virDomain.save(domain, save_path)
@@ -384,19 +407,22 @@ def restore_vm(ucpe, save_path, verbose=True):
 def snap_vm_from_xml(ucpe, vm_name, xml):
     pass
 
+
 def _start_or_resume_domain(domain):
     function_map = {
-        VMState.RUNNING: lambda domain: 0, # empty function returning statuscode 0 (working)
+        VMState.RUNNING: lambda domain: 0,  # empty function returning statuscode 0 (working)
         VMState.PAUSED: virDomain.resume,
         VMState.SHUTOFF: virDomain.create
     }
     return function_map[state(domain)](domain)
 
+
 def _delete_domain(domain):
-    #todo: this will fail as soon as we add any snapshots. snapshots must be deleted first.
+    # todo: this will fail as soon as we add any snapshots. snapshots must be deleted first.
     if state(domain) != VMState.SHUTOFF:
         virDomain.destroy(domain)
     virDomain.undefine(domain)
+
 
 def _blockpull(ucpe, vm_name, save_path, base_path):
     channel = grpc.insecure_channel(ucpe.hostname)
@@ -433,7 +459,9 @@ def _libvirt_domain_mutator(libvirt_domain_func, ucpe, vm_name, success_message,
         return_dict["traceback"] = tb.format_exc()
     return return_dict
 
-def _libvirt_multiple_domain_mutator(libvirt_domain_func, ucpe, vm_names, success_message, fail_message, verbose=True, operation_name=None):
+
+def _libvirt_multiple_domain_mutator(libvirt_domain_func, ucpe, vm_names, success_message, fail_message, verbose=True,
+                                     operation_name=None):
     # todo: factor out the outer try/catch
     operation_name = libvirt_domain_func.__name__ if operation_name is None else operation_name
     return_dict = {}
@@ -449,7 +477,8 @@ def _libvirt_multiple_domain_mutator(libvirt_domain_func, ucpe, vm_names, succes
                 except Exception:
                     success = False
                     failed_list.append(vm_name)
-                    return_dict["traceback"] = tb.format_exc() # todo: find a way to get all tracebacks, not just last one
+                    return_dict[
+                        "traceback"] = tb.format_exc()  # todo: find a way to get all tracebacks, not just last one
     except ConnectionRefusedError:
         failed_list = vm_names
         return_dict["traceback"] = tb.format_exc()
@@ -555,14 +584,14 @@ def _call_function(func, **kwargs):
 if __name__ == '__main__':
     # test:
     UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
-    # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH)
+    # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH, use_hugepages=True)
     # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
     # start_vm(DEFAULT_UCPE, "test")
     # print(start_vms(DEFAULT_UCPE, ["test", "cloud"]))
     # print(start_or_resume_vms(DEFAULT_UCPE, ["test", "cloud2"]))
     # shutdown_vm(DEFAULT_UCPE, "test")
     # destroy_vm(DEFAULT_UCPE, "test")
-    destroy_vms(DEFAULT_UCPE, ["test", "cloud2"])
+    # destroy_vms(DEFAULT_UCPE, ["test", "cloud2"])
     # suspend_vm(DEFAULT_UCPE, "test")
     # suspend_vms(DEFAULT_UCPE, ["test", "cloud2"])
     # resume_vm(DEFAULT_UCPE, "test")
