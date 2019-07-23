@@ -1,5 +1,6 @@
 from ucpe.bcm_controller.bcm_controller import *
-from web.backend.zmq_web import call_ucpe_function
+from web.backend.zmq_web import call_ucpe_function, start
+import time
 
 
 # create_vlan("135.91.120.243:50051", 100)
@@ -21,5 +22,7 @@ DEFAULT_KWARGS = {"body": {"vlanid": 100, "hostname": "135.91.120.243:50051", "p
 messagedata = {"method": "bcm_controller_create_vlan",
     "params": {"body": DEFAULT_KWARGS}, "jsonrpc": "2.0",
     "id": 0}
+start()
+time.sleep(2)
 
 print(call_ucpe_function(messagedata))
