@@ -185,9 +185,11 @@ export default {
     changeStatus(change_to) {
       this.axios.get("/api/docker/change_status", {
         params: {
+          id_name: this.short_id,
           change_to: change_to
         }
       }).then(response => {
+        // console.log(response)
         var res = JSON.parse(response.data.result)['return']
         var status = res.substring(res.indexOf('[') + 1, res.indexOf(']'))
 
@@ -238,22 +240,22 @@ export default {
       })
     },
 
-    update(){
-        //after hit the button, re-render the status and ip address
-        this.axios.get("/api/docker/inspect_container", {
-          params: {
-            id_name: this.id
-          }
-        }).then(response => {
-          var inspect = JSON.parse(response.data.result)['return']
-          // inspect = JSON.parse(inspect)
-          var status = inspect['State']['Status']
-          this.status = status
-          var ip = inspect['NetworkSettings'].IPAddress
-          this.ip = ip
-          this.setBtn(status)
+    update() {
+      //after hit the button, re-render the status and ip address
+      this.axios.get("/api/docker/inspect_container", {
+        params: {
+          id_name: this.id
+        }
+      }).then(response => {
+        var inspect = JSON.parse(response.data.result)['return']
+        // inspect = JSON.parse(inspect)
+        var status = inspect['State']['Status']
+        this.status = status
+        var ip = inspect['NetworkSettings'].IPAddress
+        this.ip = ip
+        this.setBtn(status)
 
-        });
+      });
     },
 
     setBtn(status) {
