@@ -17,7 +17,7 @@
           <router-link :to="{path: 'dockercontainer', query: {short_id: containers_id[i]}}">
             <td width='10%'>{{container}}</td>
           </router-link>
-          <td>{{images[i]}}</td>
+          <td width='33%'>{{images[i]}}</td>
           <td v-if="status[i] == 'running' ">
             <h6><span class="badge badge-pill badge-success">{{status[i]}}</span></h6>
           </td>
@@ -240,7 +240,7 @@ export default {
         type: this.type[color]
       })
     },
-    
+
 
     create_container(create_name, create_image, create_port) {
       this.axios.get('/api/docker/create_container', {

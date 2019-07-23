@@ -101,6 +101,11 @@ class DockerController(object):
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def docker_controller_remove_image(**kwargs):
+        func = remove_image
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def docker_controller_export_container(**kwargs):
         func = export_container
         return _call_function(func, **kwargs)

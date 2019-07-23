@@ -96,4 +96,12 @@ def pull_image(repo, tag=None):
     except requests.exceptions.HTTPError as re:
         return pull_error(re, func)
 
+def remove_image(name):
+    func = remove_image
+    try:
+        dcli.images.remove(name)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+    return remove_image_message(name, func)
+
 #=======================docker images end======================================
