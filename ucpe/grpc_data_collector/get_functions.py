@@ -64,47 +64,7 @@ def get_network_interfaces():
 
 
 def dpdk_get_devices():
-    with open(os.devnull, 'w') as devnull:
-        ret = subprocess.call(['which', 'lspci'],
-                              stdout=devnull, stderr=devnull)
-        if ret != 0:
-            print("'lspci' not found - please install 'pciutils'")
-            sys.exit(1)
-
-    dpdk.clear_data()
-    dpdk.status_flag = True
-    dpdk.status_dev = "all"
-
-    dpdk.check_modules()
-    dpdk.clear_data()
-    dpdk.get_device_details(dpdk.network_devices)
-
-    # tmp = devices
-
-    device_list = dict()
-    for d in devices.keys():
-
-        device_dict = dict()
-        dd = devices[d]
-
-        device_dict['slot'] = dd["Slot"]
-        device_dict['device_name'] = dd["Device_str"]
-        device_dict['interface'] = dd["Interface"]
-        device_dict['current_driver'] = dd["Driver_str"]
-        device_dict['drivers'] = list()
-        device_dict['drivers'].append(dd["Driver_str"])
-        for i in dd["Module_str"].split(','):
-            device_dict['drivers'].append(i)
-        if dd["Driver_str"] in drivers:
-            device_dict['driver_type'] = 'DPDK'
-        else:
-            device_dict['driver_type'] = 'Kernel'
-
-        device_list[dd["Slot"]] = device_dict
-
-    tmp = device_list
-
-    return tmp
+    return dpdk.get_network_devices()
 
 
 def get_linux_bridges_list():
