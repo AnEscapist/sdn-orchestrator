@@ -35,7 +35,7 @@ hugepages_total = meminfo['HugePages_Total']
 hugepages_free = meminfo['HugePages_Free']
 
 total_cpus = psutil.cpu_count()
-devices = dpdk.devices
+devices1 = dpdk.devices
 drivers = dpdk.dpdk_drivers
 
 
@@ -64,9 +64,6 @@ def get_network_interfaces():
 
 
 def dpdk_get_devices():
-    global devices
-    dpdk.status_flag = True
-    dpdk.status_dev = "all"
     with open(os.devnull, 'w') as devnull:
         ret = subprocess.call(['which', 'lspci'],
                               stdout=devnull, stderr=devnull)
@@ -74,17 +71,20 @@ def dpdk_get_devices():
             print("'lspci' not found - please install 'pciutils'")
             sys.exit(1)
 
+    # devices1 = dpdk.devices
+
     dpdk.check_modules()
     dpdk.clear_data()
     dpdk.get_device_details(dpdk.network_devices)
 
+    devices1 = dpdk.devices
     # tmp = devices
 
     device_list = dict()
-    for d in devices.keys():
+    for d in devices1.keys():
 
         device_dict = dict()
-        dd = devices[d]
+        dd = devices1[d]
 
         device_dict['slot'] = dd["Slot"]
         device_dict['device_name'] = dd["Device_str"]
@@ -101,9 +101,7 @@ def dpdk_get_devices():
 
         device_list[dd["Slot"]] = device_dict
 
-    tmp = device_list
-
-    return tmp
+    return device_list
 
 
 def get_linux_bridges_list():

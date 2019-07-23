@@ -11,6 +11,7 @@
           <th>Name:tag</th>
           <th>Size</th>
           <th>Created</th>
+          <th>Busy</th>
         </tr>
 
 
@@ -18,8 +19,13 @@
           <router-link :to="{path: 'dockerimage', params: {name: img}, query: {name: img}}">
             <td width='10%'>{{img}}</td>
           </router-link>
-          <td width='33%'>{{sizes[i]}}MB</td>
-          <td width='33%'>{{createTimes[i]}}</td>
+          <td width='25%'>{{sizes[i]}}MB</td>
+          <td width='25%'>{{createTimes[i]}}</td>
+          <td width='10%'>
+              &nbsp&nbsp
+            <font-awesome-icon v-show="busy[i] == 'yes'" :icon="['fas', 'check-circle']" size=sm color='#00bd56' />
+            <font-awesome-icon v-show="busy[i] == 'no'" :icon="['fas', 'times-circle']" size=sm color='rgb(251, 0, 0)' />
+          </td>
         </tr>
       </table>
       <hr>
@@ -76,8 +82,9 @@ export default {
   },
   data() {
     return {
-      // containers: [],
-      images: [],
+      using_images: [],
+      // images: [],
+      busy: [],
       client: '',
       info: '',
       status: [],
@@ -102,8 +109,8 @@ export default {
 
       var j;
       for (j = 0; j < this.all_img.length; j++) {
-          this.sizes = []
-          this.createTimes = []
+        this.sizes = []
+        this.createTimes = []
         this.axios.get('/api/docker/inspect_image', {
           params: {
             name: this.all_img[j]
@@ -116,6 +123,32 @@ export default {
           this.createTimes.push(inspect['Created'].split('.')[0].split('T').join(' / '))
         })
       }
+
+      this.busy = []
+      this.axios.get('api/docker/containers_images').then(response => {
+        var res = JSON.parse(response.data.result)['return']
+        var regex = /\<(.+?)\>/g;
+        var images = res.match(regex)
+        var i;
+        for (i = 0; i < images.length; i++) {
+          if (!(images[i] in this.using_images)) {
+            this.using_images.push(images[i].substring(images[i].indexOf(':') + 3, images[i].indexOf('>') - 1))
+          }
+        }
+
+        var i;
+        for (i = 0; i < this.all_img.length; i++) {
+
+          var str = JSON.stringify(this.using_images)
+          if (str.includes(this.all_img[i])) {
+            this.busy.push('yes')
+          } else {
+            this.busy.push('no')
+          }
+        }
+      })
+
+
 
     });
 
@@ -157,7 +190,7 @@ export default {
           // timeout: 1000
         }
       }).then(response => {
-        console.log(JSON.parse(response.data.result))
+        // console.log(JSON.parse(response.data.result))
         this.reload()
       })
 

@@ -60,7 +60,8 @@
             this.rowData = [];
             this.data = [];
             this.axios.get("/api/grpc/get_net_devices").then(response => {
-              let res = JSON.parse(response.data.result.return)
+              // console.log(response);
+              let res = JSON.parse(response.data.result.return);
               let tmp_list = [];
               this.data = res;
               // console.log(this.data);
