@@ -131,6 +131,8 @@ import Card from '../../../components/Cards/Card.vue'
 // import LTable from '@/components/Table.vue'
 
 export default {
+    inject: ['reload'],
+
   name: 'DockerC',
 
   components: {
@@ -259,9 +261,6 @@ export default {
     },
 
     create_container(create_name, create_image, create_port) {
-      console.log('name', create_name)
-      console.log('image', create_image)
-      console.log('port', create_port)
       this.axios.get('/api/docker/create_container', {
         params: {
           create_name: create_name,
@@ -272,6 +271,7 @@ export default {
         console.log(response)
         console.log(JSON.parse(response.data.result))
         this.showCreate = false
+        this.reload()
       })
     }
     // get_status(containers) {
