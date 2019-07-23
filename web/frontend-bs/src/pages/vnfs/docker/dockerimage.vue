@@ -1,7 +1,9 @@
 <template>
 <div class="content">
   <div class="container-fluid">
-    <h1>hello</h1>
+    <font-awesome-icon :icon="['fas', 'clone']" size=lg color='rgb(0, 0, 0)' /> <strong> Image details - </strong>
+    {{name}}
+    <hr>
   </div>
 </div>
 </template>
@@ -36,6 +38,13 @@ export default {
     //   this.name = inspect['Name'].slice(1, inspect['Name'].legth)
     //   this.createTime = inspect['Created']
     // });
+    this.axios.get('/api/docker/image_info', {
+        params: {
+            name: this.name
+        }
+    }).then(response => {
+        console.log(response)
+    })
 
   },
   methods: {

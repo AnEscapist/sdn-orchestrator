@@ -29,14 +29,15 @@ def images_info(path='ImagesInfo.json', name=None, all=True):
         os.remove(path)
     for i in range(len(image_list)):
         imageInfo['Images'].append(image_list[i].attrs)
-
+        # return images_info_message(imageInfo, func)
     json_str = json.dumps(imageInfo, indent=4)
     try:
         with open(path, 'a') as json_file:
             json_file.write(json_str)
     except FileNotFoundError:
         return fnf_error(path, func)
-    return json_file_message(path, func)
+    # return json_file_message(path, func)
+    return images_info_message(imageInfo, path, func)
 
 
 def save_image(image_name, local_path, remote_path, local_save=False, chunk_size=2097152):
