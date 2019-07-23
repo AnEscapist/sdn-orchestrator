@@ -73,7 +73,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="inputGroup-sizing-default">Image</span>
                 </div>
-                <select  v-model='create_image' class="custom-select" id="inputGroupSelect01">
+                <select v-model='create_image' class="custom-select" id="inputGroupSelect01">
                   <option selected>Choose...</option>
                   <option v-for='img in all_img'>{{img}}</option>
                   <!-- <option value="2">Two</option>
@@ -156,6 +156,7 @@ export default {
     }
   },
   mounted() {
+    this.showCreate = false
     this.axios.get("/api/docker/list_containers").then(response => {
       var res = JSON.parse(response.data.result)['return']
       // console.log(res)
@@ -257,20 +258,21 @@ export default {
 
     },
 
-    create_container(create_name, create_image, create_port){
-        console.log('name', create_name)
-        console.log('image', create_image)
-        console.log('port', create_port)
-        this.axios.get('/api/docker/create_container', {
-            params: {
-                create_name: create_name,
-                create_image: create_image,
-                create_port: create_port
-            }
-        }).then(response => {
-            console.log(response)
-            console.log(JSON.parse(response.data.result))
-        })
+    create_container(create_name, create_image, create_port) {
+      console.log('name', create_name)
+      console.log('image', create_image)
+      console.log('port', create_port)
+      this.axios.get('/api/docker/create_container', {
+        params: {
+          create_name: create_name,
+          create_image: create_image,
+          create_port: create_port
+        }
+      }).then(response => {
+        console.log(response)
+        console.log(JSON.parse(response.data.result))
+        this.showCreate = false
+      })
     }
     // get_status(containers) {
     //
