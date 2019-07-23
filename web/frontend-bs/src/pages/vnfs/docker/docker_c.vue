@@ -268,8 +268,6 @@ export default {
           create_port: create_port
         }
       }).then(response => {
-        console.log(response)
-        console.log(JSON.parse(response.data.result))
         this.showCreate = false
         this.reload()
       })

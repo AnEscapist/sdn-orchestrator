@@ -61,6 +61,11 @@ class DockerController(object):
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def docker_controller_kill_container(**kwargs):
+        func = kill_container
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def docker_controller_remove_container(**kwargs):
         func = remove_container
         return _call_function(func, **kwargs)

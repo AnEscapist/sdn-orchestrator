@@ -12,7 +12,7 @@
       <font-awesome-icon :icon="['fas', 'square']" size=sm color='rgb(255, 255, 255)' />
       Stop
     </button>
-    <button type="button" id='kill' class="btn btn-danger btn-sm">
+    <button type="button" id='kill' class="btn btn-danger btn-sm" @click='killContainer()'>
       <font-awesome-icon :icon="['fas', 'skull-crossbones']" size=sm color='rgb(255, 255, 255)' />
       Kill
     </button>
@@ -24,10 +24,14 @@
       <font-awesome-icon :icon="['fas', 'pause']" size=sm color='rgb(255, 255, 255)' />
       Pause
     </button>
-    <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeContainer()'>
-      <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
-      Remove
-    </button>
+
+    <router-link to="docker_c">
+        <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeContainer()'>
+          <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
+          Remove
+        </button>
+    </router-link>
+
 
   </div>
   <hr>
@@ -230,6 +234,16 @@ export default {
 
     removeContainer() {
         this.axios.get('/api/docker/remove_container', {
+            params: {
+                id_name: this.id,
+            }
+        }).then(response => {
+            // console.log(response.data.result)
+        })
+    },
+
+    killContainer(){
+        this.axios.get('/api/docker/kill_container', {
             params: {
                 id_name: this.id,
             }
