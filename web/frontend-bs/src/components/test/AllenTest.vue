@@ -14,17 +14,16 @@
 <script>
   import axios from 'axios';
     export default {
-        el: '#example-3',
         data () {
             return{
             checkedNames: [],
-                test: ""
+                test: "Hello"
             }
         },
         mounted(){
             axios.get('/api/bcm/show_vlans').then((response) => {
-                this.test = response.data.result
-            })
+                this.test = response.data.result.result
+            }).then(()=>{console.log(this.test)})
         }
     }
 </script>

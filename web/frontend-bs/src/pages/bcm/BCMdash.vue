@@ -1,8 +1,6 @@
 <template>
   <div class="content">
     <div class="container-fluid">
-      <ZhengqiTest></ZhengqiTest>
-      <RogerTest></RogerTest>
       <AllenTest></AllenTest>
 <!--      todo: notifications fo VNF status changes-->
     </div>
@@ -18,7 +16,7 @@
     export default {
       name: 'BCMdash',
       components: {
-        Card, ZhengqiTest, RogerTest, AllenTest
+        Card, AllenTest
       },
       data () {
         return {

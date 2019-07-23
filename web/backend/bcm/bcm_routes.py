@@ -7,7 +7,7 @@ bcm_routes = Blueprint('bcm', __name__, template_folder='templates')
 
 @bcm_routes.route('/show_vlans')
 def show_vlans():
-    messagedata = {"method": "bcm_show_vlans", "params": {
+    messagedata = {"method": "bcm_controller_show_vlans", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051"}},
         "jsonrpc": "2.0", "id": 0
     }
