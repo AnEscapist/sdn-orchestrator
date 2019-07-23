@@ -36,7 +36,7 @@ class AutoBCM(autobcm_pb2_grpc.AutoBCMServicer):
         bcmutils.add_ports(bcm,request.vlanid,request.pbm,request.ubm)
         return autobcm_pb2.ConfigReply(message='Added ports to VLAN ' + str(request.vlanid))
     def SetPVLAN(self, request, context):
-        bcmutils.set_pvlan(bcm,request.pbm,vlanid)
+        bcmutils.set_pvlan(bcm,request.pbm,request.vlanid)
         return autobcm_pb2.ConfigReply(message='Set default VLAN of port(s) ' + str(request.pbm) + ' to VLAN ' + str(request.vlanid))
     def ShowVLANs(self, request, context):
         return autobcm_pb2.ConfigReply(message=bcmutils.show_vlans(bcm))
@@ -47,7 +47,7 @@ class AutoBCM(autobcm_pb2_grpc.AutoBCMServicer):
         bcmutils.rem_ports(bcm,request.vlanid,request.pbm)
         return autobcm_pb2.ConfigReply(message='Removed ports from VLAN ' + str(request.vlanid))
     def ShowPVLANs(self, request, context):
-        return autobcm_pb2.ConfigReply(message=bcumutils.show_pvlans(bcm))
+        return autobcm_pb2.ConfigReply(message=bcmutils.show_pvlans(bcm))
 
     #def ConfigBCM(self, request, context):	
         #call the functions defined in the helper utils to config BCM. These are all hard-coded but you can modify them to take inputs from the user or elsewhere if you wish.

@@ -148,7 +148,7 @@ def export_container(id_name, local_path, remote_path, local_save=False):
         #sftp.get(remotePath, localPath)  # =============== IOError, no such file.
     # sftp.put('/tmp/test-container.tar', '/tmp/test-container.tar')
 
-def create_container(image_name, ports=None, volumes=None, detach=True):
+def create_container(image_name, name=None, ports=None, volumes=None, detach=True):
     func = create_container
     bind=dict()
     if ports:
@@ -163,14 +163,14 @@ def create_container(image_name, ports=None, volumes=None, detach=True):
         else:
             bind[container_port] = host_port
 
+    mnt = dict()
     if volumes:
-        mnt = dict()
         mnt = ast.literal_eval(volumes)
     #return type(mnt)
 
     try:
         image = dcli.images.get(image_name)
-        container = dcli.containers.run(image=image.id, ports=bind, volumes=mnt,
+        container = dcli.containers.run(image=image.id, name=name, ports=bind, volumes=mnt,
                                         detach=detach, stdin_open=True, tty=True)
     except docker.errors.APIError as ae:
         return api_error(ae, func)
@@ -180,7 +180,7 @@ def create_container(image_name, ports=None, volumes=None, detach=True):
 
 def change_status(id_name, change_to):
     func = change_status
-    # possible state: created, restarti, runing, paused, exited
+    # possible state: created, restart, runing, paused, exited
     try:
         container = dcli.containers.get(id_name)
     except requests.exceptions.HTTPError:
@@ -221,5 +221,16 @@ def rename_container(id_name, newName):
         return api_error(ae, func)
 
 
+def remove_container(id_name):
+    func = remove_container
+    try:
+        container = dcli.containers.get(id_name)
+    except requests.exceptions.HTTPError:
+        return cnf_error(id_name, func)
+    try:
+        container.remove()
+        return remove_container_message(id_name, func)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
 
 #======================docker container end============================

@@ -39,6 +39,18 @@ def containers_status():
 
     return jsonify(call_ucpe_function(messagedata))
 
+@docker_routes.route('/docker/create_container')
+def create_container():
+    image_name = request.args.get('create_image')
+    name = request.args.get('create_name')
+    port = request.args.get('create_port')
+    messagedata = {"method": "docker_controller_create_container", "params": {
+        "body": {'image_name': image_name, 'name': name, 'port': port, "username": "potato", "hostname": "10.10.81.100", "all": "True", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+
+    return jsonify(call_ucpe_function(messagedata))
+
+
 @docker_routes.route('/docker/containers_images')
 def containers_images():
     messagedata = {"method": "docker_controller_containers_images", "params": {
@@ -55,6 +67,15 @@ def change_status():
         "body": {"change_to": change_to, 'id_name': id_name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
+
+@docker_routes.route('/docker/remove_container')
+def remove_container():
+    id_name = request.args.get('id_name')
+    messagedata = {"method": "docker_controller_remove_container", "params": {
+        "body": {'id_name': id_name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))
+
 
 # @docker_routes.route('/docker/rename_container')
 # def rename_container():

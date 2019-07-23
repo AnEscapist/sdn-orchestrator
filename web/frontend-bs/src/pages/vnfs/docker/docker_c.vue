@@ -29,7 +29,98 @@
           </td>
         </tr>
       </table>
+      <hr>
+      <button type="button" class="btn btn-primary btn-sm" @click='showCreate = !showCreate'>
+        <font-awesome-icon :icon="['fas', 'plus']" size=sm color='rgb(255, 255, 255)' />
+        Create
+      </button>
+
     </card>
+
+    <card v-show='showCreate'>
+      <div class="container-fluid">
+        <table width='100%'>
+          <tr width='10%'>
+            <td>
+              <font-awesome-icon :icon="['far', 'plus-square']" size=lg color='rgb(0, 0, 0)' /> <strong> New container</strong>
+            </td>
+
+            <td align='right' width='80%'>
+              <router-link to="docker_i">
+                <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=lg color='#1b7fbd' />
+                <strong> Pull an image</strong>
+              </router-link>
+            </td>
+          </tr>
+        </table>
+        <hr>
+      </div>
+
+      <div class="container-fluid">
+        <table width='100%'>
+          <tr>
+            <td width='48%'>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Name</span>
+                </div>
+                <input v-model='create_name' type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </td>
+            <td></td>
+            <td width='48%'>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Image</span>
+                </div>
+                <select v-model='create_image' class="custom-select" id="inputGroupSelect01">
+                  <option selected>Choose...</option>
+                  <option v-for='img in all_img'>{{img}}</option>
+                  <!-- <option value="2">Two</option>
+                    <option value="3">Three</option> -->
+                </select>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <table width='100%'>
+          <tr>
+            <td width='80%'>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Ports</span>
+                </div>
+                <input v-model='create_port' type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </td>
+            <td width='0%'></td>
+            <td stype='background:red' height='10px' style='padding-bottom: 15px' title="Valid format: container:host. e.g.: '2222/tcp:3333', '2222/tcp:None', '1111/tcp:(127.0.0.1, 111)' or '1111/tcp:[1234, 4567]'">
+
+              <font-awesome-icon :icon="['fas', 'question-circle']" size=lg color='#1b7fbd' />
+            </td>
+          </tr>
+        </table width='100%'>
+        <table>
+          <tr>
+            <td width='50%'></td>
+            <td width='40%'></td>
+            <td>
+              <button type="button" class="btn btn-secondary btn-sm" @click='showCreate = false'>
+                Cancel
+              </button>
+            </td>
+            <td>
+
+              <button type="button" class="btn btn-primary btn-sm" @click='create_container(create_name, create_image, create_port)'>
+                Create
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </card>
+
   </div>
 </div>
 </template>
@@ -40,6 +131,8 @@ import Card from '../../../components/Cards/Card.vue'
 // import LTable from '@/components/Table.vue'
 
 export default {
+    inject: ['reload'],
+
   name: 'DockerC',
 
   components: {
@@ -56,9 +149,16 @@ export default {
       status: [],
       all_img: [],
       name_tag: '',
+      showCreate: true,
+
+      create_name: '',
+      create_image: '',
+      create_port: '',
+
     }
   },
   mounted() {
+    this.showCreate = false
     this.axios.get("/api/docker/list_containers").then(response => {
       var res = JSON.parse(response.data.result)['return']
       // console.log(res)
@@ -73,14 +173,14 @@ export default {
     });
 
     this.axios.get('/api/docker/containers_id').then(response => {
-        // console.log(JSON.parse(response.data.result)['return'])
-        var res = JSON.parse(response.data.result)["return"]
-        var containers_id = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
-        var i;
-        for (i = 0; i < containers_id.length; i++) {
-          // console.log(containers[i].trim().slice(1, -1))
-          this.containers_id.push(containers_id[i].trim().slice(1, -1))
-        }
+      // console.log(JSON.parse(response.data.result)['return'])
+      var res = JSON.parse(response.data.result)["return"]
+      var containers_id = res.substring(res.indexOf('[') + 1, res.indexOf(']')).split(',')
+      var i;
+      for (i = 0; i < containers_id.length; i++) {
+        // console.log(containers[i].trim().slice(1, -1))
+        this.containers_id.push(containers_id[i].trim().slice(1, -1))
+      }
     })
 
     this.axios.get('/api/docker/containers_status').then(response => {
@@ -140,24 +240,39 @@ export default {
         type: this.type[color]
       })
     },
-    pullImg(name_tag){
-        if (name_tag.includes(':')){
-            var name = name_tag.split(':')[0]
-            var tag = name_tag.split(':')[1]
-        } else {
-            var name = name_tag
-            var tag = 'latest'
+    pullImg(name_tag) {
+      if (name_tag.includes(':')) {
+        var name = name_tag.split(':')[0]
+        var tag = name_tag.split(':')[1]
+      } else {
+        var name = name_tag
+        var tag = 'latest'
+      }
+      this.axios.get('/api/docker/pull_image', {
+        params: {
+          name: name,
+          tag: tag,
+          timeout: 1000
         }
-        this.axios.get('/api/docker/pull_image', {
-            params: {
-                name: name,
-                tag: tag,
-                timeout: 1000
-            }
-        }).then(response => {
-            console.log(JSON.parse(response.data.result))
-        })
+      }).then(response => {
+        console.log(JSON.parse(response.data.result))
+      })
 
+    },
+
+    create_container(create_name, create_image, create_port) {
+      this.axios.get('/api/docker/create_container', {
+        params: {
+          create_name: create_name,
+          create_image: create_image,
+          create_port: create_port
+        }
+      }).then(response => {
+        console.log(response)
+        console.log(JSON.parse(response.data.result))
+        this.showCreate = false
+        this.reload()
+      })
     }
     // get_status(containers) {
     //
@@ -208,9 +323,10 @@ input {
 }
 
 p {
-    font-size: 12px;
-    font-weight: bold;
+  font-size: 12px;
+  font-weight: bold;
 }
+
 
 
 #containerInfoCard {

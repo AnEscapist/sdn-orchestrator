@@ -88,7 +88,7 @@ def rem_ports(hostname, vlanid, pbm):
     channel = grpc.insecure_channel(hostname)
     stub = autobcm_pb2_grpc.AutoBCMStub(channel)
     request = autobcm_pb2.ConfigRequest(vlanid=vlanid, pbm=pbm)
-    response = stub.AddPorts(request)
+    response = stub.RemovePorts(request)
     return response.message
 
 
@@ -120,7 +120,8 @@ def _call_function(func, **kwargs):
                 raise KeyError("missing argument " + param + " in call to " + func.__name__)
         else:  # todo: this is REALLY bad - depends on the arg name, but so does the request/response
             relevant_kwargs[param] = body.get(param, params[param].default)
-    return_dict = func(**relevant_kwargs)
+    return_dict = {}
+    return_dict["result"] = func(**relevant_kwargs)
     caller_name = get_caller_function_name()
     return_dict["function"] = caller_name
     return return_dict
