@@ -135,10 +135,10 @@ def pull_image():
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata, TIMEOUT=timeout))
 
-@docker_routes.route('/docker/image_info')
+@docker_routes.route('/docker/images_info')
 def image_info():
     name = request.args.get('name')
-    messagedata = {"method": "docker_controller_image_info", "params": {
+    messagedata = {"method": "docker_controller_images_info", "params": {
         "body": {"repo": name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))

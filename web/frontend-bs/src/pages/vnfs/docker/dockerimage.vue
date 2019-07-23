@@ -38,7 +38,7 @@ export default {
     //   this.name = inspect['Name'].slice(1, inspect['Name'].legth)
     //   this.createTime = inspect['Created']
     // });
-    this.axios.get('/api/docker/image_info', {
+    this.axios.get('/api/docker/images_info', {
         params: {
             name: this.name
         }
