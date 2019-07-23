@@ -45,7 +45,7 @@ def hugepage_free_mem():
 def cpu_total():
     messagedata = {"method": "grpc_get_totalcpus", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051"}},
-        "jsonprc": "2.0", "id": 0
+        "jsonrpc": "2.0", "id": 0
     }
     return jsonify(call_ucpe_function(messagedata))
 

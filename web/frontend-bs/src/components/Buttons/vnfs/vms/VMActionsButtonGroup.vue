@@ -50,19 +50,18 @@
     </button>
     <!-- The modal -->
     <b-modal
+      ok-variant="danger"
+      ok-title="Proceed"
+      @ok="deleteSelectedVMs"
       id="vm-remove-modal">
       <div>
-      Are you sure you want to remove the VNFs below?
-      <br/>
-      <strong>This operation cannot be undone.</strong>
+        <strong>Are you sure you would like to proceed with removal of the VNFs below?</strong>
+        <ul>
+          <li v-for="vmName in vmSelection">{{vmName}}</li>
+        </ul>
       </div>
+      <strong class="text-danger">This operation cannot be undone.</strong>
     </b-modal>
-<!--        <b-modal-->
-<!--          id="vm-remove-modal">-->
-<!--          <div>-->
-<!--            Some text-->
-<!--          </div>-->
-<!--        </b-modal>-->
   </div>
 </template>
 
@@ -85,5 +84,4 @@
 </script>
 
 <style scoped>
-
 </style>

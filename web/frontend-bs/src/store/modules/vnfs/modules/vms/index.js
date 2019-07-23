@@ -7,7 +7,12 @@ const state = {
   vmInfo: {},
   vmSelection: [], //list of vms selected in vm table in vnfs/home
   vmFilterText: '',
-  atLeastOneVMSelected: false
+  atLeastOneVMSelected: false,
+  vmCreateForm: {
+    vCPUsAvailable: 0,
+    memoryAvailable: 0,
+    hugepageMemoryAvailable: 0
+  }
 };
 
 const mutations = {
@@ -25,7 +30,16 @@ const mutations = {
   },
   SET_AT_LEAST_ONE_VM_SELECTED(state, payload){
     state.atLeastOneVMSelected = payload
-  }
+  },
+  SET_VCPUS_AVAILABLE(state, payload){
+    state.vmCreateForm.vCPUsAvailable = payload
+  },
+  SET_MEMORY_AVAILABLE(state, payload){
+    state.vmCreateForm.memoryAvailable = payload
+  },
+  SET_HUGEPAGE_MEMORY_AVAILABLE(state, payload){
+    state.vmCreateForm.hugepageMemoryAvailable = payload
+  },
 };
 
 const controller_id = "test-id";
@@ -34,16 +48,11 @@ const URL_PREFIX = `/api/vms/`;
 const URL_SUFFIX = `/${controller_id}/${ucpe_sn}`;
 
 const actions = {
-  updateVMList({commit}, token){
-    // axios.get('/api/all_vm_info/' + controller_id + '/' + ucpe_sn).then((response) => {
-    //   commit('SET_VM_LIST', response.data.result.return)
-    // });
-    // commit('SET_VM_LIST', methods.requestVMList()) //todo: make this a promise
-  },
   updateVMInfo({commit}, token){
       axios.get(getURL('all_vm_info')).then((response) => {
         let vmInfo = response.data.result.return;
-        commit('SET_VM_INFO', Object.keys(vmInfo)
+        let vmNames = Object.keys(vmInfo);
+        commit('SET_VM_INFO', vmNames
           .filter(vmName => vmName !== AGENT_NAME)
           .reduce((obj, vmName) => {
             return {
@@ -51,7 +60,9 @@ const actions = {
               [vmName]: vmInfo[vmName]
             }
           }, {})
-        )}
+        );
+        commit('SET_VM_LIST', vmNames)
+      }
       ).catch(err => console.log(err))
     // https://stackoverflow.com/questions/38750705/filter-object-properties-by-key-in-es6
   },
@@ -79,9 +90,30 @@ const actions = {
   },
   deleteSelectedVMs({commit, dispatch}){
     axios.post(getURL('delete_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
+      dispatch('updateVMSelection', []);
       dispatch('updateVMInfo')
     });
   },
+  createVM({commit, dispatch}, form){
+    return axios.post(getURL('create_vm'), {'form': form}).then((response) => {
+      dispatch('updateVMInfo')
+    });
+  },
+  updateVCPUsAvailable({commit}){
+    return axios.get('/api/grpc/cpu_total').then((response) => {
+      commit('SET_VCPUS_AVAILABLE', parseInt(response.data.result.return))
+    })
+  },
+  updateMemoryAvailable({commit}){
+    return axios.get('/api/grpc/avail_mem').then((response) => {
+      commit('SET_MEMORY_AVAILABLE', parseMemoryInt(response.data.result.return))
+    })
+  },
+  updateHugepageMemoryAvailable({commit}){
+    return axios.get('/api/grpc/hugepage_free_mem').then((response) => {
+      commit('SET_HUGEPAGE_MEMORY_AVAILABLE', parseMemoryInt(response.data.result.return))
+    })
+  }
 };
 
 const getters = {
@@ -91,11 +123,23 @@ const getters = {
   // vmState: (state, vmName) => state.vmInfo[vmName]["state"]
   vmFilterText: state => state.vmFilterText,
   vmStateFromName: state => (name) => state.vmInfo[name].state,
-  vmAtLeastOneSelected: state => state.atLeastOneVMSelected
+  vmAtLeastOneSelected: state => state.atLeastOneVMSelected,
+  vmCreateForm: state => state.vmCreateForm,
+  vmVCPUOptions: state => getOneToNArray(state.vmCreateForm.vCPUsAvailable),
+  vmMemoryOptions: state => getOneToNArray(state.vmCreateForm.memoryAvailable),
+  vmHugepageMemoryOptions: state => getOneToNArray(state.vmCreateForm.hugepageMemoryAvailable)
 };
 
 function getURL(endpoint){
   return `${URL_PREFIX}/${endpoint}/${URL_SUFFIX}`;
+}
+
+function parseMemoryInt(memoryStr){
+  return parseInt(memoryStr.split(" ")[0])
+}
+
+function getOneToNArray(n){
+  return Array.from(Array(n).keys()).map(x => x+1)
 }
 
 const methods = {

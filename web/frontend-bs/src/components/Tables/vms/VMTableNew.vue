@@ -10,13 +10,15 @@
              role="group"
              aria-label="Create VNF">
           <button type="button"
+                  v-b-modal="'vm-create-modal'"
                   class="btn btn-secondary btn-sm"
-                  @click="deleteSelectedVMs">
+                  >
             <font-awesome-icon :icon="['fas', 'plus-circle']"
                                size=sm
                                color='rgb(255, 255, 255)'/>
             New VNF
           </button>
+          <CreateVMModal></CreateVMModal>
         </div>
       </div>
       <div>
@@ -37,13 +39,7 @@
                  @selection-changed="onSelectionChanged"
       >
       </AgGridVue>
-      <!-- Using value -->
-      <b-button v-b-modal="'my-modal'">Show Modal</b-button>
-
-      <!-- The modal -->
-      <b-modal id="my-modal">Hello From My Modal!</b-modal>
     </div>
-    <!--        <h3>Agent State: {{vmStateFromName('agent')}}</h3>-->
   </div>
 </template>
 
@@ -51,12 +47,13 @@
   import { mapGetters, mapActions } from 'vuex'
   import { AgGridVue } from "ag-grid-vue"
   import VMActionsButtonGroup from '../../Buttons/vnfs/vms/VMActionsButtonGroup'
+  import CreateVMModal from '../../Modals/vnfs/vms/CreateVMModal'
 
   const AGENT_NAME = 'agent'; //todo: this is bad
 
   export default {
     name: "VMTableNew",
-    components: { AgGridVue, VMActionsButtonGroup },
+    components: { AgGridVue, VMActionsButtonGroup, CreateVMModal },
     data() {
       return {
         vmTableColumns: [

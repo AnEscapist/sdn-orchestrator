@@ -27,7 +27,6 @@
     },
     created() {
       this.$store.dispatch('updateContainerList');
-      this.$store.dispatch('updateVMList');
       this.$store.dispatch('updateVMInfo');
     },
     computed: {

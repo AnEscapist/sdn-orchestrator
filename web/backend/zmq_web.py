@@ -255,3 +255,9 @@ if __name__ == "__main__":
     #  "params": {"body": {"username": "potato", "hostname": "10.10.81.100", "vm_name": "test"}}, "jsonrpc": "2.0",
     #  "id": 0}
     # call_ucpe_function(messagedata)
+    messagedata = {'method': 'grpc_get_totalcpus', 'params': {
+        'body': {'hostname': '10.10.81.100', 'port': '50051'}},
+                   'jsonrpc': '2.0', 'id': 0
+                   }
+    print(call_ucpe_function(messagedata))
+
