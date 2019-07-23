@@ -64,6 +64,7 @@ def get_network_interfaces():
 
 
 def dpdk_get_devices():
+    global devices
     dpdk.status_flag = True
     dpdk.status_dev = "all"
     with open(os.devnull, 'w') as devnull:
@@ -75,7 +76,6 @@ def dpdk_get_devices():
 
     dpdk.check_modules()
     dpdk.clear_data()
-    devices = {}
     dpdk.get_device_details(dpdk.network_devices)
 
     # tmp = devices
