@@ -30,3 +30,12 @@ def get_net_devices():
         "jsonrpc": "2.0", "id": 0
     }
     return jsonify(call_ucpe_function(messagedata))
+
+
+@grpc_routes.route('/grpc/dpdk_bind/<param1>/<param2>')
+def dpdk_bind(param1, param2):
+    messagedata = {"method": "grpc_modify_dpdk_bind", "params": {
+        "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": f'{param1}', "str_param2": f'{param2}'}},
+        "jsonrpc": "2.0", "id": 0
+    }
+    return jsonify(call_ucpe_function(messagedata))

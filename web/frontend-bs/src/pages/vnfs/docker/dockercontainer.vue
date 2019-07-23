@@ -179,7 +179,6 @@ export default {
     changeStatus(change_to) {
       this.axios.get("/api/docker/change_status", {
         params: {
-          id_name: this.id,
           change_to: change_to
         }
       }).then(response => {

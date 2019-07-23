@@ -1,13 +1,23 @@
 <template>
-  <div class="content">
-    <div class="mt-2">
-      <AgGridVue style="width: 1220px; height: 300px;"
-                 class="ag-theme-balham"
-                 :columnDefs="columnDefs"
-                 :rowData="rowData"
-                 :gridOptions="gridOptions"
-      >
-      </AgGridVue>
+  <div>
+    <div class="content">
+      <div class="mt-2">
+        <AgGridVue style="width: 1220px; height: 300px;"
+                   class="ag-theme-balham"
+                   :columnDefs="columnDefs"
+                   :rowData="rowData"
+                   :gridOptions="gridOptions"
+        >
+        </AgGridVue>
+      </div>
+      <div class="text-center">
+        <button type="button" class="btn btn-primary" @click="adjustValues">
+          Submit
+        </button>
+      </div>
+      <div>
+
+      </div>
     </div>
   </div>
 </template>
@@ -41,10 +51,10 @@
         mounted() {
           this.gridApi = this.gridOptions.api;
           this.gridColumnApi = this.gridOptions.api;
-          this.getDevices()
+          this.updateData()
         },
         methods: {
-          getDevices(){
+          updateData(){
             this.axios.get("/api/grpc/get_net_devices").then(response => {
               let res = JSON.parse(response.data.result.return)
               let tmp_list = [];
@@ -65,6 +75,25 @@
               console.log(this.rowData)
             });
           },
+          adjustValues(){
+
+            this.updateData();
+          },
+          bindDevice(node){
+            this.axios.get('/api/grpc/dpdk_bind/', {
+              params: {
+                slot: node.data.slot,
+                current_driver: node.current_driver
+              }
+            }).then(response => {
+              console.log(JSON.parse(response.data.result.return));
+              const sleep = (milliseconds) => {
+                return new Promise(resolve => setTimeout(resolve, milliseconds))
+              };
+              sleep(1000).then(() => {})
+            })
+            // console.log("hello2")
+          }
         }
     }
 </script>
