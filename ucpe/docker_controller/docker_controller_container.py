@@ -163,8 +163,8 @@ def create_container(image_name, name=None, ports=None, volumes=None, detach=Tru
         else:
             bind[container_port] = host_port
 
+    mnt = dict()
     if volumes:
-        mnt = dict()
         mnt = ast.literal_eval(volumes)
     #return type(mnt)
 

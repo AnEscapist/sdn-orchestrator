@@ -73,8 +73,8 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="inputGroup-sizing-default">Image</span>
                 </div>
-                <select class="custom-select" id="inputGroupSelect01">
-                  <option v-model='create_image' selected>Choose...</option>
+                <select  v-model='create_image' class="custom-select" id="inputGroupSelect01">
+                  <option selected>Choose...</option>
                   <option v-for='img in all_img'>{{img}}</option>
                   <!-- <option value="2">Two</option>
                     <option value="3">Three</option> -->
@@ -111,7 +111,7 @@
             </td>
             <td>
 
-              <button type="button" class="btn btn-primary btn-sm" @click='create_container(this.create_name, this.create_image, this.create_port)'>
+              <button type="button" class="btn btn-primary btn-sm" @click='create_container(create_name, create_image, create_port)'>
                 Create
               </button>
             </td>
@@ -258,6 +258,9 @@ export default {
     },
 
     create_container(create_name, create_image, create_port){
+        console.log('name', create_name)
+        console.log('image', create_image)
+        console.log('port', create_port)
         this.axios.get('/api/docker/create_container', {
             params: {
                 create_name: create_name,
@@ -265,6 +268,7 @@ export default {
                 create_port: create_port
             }
         }).then(response => {
+            console.log(response)
             console.log(JSON.parse(response.data.result))
         })
     }
