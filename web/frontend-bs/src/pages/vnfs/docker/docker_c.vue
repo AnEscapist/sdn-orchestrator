@@ -268,7 +268,6 @@ export default {
           create_port: create_port
         }
       }).then(response => {
-        console.log(response)
         this.showCreate = false
         this.reload()
       })

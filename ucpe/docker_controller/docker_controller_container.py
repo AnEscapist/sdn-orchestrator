@@ -148,7 +148,7 @@ def export_container(id_name, local_path, remote_path, local_save=False):
         #sftp.get(remotePath, localPath)  # =============== IOError, no such file.
     # sftp.put('/tmp/test-container.tar', '/tmp/test-container.tar')
 
-def create_container(image_name, name=None, ports=None, volumes=None, detach=False):
+def create_container(image_name, name=None, ports=None, volumes=None, detach=True):
     func = create_container
     bind=dict()
     if ports:
