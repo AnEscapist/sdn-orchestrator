@@ -11,7 +11,7 @@ HOST_USERNAME = 'potato'  # todo: remove the need for this (ask if one account p
 JSON_RPC_VERSION = '2.0'
 JSON_RPC_ID = 0  # todo: ask tyler what id to put
 
-IMAGE_BASE_PATH = '/var/third-party/base'
+IMAGE_ACTIVE_PATH = '/var/third-party/active'
 # todo: put these in a database
 IMAGE_FILES = {
     'Vyatta Router': 'vyatta.qcow2',
@@ -72,7 +72,7 @@ def create_vm(controller_id, ucpe_sn):
     # TODO: database for image paths
     form = data["form"]
     image_file = IMAGE_FILES[form['vmImage']]
-    image_path = os.path.join(IMAGE_BASE_PATH, image_file)
+    image_path = os.path.join(IMAGE_ACTIVE_PATH, image_file)
     body = {
         "username": HOST_USERNAME,
         "hostname": HOST_IP,
