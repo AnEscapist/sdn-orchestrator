@@ -231,6 +231,14 @@ def save_image_message(image_name, local_path, username, ip, remote_path, local_
         }
     return json_str(message)
 
+def remove_image_message(name, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Image {name} removed successfully.',
+        'return': f'{name} removed.'
+    }
+    return json_str(message)
+
 def export_container_message(id_name, local_path, username, ip, remote_path, local_save, func):
     if local_save:
         message = {

@@ -150,3 +150,11 @@ def inspect_image():
         "body": {"name": name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
+
+@docker_routes.route('/docker/remove_image')
+def remove_image():
+    name = request.args.get('name')
+    messagedata = {"method": "docker_controller_remove_image", "params": {
+        "body": {"name": name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))
