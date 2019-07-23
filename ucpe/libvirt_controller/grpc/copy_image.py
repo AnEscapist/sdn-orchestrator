@@ -7,7 +7,7 @@ def copy_image(vm_name, image_file_name):
     base_path = os.path.join(BASE_DIRECTORY, image_file_name)
     image_active_dir = os.path.join(ACTIVE_DIRECTORY, vm_name)
     os.makedirs(image_active_dir)
-    p = subprocess.Popen(['cp', base_path, image_active_dir])
+    p = subprocess.Popen(['cp', base_path, image_active_dir], stdout = subprocess.PIPE, stderr=subprocess.PIPE)
     out,err = p.communicate()
     return out, err
 
