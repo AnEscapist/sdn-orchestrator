@@ -12,7 +12,7 @@
       <font-awesome-icon :icon="['fas', 'square']" size=sm color='rgb(255, 255, 255)' />
       Stop
     </button>
-    <button type="button" id='kill' class="btn btn-danger btn-sm">
+    <button type="button" id='kill' class="btn btn-danger btn-sm" @click='killContainer()'>
       <font-awesome-icon :icon="['fas', 'skull-crossbones']" size=sm color='rgb(255, 255, 255)' />
       Kill
     </button>
@@ -24,10 +24,14 @@
       <font-awesome-icon :icon="['fas', 'pause']" size=sm color='rgb(255, 255, 255)' />
       Pause
     </button>
-    <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeContainer()'>
-      <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
-      Remove
-    </button>
+
+    <router-link to="docker_c">
+      <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeContainer()'>
+        <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
+        Remove
+      </button>
+    </router-link>
+
 
   </div>
   <hr>
@@ -187,21 +191,7 @@ export default {
         var res = JSON.parse(response.data.result)['return']
         var status = res.substring(res.indexOf('[') + 1, res.indexOf(']'))
 
-        //after hit the button, re-render the status and ip address
-        this.axios.get("/api/docker/inspect_container", {
-          params: {
-            id_name: this.id
-          }
-        }).then(response => {
-          var inspect = JSON.parse(response.data.result)['return']
-          // inspect = JSON.parse(inspect)
-          var status = inspect['State']['Status']
-          this.status = status
-          var ip = inspect['NetworkSettings'].IPAddress
-          this.ip = ip
-          this.setBtn(status)
-
-        });
+        this.update()
 
       });
 
@@ -228,53 +218,80 @@ export default {
     },
 
     removeContainer() {
-        this.axios.get('/api/docker/remove_container', {
-            params: {
-                id_name: this.id,
-            }
-        }).then(response => {
-            console.log(response.data.result)
-        })
+      this.axios.get('/api/docker/remove_container', {
+        params: {
+          id_name: this.id,
+        }
+      }).then(response => {
+        // console.log(response.data.result)
+      })
     },
 
-    setBtn(status){
-        if (status == 'exited'){
-            document.getElementById("start").removeAttribute("disabled");
-            document.getElementById("stop").removeAttribute("disabled");
-            document.getElementById("kill").removeAttribute("disabled");
-            document.getElementById("restart").removeAttribute("disabled");
-            document.getElementById("pause").removeAttribute("disabled");
-            document.getElementById("remove").removeAttribute("disabled");
-
-            document.getElementById("stop").setAttribute("disabled", true);
-            document.getElementById("kill").setAttribute("disabled", true);
-            document.getElementById("restart").setAttribute("disabled", true);
-            document.getElementById("pause").setAttribute("disabled", true);
-
+    killContainer() {
+      this.axios.get('/api/docker/kill_container', {
+        params: {
+          id_name: this.id,
         }
-        else if (status == 'running') {
-            document.getElementById("start").removeAttribute("disabled");
-            document.getElementById("stop").removeAttribute("disabled");
-            document.getElementById("kill").removeAttribute("disabled");
-            document.getElementById("restart").removeAttribute("disabled");
-            document.getElementById("pause").removeAttribute("disabled");
+      }).then(response => {
+        this.update()
 
-            document.getElementById("start").setAttribute("disabled", true);
-            document.getElementById("restart").setAttribute("disabled", true);
-            document.getElementById("remove").setAttribute("disabled", true);
-        }
-        else if (status == 'paused') {
-            document.getElementById("start").removeAttribute("disabled");
-            document.getElementById("stop").removeAttribute("disabled");
-            document.getElementById("kill").removeAttribute("disabled");
-            document.getElementById("restart").removeAttribute("disabled");
-            document.getElementById("pause").removeAttribute("disabled");
+      })
+    },
 
-            document.getElementById("start").setAttribute("disabled", true);
-            document.getElementById("pause").setAttribute("disabled", true);
-            document.getElementById("remove").setAttribute("disabled", true);
+    update(){
+        //after hit the button, re-render the status and ip address
+        this.axios.get("/api/docker/inspect_container", {
+          params: {
+            id_name: this.id
+          }
+        }).then(response => {
+          var inspect = JSON.parse(response.data.result)['return']
+          // inspect = JSON.parse(inspect)
+          var status = inspect['State']['Status']
+          this.status = status
+          var ip = inspect['NetworkSettings'].IPAddress
+          this.ip = ip
+          this.setBtn(status)
 
-        }
+        });
+    },
+
+    setBtn(status) {
+      if (status == 'exited') {
+        document.getElementById("start").removeAttribute("disabled");
+        document.getElementById("stop").removeAttribute("disabled");
+        document.getElementById("kill").removeAttribute("disabled");
+        document.getElementById("restart").removeAttribute("disabled");
+        document.getElementById("pause").removeAttribute("disabled");
+        document.getElementById("remove").removeAttribute("disabled");
+
+        document.getElementById("stop").setAttribute("disabled", true);
+        document.getElementById("kill").setAttribute("disabled", true);
+        document.getElementById("restart").setAttribute("disabled", true);
+        document.getElementById("pause").setAttribute("disabled", true);
+
+      } else if (status == 'running') {
+        document.getElementById("start").removeAttribute("disabled");
+        document.getElementById("stop").removeAttribute("disabled");
+        document.getElementById("kill").removeAttribute("disabled");
+        document.getElementById("restart").removeAttribute("disabled");
+        document.getElementById("pause").removeAttribute("disabled");
+
+        document.getElementById("start").setAttribute("disabled", true);
+        document.getElementById("restart").setAttribute("disabled", true);
+        document.getElementById("remove").setAttribute("disabled", true);
+      } else if (status == 'paused') {
+        document.getElementById("start").removeAttribute("disabled");
+        document.getElementById("stop").removeAttribute("disabled");
+        document.getElementById("kill").removeAttribute("disabled");
+        document.getElementById("restart").removeAttribute("disabled");
+        document.getElementById("pause").removeAttribute("disabled");
+
+        document.getElementById("start").setAttribute("disabled", true);
+        document.getElementById("pause").setAttribute("disabled", true);
+        document.getElementById("remove").setAttribute("disabled", true);
+
+      }
     },
 
   }
