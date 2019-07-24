@@ -120,7 +120,7 @@
               <font size='2px'> Stats</font>
             </td>
           </button>
-          <button type="button" class="btn btn-link">
+          <button type="button" class="btn btn-link" @click='goConsole(id)'>
             <td>
               <font-awesome-icon :icon="['fas', 'terminal']" size=sm coler="#1b7fbd" />
               <font size='2px'> Console</font>
@@ -256,6 +256,17 @@ export default {
         this.setBtn(status)
 
       });
+    },
+
+    goConsole(id){
+        console.log(id)
+        this.axios.get('/api/docker/console_container', {
+            params: {
+                container_id: id
+            }
+        }).then(response => {
+            console.log('response', response)
+        })
     },
 
     setBtn(status) {
