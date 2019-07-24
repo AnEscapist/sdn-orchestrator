@@ -203,7 +203,7 @@ def _construct_info_dict(domain):
 
 def prepare_vm_console(ucpe, vm_name):
     vnc_port = get_vm_vnc_port(ucpe, vm_name)
-    launch_script_path = '../../utilities/novnc/utils/launch.sh'
+    launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
     p = subprocess.Popen([launch_script_path, '--vnc', f'{ucpe.hostname}:{vnc_port}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out,err = p.communicate()
     return_dict = {"return": out}
@@ -631,7 +631,7 @@ def _call_function(func, **kwargs):
 if __name__ == '__main__':
     # test:
     UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
-    prepare_vm_console(DEFAULT_UCPE, 'test')
+    print(prepare_vm_console(DEFAULT_UCPE, 'test'))
     # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr")
     # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
     # start_vm(DEFAULT_UCPE, "test")
