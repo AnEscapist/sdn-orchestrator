@@ -1,3 +1,15 @@
+def show_active_ports(child):
+    child.sendline('ports')
+    child.expect('BCM.0>')
+    raw = child.before.decode('utf-8')
+    lines = raw.split('\n')
+    output = ''
+    for line in lines[3:-1]:
+        words = line.split()
+        output += words[0] + words[1] + ' ' + words[2] + '\n'
+    return output
+
+
 def show_vlans(child):
     child.sendline('vlan show')
     child.expect('BCM.0>')

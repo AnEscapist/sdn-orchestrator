@@ -24,6 +24,7 @@ package autobcm;
 // define the service
 service AutoBCM {
   // Configure the Broadcom Shell
+  rpc ShowActivePorts (ConfigRequest) returns (ConfigReply) {}
   rpc CreateVLAN (ConfigRequest) returns (ConfigReply) {}
   rpc AddPorts (ConfigRequest) returns (ConfigReply) {}
   rpc SetPVLAN (ConfigRequest) returns (ConfigReply) {}

@@ -1,6 +1,7 @@
 <!--Todo
       -CONSTANTS
-
+    NOTES:
+      -Filesizes MUST be inputted in GB (there's some bad hardcoding that you can get rid of)
 -->
 <template>
   <div>
@@ -144,6 +145,7 @@
           vmMemory: '4 GB',
           vmHugepageMemory: '4 GB',
           hugepagesEnabled: false,
+          vmAddBridgeInterface: true,
           vmBridge: 'mgmtbr'
         },
         show: true,

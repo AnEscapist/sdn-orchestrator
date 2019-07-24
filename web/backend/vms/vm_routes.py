@@ -77,12 +77,14 @@ def create_vm(controller_id, ucpe_sn):
         "username": HOST_USERNAME,
         "hostname": HOST_IP,
         "vm_name": form['vmName'],
-        "image_path": image_path,
+        "vm_image_path": image_path,
         "vm_memory": parseMemoryGB(form['vmMemory']),
         "vm_vcpu_count": form['vmCPUs'],
-        "use_hugepages": form['hugepagesEnabled'],
+        "vm_use_hugepages": form['hugepagesEnabled'],
         "vm_hugepage_memory": parseMemoryGB(form['vmHugepageMemory'])
     }
+    if form['vmAddBridgeInterface']:
+        body['vm_bridge_name'] = form['vmBridge']
     message_data = get_message_data(method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
     return jsonify(response)
