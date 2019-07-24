@@ -19,3 +19,11 @@ def list_volumes():
 	except docker.errors.APIError as ae:
 		return api_error(ae, func)
 	return list_volumes_message(volumes_list, func)
+
+def inspect_volume(name):
+	func = inspect_volume
+	try:
+		inspection = api_cli.inspect_volume(name)
+		return inspect_volume_message(name, inspection, func)
+	except docker.errors.APIError as ae:
+		return api_error(ae, func)
