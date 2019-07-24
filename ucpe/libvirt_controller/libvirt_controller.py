@@ -206,11 +206,12 @@ def prepare_vm_console(ucpe, vm_name):
     launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
     p = subprocess.Popen([launch_script_path, '--vnc', f'{ucpe.hostname}:{vnc_port}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out,err = p.communicate()
-    return_dict = {"return": out}
+    return_dict = {"return": out.decode('utf-8')}
     if not err:
         return_dict["success_message"] = f"Successfully prepared VNC for {vm_name}"
     else:
         return_dict["fail_message"] = f"Failed to prepare VNC for {vm_name}"
+        return_dict["error"] = err.decode("utf-8")
         return_dict["traceback"] = tb.format_exc()
     return return_dict
 
