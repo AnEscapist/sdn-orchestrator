@@ -1,0 +1,12 @@
+{
+    "container:sql1(id: c33833f1cd)": "[running]",
+    "container:quirky_mestorf(id: 67588f30bc)": "[paused]",
+    "container:vigorous_galileo(id: 1414349c32)": "[running]",
+    "container:elated_hawking(id: 887449d30e)": "[running]",
+    "container:angry_beaver(id: e3c9bfcca2)": "[created]",
+    "container:clever_perlman(id: 1e510c00e7)": "[created]",
+    "container:practical_poincare(id: e33d2af371)": "[exited]",
+    "container:boring_cray(id: a96c2a6a9b)": "[running]",
+    "container:keen_elgamal(id: cca28702a6)": "[running]",
+    "container:blissful_northcutt(id: 7865333b90)": "[exited]"
+}
