@@ -95,7 +95,9 @@
                         slot: paramData.slot,
                         current_driver: paramData.current_driver
                     }
-                }).then();
+                }).then( response => {
+                    let res = JSON.parse(response.data.result.return)
+                });
             }
             this.gridApi.refreshCells();
             this.reload();

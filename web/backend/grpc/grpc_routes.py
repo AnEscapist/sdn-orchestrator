@@ -68,3 +68,12 @@ def dpdk_bind():
         "jsonrpc": "2.0", "id": 0
     }
     return jsonify(call_ucpe_function(messagedata))
+
+
+@grpc_routes.route('/grpc/linux_bridge_list')
+def linux_bridge_list():
+    messagedata = {"method": "grpc_get_linux_bridges_list", "params": {
+        "body": {"hostname": "10.10.81.100", "port": "50051"}},
+        "jsonrpc": "2.0", "id": 0
+    }
+    return jsonify(call_ucpe_function(messagedata))
