@@ -127,7 +127,7 @@ def main():
     kwargs = {'body': {'str_param1': '66:00.1', 'str_param2': 'igb'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
-    print(tmp.grpc_modify_dpdk_bind(**kwargs))
+    print(tmp.grpc_get_hugepages_freemem(**kwargs))
 
 
 if __name__ == '__main__':

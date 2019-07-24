@@ -26,32 +26,38 @@ CRYPTO_BASE_CLASS = "0b"
 # Definitions
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
-meminfo = dict((i.split()[0].rstrip(':'), int(i.split()[1])) for i in open('/proc/meminfo').readlines())
-
-hugepagesize_in_b = meminfo['Hugepagesize'] * 1000
-total_memory_in_b = meminfo['MemTotal'] * 1000
-available_memory_in_b = meminfo['MemAvailable'] * 1000
-hugepages_total = meminfo['HugePages_Total']
-hugepages_free = meminfo['HugePages_Free']
-
 total_cpus = psutil.cpu_count()
 devices1 = dpdk.devices
 drivers = dpdk.dpdk_drivers
 
 
 def get_hugepages_totalmem():
+    global meminfo
+    meminfo = dict((i.split()[0].rstrip(':'), int(i.split()[1])) for i in open('/proc/meminfo').readlines())
+    hugepagesize_in_b = meminfo['Hugepagesize'] * 1000
+    hugepages_total = meminfo['HugePages_Total']
     return fsize(hugepagesize_in_b * hugepages_total, system=alternative)
 
 
 def get_hugepages_freemem():
+    global meminfo
+    meminfo = dict((i.split()[0].rstrip(':'), int(i.split()[1])) for i in open('/proc/meminfo').readlines())
+    hugepagesize_in_b = meminfo['Hugepagesize'] * 1000
+    hugepages_free = meminfo['HugePages_Free']
     return fsize(hugepagesize_in_b * hugepages_free, system=alternative)
 
 
 def get_total_mem():
+    global meminfo
+    meminfo = dict((i.split()[0].rstrip(':'), int(i.split()[1])) for i in open('/proc/meminfo').readlines())
+    total_memory_in_b = meminfo['MemTotal'] * 1000
     return fsize(total_memory_in_b, system=alternative)
 
 
 def get_avail_mem():
+    global meminfo
+    meminfo = dict((i.split()[0].rstrip(':'), int(i.split()[1])) for i in open('/proc/meminfo').readlines())
+    available_memory_in_b = meminfo['MemAvailable'] * 1000
     return fsize(available_memory_in_b, system=alternative)
 
 
