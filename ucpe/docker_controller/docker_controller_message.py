@@ -295,6 +295,8 @@ def inspect_container_message(id_name, inspection, func):
     }
     return json_str(message)
 
+#=========================docker network============================
+
 def create_network_message(net_id, func):
     message = {
         'function': f'<{func.__name__}>',
@@ -331,5 +333,13 @@ def create_volume_message(name, func):
     message = {
         'function': f'<{func.__name__}>',
         'success message': f'Volume {name} created!',
+    }
+    return json_str(message)
+
+def list_volumes_message(volumes_list, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'All volumes listed!',
+        'return': f'{volumes_list}'
     }
     return json_str(message)

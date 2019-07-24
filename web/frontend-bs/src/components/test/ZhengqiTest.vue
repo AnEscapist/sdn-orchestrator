@@ -51,7 +51,7 @@
         <td width='48%'>
           <router-link to="./docker_v">
             <div class="container-fluid">
-              <font-awesome-icon :icon="['fas', 'boxes']" size=lg color='rgb(68, 68, 68)' />
+              <font-awesome-icon :icon="['fas', 'cubes']" size=lg color='rgb(68, 68, 68)' />
               <strong> {{volumes}} Volumes</strong>
               <hr>
             </div>

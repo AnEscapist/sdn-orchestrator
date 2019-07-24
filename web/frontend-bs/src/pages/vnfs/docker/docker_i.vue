@@ -22,13 +22,20 @@
           <td width='25%'>{{sizes[i]}}MB</td>
           <td width='25%'>{{createTimes[i]}}</td>
           <td width='10%'>
-              &nbsp&nbsp
+            &nbsp&nbsp
             <font-awesome-icon v-show="busy[i] == 'yes'" :icon="['fas', 'check-circle']" size=sm color='#00bd56' />
             <font-awesome-icon v-show="busy[i] == 'no'" :icon="['fas', 'times-circle']" size=sm color='rgb(251, 0, 0)' />
           </td>
         </tr>
       </table>
       <hr>
+
+      <button type="button" class="btn btn-primary btn-sm" @click='showPull = !showPull'>
+        <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=sm color='rgb(255, 255, 255)' />
+        Pull image
+      </button>
+    </card>
+    <card v-show="showPull">
       <div class="pullimage">
         <font-awesome-icon :icon="['fas', 'download']" size=lg />
         <strong> Pull image</strong>
@@ -57,12 +64,28 @@
             Note: if you don't specify the tag of the image, <span class="badge badge-pill badge-info">latest</span> will be used.
           </p>
         </div>
-        <button type="button" class="btn btn-primary" @click="pullImg(name_tag)">
+        <!-- <button type="button" class="btn btn-primary" @click="pullImg(name_tag)">
           <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=sm /> <strong style="font-size:13px"> PULL</strong>
-        </button>
+        </button> -->
+        <table>
+          <tr>
+            <td width='43%'></td>
+            <td width='42%'></td>
+            <td>
+              <button type="button" class="btn btn-secondary btn-sm" @click='showPull = false'>
+                Cancel
+              </button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary btn-sm" @click="pullImg(name_tag)">
+                  <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=sm /> <strong style="font-size:13px"> PULL</strong>
+                </button>
+            </td>
+          </tr>
+        </table>
       </div>
-    </card>
 
+    </card>
   </div>
 </div>
 </template>
@@ -94,6 +117,8 @@ export default {
       inspect: '',
       sizes: [],
       createTimes: [],
+
+      showPull: false,
     }
   },
   mounted() {
@@ -193,8 +218,8 @@ export default {
         // console.log(JSON.parse(response.data.result))
         this.reload()
       })
-
     },
+
   }
 }
 </script>

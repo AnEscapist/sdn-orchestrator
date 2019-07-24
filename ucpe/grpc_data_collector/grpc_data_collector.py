@@ -124,10 +124,10 @@ def modify_execute(name, input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'str_param1': 'b7:00.3', 'str_param2': 'i40e'}}
+    kwargs = {'body': {'str_param1': '66:00.1', 'str_param2': 'igb'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
-    print(tmp.grpc_get_totalcpus(**kwargs))
+    print(tmp.grpc_modify_dpdk_bind(**kwargs))
 
 
 if __name__ == '__main__':

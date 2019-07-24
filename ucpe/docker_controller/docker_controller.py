@@ -160,6 +160,11 @@ class DockerController(object):
         func = create_volume
         return _call_function(func, **kwargs)
 
+    @staticmethod
+    def docker_controller_list_volumes(**kwargs):
+        func = list_volumes
+        return _call_function(func, **kwargs)
+
 # =====================================private functions======================#
 
 
