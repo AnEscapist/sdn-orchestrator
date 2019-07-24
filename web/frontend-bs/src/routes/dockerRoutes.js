@@ -10,6 +10,7 @@ import Blank from '@/components/Blank'
 import DockerContainer from '../pages/vnfs/docker/dockercontainer'
 import DockerImage from '../pages/vnfs/docker/dockerimage'
 import DockerVolume from '../pages/vnfs/docker/dockervolume'
+import ConsoleContainer from '../pages/vnfs/docker/consolecontainer'
 
 const dockerRoutes = [{
     path: 'docker_c',
@@ -41,6 +42,13 @@ const dockerRoutes = [{
     component: DockerContainer,
 
   },
+
+  {
+    path: 'consolecontainer',
+    name: 'consolecontainer',
+    component: ConsoleContainer,
+  },
+
   {
     path: 'dockerimage',
     name: 'dockerimage',

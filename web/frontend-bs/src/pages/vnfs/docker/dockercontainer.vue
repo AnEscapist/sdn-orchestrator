@@ -120,17 +120,31 @@
               <font size='2px'> Stats</font>
             </td>
           </button>
+
           <button type="button" class="btn btn-link" @click='goConsole(id)'>
-            <td>
-              <font-awesome-icon :icon="['fas', 'terminal']" size=sm coler="#1b7fbd" />
-              <font size='2px'> Console</font>
-            </td>
+            <router-link target="_blank" :to="{ path: 'consolecontainer', query: {short_id: this.short_id} }">
+              <td>
+                <font-awesome-icon :icon="['fas', 'terminal']" size=sm coler="#1b7fbd" />
+                <font size='2px'> Console</font>
+              </td>
+            </router-link>
           </button>
+
+          <!-- <router-link :to="{ path: 'consolecontainer', query: {short_id: containers_id[i]} }">
+
+          </router-link> -->
+
         </tr>
       </table>
+
+
+
     </div>
     <div>
     </div>
+  </div>
+
+  <div id="console">
   </div>
 
   <div class="container-fluid" v-show="showIns">
@@ -258,15 +272,19 @@ export default {
       });
     },
 
-    goConsole(id){
-        console.log(id)
-        this.axios.get('/api/docker/console_container', {
-            params: {
-                container_id: id
-            }
-        }).then(response => {
-            console.log('response', response)
-        })
+    goConsole(id) {
+      var path = '/#/ucpe/123/vnfs/dockercontainer?short_id=' + this.short_id
+      // window.open(path)
+
+      // console.log(id)
+      // document.getElementById("console").innerHTML = '<object type="text/html" data="hello.html" ></object>';
+      this.axios.get('/api/docker/console_container', {
+        params: {
+          container_id: id
+        }
+      }).then(response => {
+        console.log('response', response)
+      })
     },
 
     setBtn(status) {
@@ -352,6 +370,10 @@ input {
   font-family: Arial, sans-serif;
   font-weight: bold;
   font-size: 12px;
+}
+
+#console {
+  background-color: red;
 }
 
 #textR {
