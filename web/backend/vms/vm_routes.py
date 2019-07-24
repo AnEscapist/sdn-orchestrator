@@ -77,7 +77,7 @@ def create_vm(controller_id, ucpe_sn):
         "username": HOST_USERNAME,
         "hostname": HOST_IP,
         "vm_name": form['vmName'],
-        "image_path": image_path,
+        "vm_image_path": image_path,
         "vm_memory": parseMemoryGB(form['vmMemory']),
         "vm_vcpu_count": form['vmCPUs'],
         "vm_use_hugepages": form['hugepagesEnabled'],

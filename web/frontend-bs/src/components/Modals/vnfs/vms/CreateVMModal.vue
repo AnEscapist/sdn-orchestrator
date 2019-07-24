@@ -145,6 +145,7 @@
           vmMemory: '4 GB',
           vmHugepageMemory: '4 GB',
           hugepagesEnabled: false,
+          vmAddBridgeInterface: true,
           vmBridge: 'mgmtbr'
         },
         show: true,
