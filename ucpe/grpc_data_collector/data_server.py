@@ -29,6 +29,9 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
             elif request.str_request == 'free':
                 response.header = "Total free hugepages memory"
                 response.str_response = get_functions.get_hugepages_freemem()
+            elif request.str_request == 'free_b':
+                response.header = "Total free hugepages memory in bytes"
+                response.str_response = get_functions.get_hugepages_freemem_b()
 
         elif request.command == 'memory':
             if request.str_request == 'total':
@@ -37,6 +40,9 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
             elif request.str_request == 'available':
                 response.header = "Total available memory"
                 response.str_response = get_functions.get_avail_mem()
+            elif request.str_request == 'available_b':
+                response.header = "Total available memory in bytes"
+                response.str_response = get_functions.get_avail_mem_b()
 
         elif request.command == 'cpu':
             if request.str_request == 'total':

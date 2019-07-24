@@ -19,12 +19,20 @@ class gRPCDataCollector(object):
         return get_execute(func_name(), "hugepages free", **kwargs)
 
     @staticmethod
+    def grpc_get_hugepages_freemem_b(**kwargs):
+        return get_execute(func_name(), "hugepages free_b", **kwargs)
+
+    @staticmethod
     def grpc_get_totalmem(**kwargs):
         return get_execute(func_name(), "memory total", **kwargs)
 
     @staticmethod
     def grpc_get_availmem(**kwargs):
         return get_execute(func_name(), "memory available", **kwargs)
+
+    @staticmethod
+    def grpc_get_availmem_b(**kwargs):
+        return get_execute(func_name(), "memory available_b", **kwargs)
 
     @staticmethod
     def grpc_get_totalcpus(**kwargs):

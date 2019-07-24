@@ -47,6 +47,14 @@ def get_hugepages_freemem():
     return fsize(hugepagesize_in_b * hugepages_free, system=alternative)
 
 
+def get_hugepages_freemem_b():
+    global meminfo
+    meminfo = dict((i.split()[0].rstrip(':'), int(i.split()[1])) for i in open('/proc/meminfo').readlines())
+    hugepagesize_in_b = meminfo['Hugepagesize'] * 1000
+    hugepages_free = meminfo['HugePages_Free']
+    return str(hugepagesize_in_b * hugepages_free)
+
+
 def get_total_mem():
     global meminfo
     meminfo = dict((i.split()[0].rstrip(':'), int(i.split()[1])) for i in open('/proc/meminfo').readlines())
@@ -59,6 +67,13 @@ def get_avail_mem():
     meminfo = dict((i.split()[0].rstrip(':'), int(i.split()[1])) for i in open('/proc/meminfo').readlines())
     available_memory_in_b = meminfo['MemAvailable'] * 1000
     return fsize(available_memory_in_b, system=alternative)
+
+
+def get_avail_mem_b():
+    global meminfo
+    meminfo = dict((i.split()[0].rstrip(':'), int(i.split()[1])) for i in open('/proc/meminfo').readlines())
+    available_memory_in_b = meminfo['MemAvailable'] * 1000
+    return str(available_memory_in_b)
 
 
 def get_total_cpus():

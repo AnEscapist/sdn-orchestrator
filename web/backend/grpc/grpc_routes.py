@@ -23,6 +23,15 @@ def avail_mem():
     return jsonify(call_ucpe_function(messagedata))
 
 
+@grpc_routes.route('/grpc/avail_mem_bytes')
+def avail_mem_bytes():
+    messagedata = {"method": "grpc_get_availmem_b", "params": {
+        "body": {"hostname": "10.10.81.100", "port": "50051"}},
+        "jsonrpc": "2.0", "id": 0
+    }
+    return jsonify(call_ucpe_function(messagedata))
+
+
 @grpc_routes.route('/grpc/hugepage_total_mem')
 def hugepage_total_mem():
     messagedata = {"method": "grpc_get_hugepages_totalmem", "params": {
@@ -35,6 +44,15 @@ def hugepage_total_mem():
 @grpc_routes.route('/grpc/hugepage_free_mem')
 def hugepage_free_mem():
     messagedata = {"method": "grpc_get_hugepages_freemem", "params": {
+        "body": {"hostname": "10.10.81.100", "port": "50051"}},
+        "jsonrpc": "2.0", "id": 0
+    }
+    return jsonify(call_ucpe_function(messagedata))
+
+
+@grpc_routes.route('/grpc/hugepage_free_mem_bytes')
+def hugepage_free_mem_bytes():
+    messagedata = {"method": "grpc_get_hugepages_freemem_b", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051"}},
         "jsonrpc": "2.0", "id": 0
     }

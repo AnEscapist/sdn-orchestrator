@@ -43,5 +43,8 @@ def ovs_add_dpdk_port(bridge, port_name, port):
                            'type=dpdk', f'options:dpdk-devargs={port}'])
     return True
 
-def ovs_docker_add_port(bridge, interface, container, port, options):
+
+def ovs_docker_add_port(bridge, interface, container, port, **kwargs):
+    list = ['sudo', 'ovs-docker', 'add-port', bridge, interface, container]
+    subprocess.run()
     return None
