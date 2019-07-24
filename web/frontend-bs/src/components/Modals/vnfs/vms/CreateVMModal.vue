@@ -156,7 +156,7 @@
           agent: false,
           nameExceedsCharLimit: false,
           nameIsEmpty: true,
-          memoryError: true
+          memoryError: false
         },
         charLimit: 15 //todo: make this a constant
       }

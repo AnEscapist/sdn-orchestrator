@@ -22,6 +22,8 @@ import hurry.filesize as filesize
 from hurry.filesize import alternative
 import datetime
 
+import subprocess
+
 
 
 class LibvirtController():
@@ -141,6 +143,11 @@ class LibvirtController():
         func = get_vm_xml
         return _call_function(func, **kwargs)
 
+    @staticmethod
+    def libvirt_controller_prepare_vm_console(**kwargs):
+        func = prepare_vm_console
+        return _call_function(func, **kwargs)
+
 
 def get_vm_state(ucpe, vm_name):
     func = _state_str_from_domain
@@ -190,6 +197,19 @@ def _construct_info_dict(domain):
         info_dict['memory'] = 0
     info_dict['memory usage'] = "{:.2%}".format(info_dict['memory'] / maxmem)
     return info_dict
+
+def prepare_vm_console(ucpe, vm_name):
+    vnc_port = get_vm_vnc_port(ucpe, vm_name)
+    launch_script_path = '../../utilities/novnc/utils/launch.sh'
+    p = subprocess.Popen([launch_script_path, '--vnc', f'{ucpe.hostname}:{vnc_port}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out,err = p.communicate()
+    return_dict = {"return": out}
+    if not err:
+        return_dict["success_message"] = f"Successfully prepared VNC for {vm_name}"
+    else:
+        return_dict["fail_message"] = f"Failed to prepare VNC for {vm_name}"
+        return_dict["traceback"] = tb.format_exc()
+    return return_dict
 
 
 def get_vm_vnc_port(ucpe, vm_name):
@@ -608,7 +628,8 @@ def _call_function(func, **kwargs):
 if __name__ == '__main__':
     # test:
     UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
-    define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr")
+    prepare_vm_console(DEFAULT_UCPE, 'test')
+    # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr")
     # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
     # start_vm(DEFAULT_UCPE, "test")
     # print(start_vms(DEFAULT_UCPE, ["test", "cloud"]))
