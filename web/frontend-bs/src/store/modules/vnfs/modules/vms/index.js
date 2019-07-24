@@ -8,41 +8,45 @@ const state = {
   vmSelection: [], //list of vms selected in vm table in vnfs/home
   vmFilterText: '',
   atLeastOneVMSelected: false,
-  imagesAvailable: [],
+  vmImagesAvailable: [],
   vmCreateForm: {
     vCPUsAvailable: 0,
     memoryAvailable: 0,
     hugepageMemoryAvailable: 0,
-  }
+  },
+  vmBridgesAvailable: []
 };
 
 const mutations = {
-  SET_VM_LIST(state, payload){
+  SET_VM_LIST(state, payload) {
     state.vmList = payload;
   },
-  SET_VM_INFO(state, payload){
+  SET_VM_INFO(state, payload) {
     state.vmInfo = payload;
   },
-  SET_VM_SELECTION(state, payload){
+  SET_VM_SELECTION(state, payload) {
     state.vmSelection = payload
   },
-  SET_VM_FILTER_TEXT(state, payload){
+  SET_VM_FILTER_TEXT(state, payload) {
     state.vmFilter = payload
   },
-  SET_AT_LEAST_ONE_VM_SELECTED(state, payload){
+  SET_AT_LEAST_ONE_VM_SELECTED(state, payload) {
     state.atLeastOneVMSelected = payload
   },
-  SET_VCPUS_AVAILABLE(state, payload){
+  SET_VCPUS_AVAILABLE(state, payload) {
     state.vmCreateForm.vCPUsAvailable = payload
   },
-  SET_MEMORY_AVAILABLE(state, payload){
+  SET_MEMORY_AVAILABLE(state, payload) {
     state.vmCreateForm.memoryAvailable = payload
   },
-  SET_HUGEPAGE_MEMORY_AVAILABLE(state, payload){
+  SET_HUGEPAGE_MEMORY_AVAILABLE(state, payload) {
     state.vmCreateForm.hugepageMemoryAvailable = payload
   },
-  SET_IMAGES_AVAILABLE(state, payload){
-    state.imagesAvailable = payload
+  SET_VM_IMAGES_AVAILABLE(state, payload) {
+    state.vmImagesAvailable = payload
+  },
+  SET_VM_BRIDGES_AVAILABLE(state, payload) {
+    state.vmBridgesAvailable = payload
   }
 };
 
@@ -52,8 +56,8 @@ const URL_PREFIX = `/api/vms/`;
 const URL_SUFFIX = `/${controller_id}/${ucpe_sn}`;
 
 const actions = {
-  updateVMInfo({commit}, token){
-      axios.get(getURL('all_vm_info')).then((response) => {
+  updateVMInfo({ commit }, token) {
+    axios.get(getURL('all_vm_info')).then((response) => {
         let vmInfo = response.data.result.return;
         let vmNames = Object.keys(vmInfo);
         commit('SET_VM_INFO', vmNames
@@ -67,62 +71,67 @@ const actions = {
         );
         commit('SET_VM_LIST', vmNames)
       }
-      ).catch(err => console.log(err))
+    ).catch(err => console.log(err))
     // https://stackoverflow.com/questions/38750705/filter-object-properties-by-key-in-es6
   },
-  updateVMSelection({commit}, newSelection){
+  updateVMSelection({ commit }, newSelection) {
     commit('SET_VM_SELECTION', newSelection)
     commit('SET_AT_LEAST_ONE_VM_SELECTED', !!newSelection.length) //!! is a trick to cast to truthiness value bool
   },
-  updateVMFilterText({commit}, newFilterText){
+  updateVMFilterText({ commit }, newFilterText) {
     commit('SET_VM_FILTER_TEXT', newFilterText)
   },
-  startSelectedVMs({commit, dispatch}){
-    axios.post(getURL('start_or_resume_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
+  startSelectedVMs({ commit, dispatch }) {
+    axios.post(getURL('start_or_resume_selected_vms'), { 'vm_names': state.vmSelection }).then((response) => {
       dispatch('updateVMInfo')
     });
   },
-  pauseSelectedVMs({commit, dispatch}){
-    axios.post(getURL('pause_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
+  pauseSelectedVMs({ commit, dispatch }) {
+    axios.post(getURL('pause_selected_vms'), { 'vm_names': state.vmSelection }).then((response) => {
       dispatch('updateVMInfo')
     });
   },
-  killSelectedVMs({commit, dispatch}){
-    axios.post(getURL('kill_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
+  killSelectedVMs({ commit, dispatch }) {
+    axios.post(getURL('kill_selected_vms'), { 'vm_names': state.vmSelection }).then((response) => {
       dispatch('updateVMInfo')
     });
   },
-  deleteSelectedVMs({commit, dispatch}){
-    axios.post(getURL('delete_selected_vms'), {'vm_names': state.vmSelection}).then((response) => {
+  deleteSelectedVMs({ commit, dispatch }) {
+    axios.post(getURL('delete_selected_vms'), { 'vm_names': state.vmSelection }).then((response) => {
       dispatch('updateVMSelection', []);
       dispatch('updateVMInfo')
     });
   },
-  createVM({commit, dispatch}, form){
-    return axios.post(getURL('create_vm'), {'form': form}).then((response) => {
+  createVM({ commit, dispatch }, form) {
+    return axios.post(getURL('create_vm'), { 'form': form }).then((response) => {
       dispatch('updateVMInfo')
     });
   },
-  updateVMVCPUsAvailable({commit}){
+  updateVMVCPUsAvailable({ commit }) {
     return axios.get('/api/grpc/cpu_total').then((response) => {
       commit('SET_VCPUS_AVAILABLE', parseInt(response.data.result.return))
     })
   },
-  updateVMMemoryAvailable({commit}){
+  updateVMMemoryAvailable({ commit }) {
     return axios.get('/api/grpc/avail_mem').then((response) => {
       commit('SET_MEMORY_AVAILABLE', parseMemoryInt(response.data.result.return))
     })
   },
-  updateVMHugepageMemoryAvailable({commit}){
+  updateVMHugepageMemoryAvailable({ commit }) {
     return axios.get('/api/grpc/hugepage_free_mem').then((response) => {
       commit('SET_HUGEPAGE_MEMORY_AVAILABLE', parseMemoryInt(response.data.result.return))
     })
   },
-  updateVMImagesAvailable({commit}){
+  updateVMImagesAvailable({ commit }) {
     return axios.get(getURL('/images')).then((response) => {
-      commit('SET_IMAGES_AVAILABLE', response.data.images)
+      commit('SET_VM_IMAGES_AVAILABLE', response.data.images)
+  })
+  },
+  updateVMBridgesAvailable({ commit }) {
+    return axios.get('/api/grpc/linux_bridge_list').then((response) => {
+      commit('SET_VM_BRIDGES_AVAILABLE', eval(response.data.result.return)) //solved all of our problems just now
     })
-  }
+  },
 };
 
 const getters = {
@@ -137,23 +146,23 @@ const getters = {
   vmVCPUOptions: state => getOneToNArray(state.vmCreateForm.vCPUsAvailable),
   vmMemoryOptions: state => getOneToNArray(state.vmCreateForm.memoryAvailable),
   vmHugepageMemoryOptions: state => getOneToNArray(state.vmCreateForm.hugepageMemoryAvailable),
-  vmImagesAvailable: state => state.imagesAvailable
+  vmImagesAvailable: state => state.vmImagesAvailable,
+  vmBridgesAvailable: state => state.vmBridgesAvailable
 };
 
-function getURL(endpoint){
+function getURL(endpoint) {
   return `${URL_PREFIX}/${endpoint}/${URL_SUFFIX}`;
 }
 
-function parseMemoryInt(memoryStr){
+function parseMemoryInt(memoryStr) {
   return parseInt(memoryStr.split(" ")[0])
 }
 
-function getOneToNArray(n){
-  return Array.from(Array(n).keys()).map(x => x+1)
+function getOneToNArray(n) {
+  return Array.from(Array(n).keys()).map(x => x + 1)
 }
 
-const methods = {
-};
+const methods = {};
 
 const vmModule = {
   state,

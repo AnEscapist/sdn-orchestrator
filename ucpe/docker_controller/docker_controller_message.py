@@ -351,3 +351,10 @@ def inspect_volume_message(name, inspection, func):
         'return': inspection
     }
     return json_str(message)
+
+def remove_volume_message(name, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Volume {name} removed!',
+    }
+    return json_str(message)

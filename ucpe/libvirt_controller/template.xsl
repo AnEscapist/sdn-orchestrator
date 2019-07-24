@@ -63,7 +63,7 @@
                 -->
                 <disk device="disk" type="file">
                     <driver name="qemu" type="qcow2"/>
-                    <source file="/var/third-party/BASE_IMAGE"/>
+		    <source file="/var/third-party/active/BASE_IMAGE"/>
                     <backingStore/>
                     <target bus="virtio" dev="vda"/>
                     <alias name="virtio-disk0"/>

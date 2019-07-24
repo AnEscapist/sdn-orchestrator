@@ -1,3 +1,7 @@
+<!--Todo
+      -CONSTANTS
+
+-->
 <template>
   <div>
     <b-modal
@@ -7,11 +11,12 @@
       :ok-disabled="!isFormValid"
       id="vm-create-modal">
       <form>
-<!--        <h1>validity: {{isFormValid}}</h1>-->
-<!--        <h2>name: {{!!form.vmName.match(/^[a-zA-Z][-_a-zA-Z0-9]*$/)}} </h2>-->
-<!--&lt;!&ndash;        <h2>exist: {{vmList.contains(form.vmName)}}</h2>&ndash;&gt;-->
-<!--        <h2>exist: {{vmList.includes(form.vmName)}}</h2>-->
-<!--        <h2>vmList: {{vmList}}</h2>-->
+<!--        <h2>{{typeof(JSON.parse(vmBridgesAvailable))}}</h2>-->
+        <!--        <h1>validity: {{isFormValid}}</h1>-->
+        <!--        <h2>name: {{!!form.vmName.match(/^[a-zA-Z][-_a-zA-Z0-9]*$/)}} </h2>-->
+        <!--&lt;!&ndash;        <h2>exist: {{vmList.contains(form.vmName)}}</h2>&ndash;&gt;-->
+        <!--        <h2>exist: {{vmList.includes(form.vmName)}}</h2>-->
+        <!--        <h2>vmList: {{vmList}}</h2>-->
         <div class="form-row">
           <!--          <div class="form-group col-md-6">-->
           <!--            <label for="inputEmail4">Email</label>-->
@@ -23,14 +28,18 @@
           <!--          </div>-->
           <label for="vmName">VNF Name</label>
           <input
-                 class="form-control"
-                 v-model="form.vmName"
-                 id="vmName"
-                 placeholder="name">
+            class="form-control"
+            v-model="form.vmName"
+            :maxlength="charLimit+1"
+            id="vmName"
+            placeholder="name">
           <div class="text-danger">
             <ul>
               <li v-if="formErrors.badStartingCharacter">VNF name must start with a letter</li>
-              <li v-if="formErrors.badCharacters">VNF name can only contain alphanumeric characters, underscores, and dashes.</li>
+              <li v-if="formErrors.badCharacters">VNF name can only contain alphanumeric characters, underscores, and
+                dashes.
+              </li>
+              <li v-if="formErrors.nameExceedsCharLimit">VNF name can be at most {{charLimit}} characters long.</li>
               <li v-if="formErrors.vmExists && !formErrors.agent">VNF with name "{{form.vmName}}" already exists</li>
               <li v-if="formErrors.agent">VNF name "agent" is reserved</li>
             </ul>
@@ -56,30 +65,60 @@
           <div v-if="!form.hugepagesEnabled"
                class="form-group col-md-4">
             <label for="vmMemory">Memory</label>
-            <select id="vmMemory"
+            <select
+                    :disabled="isOutOfMemory"
+                    id="vmMemory"
                     v-model="form.vmMemory"
                     class="custom-select mr-sm-2">
               <option v-for="option in vmMemoryOptions">{{option}} GB</option>
+              <option v-if="isOutOfMemory">0 GB</option>
             </select>
           </div>
           <div v-if="form.hugepagesEnabled"
-               v-model="form.vmHugepageMemory"
                class="form-group col-md-4">
             <label for="vmHugepageMemory">Hugepage Memory</label>
-            <select id="vmHugepageMemory"
+            <select :disabled=isOutOfHugepageMemory
+                    id="vmHugepageMemory"
+                    v-model="form.vmHugepageMemory"
                     class="custom-select mr-sm-2">
               <option v-for="option in vmHugepageMemoryOptions">{{option}} GB</option>
+              <option v-if="isOutOfHugepageMemory">0 GB</option>
             </select>
           </div>
           <div class="form-group col-md-4">
             <div><label>Hugepage Memory</label></div>
-            <ToggleButton v-model="form.hugepagesEnabled" :height=35 :width=130 :font-size=16 :labels="{checked: 'Enabled', unchecked: 'Disabled'}"></ToggleButton>
+            <ToggleButton v-model="form.hugepagesEnabled"
+                          :height=35
+                          :width=130
+                          :font-size=16
+                          :labels="{checked: 'Enabled', unchecked: 'Disabled'}"
+                          @change="onHugepageToggle"
+            />
           </div>
         </div>
-<!--        <div class="form-group">-->
-<!--          <div><label>Hugepages</label></div>-->
-<!--          <ToggleButton :height=35 :width=80></ToggleButton>-->
-<!--        </div>-->
+        <!--        <div class="form-group">-->
+        <!--          <div><label>Hugepages</label></div>-->
+        <!--          <ToggleButton :height=35 :width=80></ToggleButton>-->
+        <!--        </div>-->
+        <div v-if="!form.hugepagesEnabled && isOutOfMemory"
+             class="alert alert-danger">
+          <span><strong>Out of Memory -</strong>  Cannot allocate sufficient memory.</span>
+        </div>
+        <div v-if="form.hugepagesEnabled && isOutOfHugepageMemory"
+             class="alert alert-danger">
+          <span><strong>Out of Memory -</strong>  Cannot allocate sufficient hugepage memory.</span>
+        </div>
+        <div
+             class="form-group col-md-4">
+          <label for="vmBridges">Bridge</label>
+<!--          todo: error handling on no bridge-->
+          <select
+                  id="vmBridges"
+                  v-model="form.vmBridge"
+                  class="custom-select mr-sm-2">
+            <option v-for="bridge in vmBridgesAvailable">{{bridge}}</option>
+          </select>
+        </div>
       </form>
     </b-modal>
   </div>
@@ -89,7 +128,7 @@
   import Switches from 'vue-switches';
   import { ToggleButton } from 'vue-js-toggle-button';
   import axios from 'axios';
-  import {mapGetters, mapActions} from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
 
   export default {
     name: "CreateVMModal",
@@ -99,12 +138,13 @@
     data() {
       return {
         form: {
-          vmName: "a",
+          vmName: "",
           vmImage: "Vyatta Router",
           vmCPUs: 1,
           vmMemory: '4 GB',
           vmHugepageMemory: '4 GB',
-          hugepagesEnabled: false
+          hugepagesEnabled: false,
+          vmBridge: 'mgmtbr'
         },
         show: true,
         formErrors: {
@@ -112,49 +152,82 @@
           badCharacters: false,
           vmExists: false,
           agent: false,
-          nameIsEmpty: true
-        }
+          nameExceedsCharLimit: false,
+          nameIsEmpty: true,
+          memoryError: true
+        },
+        charLimit: 15 //todo: make this a constant
       }
     },
     computed: {
       ...mapGetters([
-        'vmCreateForm', 'vmVCPUOptions', 'vmMemoryOptions', 'vmHugepageMemoryOptions', 'vmImagesAvailable', 'vmList'
+        'vmCreateForm', 'vmVCPUOptions', 'vmMemoryOptions', 'vmHugepageMemoryOptions', 'vmImagesAvailable', 'vmList', 'vmBridgesAvailable'
       ]),
-      vmName(){
+      vmName() {
         return this.form.vmName
       },
-      isFormValid(){
+      isFormValid() {
         return Object.values(this.formErrors).every(error => !error)
+      },
+      initialFormMemory() {
+        //todo: CLEAN THIS UP
+        if (this.vmMemoryOptions.length === 0) {
+          return '0 GB'; //todo: put this in a constant
+        }
+        return Math.max(Math.min(parseInt(this.form.vmMemory.split(" ")[0]), this.vmMemoryOptions.length), 1) + " GB" //max because after oom, vmMemory gets set to 0, s owithout the max it woudl be stuck at 0 from the min
+      },
+      initialFormHugepageMemory() {
+        if (this.vmHugepageMemoryOptions.length === 0) {
+          return '0 GB';
+        }
+        return Math.max(Math.min(parseInt(this.form.vmHugepageMemory.split(" ")[0]), this.vmHugepageMemoryOptions.length), 1) + " GB"
+      },
+      isOutOfMemory() {
+        return this.form.vmMemory === '0 GB'
+      },
+      isOutOfHugepageMemory() {
+        return this.form.vmHugepageMemory === '0 GB'
       }
     },
     methods: {
       ...mapActions([
-        'createVM', 'updateVMVCPUsAvailable', 'updateVMMemoryAvailable', 'updateVMHugepageMemoryAvailable', 'updateVMImagesAvailable'
+        'createVM', 'updateVMVCPUsAvailable', 'updateVMMemoryAvailable', 'updateVMHugepageMemoryAvailable', 'updateVMImagesAvailable', 'updateVMBridgesAvailable'
       ]),
-      onCreateVNF(){
-        this.createVM({...this.form}).then(this.clearForm());
+      onCreateVNF() {
+        this.createVM({ ...this.form }).then(this.clearForm());
       },
-      clearForm(){
+      clearForm() {
         this.form.vmName = "";
-        this.form.vmHugepageMemory = 0;
       },
-      onShow(){
+      onShow() {
         this.updateVMVCPUsAvailable();
-        this.updateVMMemoryAvailable();
-        this.updateVMHugepageMemoryAvailable();
+        this.updateVMMemoryAvailable().then(() => {
+          this.form.vmMemory = this.initialFormMemory
+        });
+        this.updateVMHugepageMemoryAvailable().then(() => {
+          this.form.vmHugepageMemory = this.initialFormHugepageMemory
+        });
         this.updateVMImagesAvailable();
-        this.clearForm();
+        this.updateVMBridgesAvailable();
+        this.checkForMemoryError();
       },
-      validateName(){
+      onHugepageToggle() {
+        this.checkForMemoryError()
+      },
+      checkForMemoryError(){
+        this.formErrors.memoryError = (!this.hugepagesEnabled && this.isOutOfMemory) || (this.hugepagesEnabled && this.isOutOfHugepageMemory)
+      },
+      validateName() {
         this.formErrors.badStartingCharacter = this.form.vmName.length > 0 && !this.form.vmName.match(/^[a-zA-Z]/);
         this.formErrors.agent = this.form.vmName === 'agent'; //todo: make constant
         this.formErrors.vmExists = this.vmList.includes(this.form.vmName);
-        this.formErrors.badCharacters = this.form.vmName.length > 0 && !this.form.vmName.match(/^[a-zA-Z][-_a-zA-Z0-9]*$/);
+        this.formErrors.badCharacters = this.form.vmName.length > 0 && !this.form.vmName.match(/^[-_a-zA-Z0-9]*$/);
+        this.formErrors.nameExceedsCharLimit = this.form.vmName.length > this.charLimit;
         this.formErrors.nameIsEmpty = this.form.vmName.length === 0;
       }
     },
     watch: {
-      vmName: function() {
+      vmName: function () {
         this.validateName()
       }
     }
