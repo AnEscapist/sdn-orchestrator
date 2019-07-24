@@ -122,7 +122,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                 print('Driver enabled')
 
         elif request.command == 'ovs':
-            if request.str_request == ' add_dpdk_port':
+            if request.str_request == 'add_dpdk_port':
                 response.status = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
                 print(response.str_response)
                 proc = modify_functions.ovs_add_dpdk_port(request.str_param1, request.str_param2,
@@ -134,6 +134,19 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
             elif request.str_request == 'add_port':
                 response.status = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
                 print(response.status)
+                response.str_response = None
+
+        elif request.command == 'ovs_docker':
+            if request.str_request == 'add_port':
+                response.status = f"Adding {request.str_param2} inside {request.str_param3} and " \
+                    f"connecting to bridge {request.str_param1} via {request.str_param4}"
+                print(response.status)
+                proc = modify_functions.ovs_docker_add_port(request.str_param1, request.str_param2, request.str_param3,
+                                                            request.str_param4, request.str_param5)
+                if proc:
+                    response.status = f'Interface {request.str_param2} added'
+                else:
+                    response.status = f'Request failed'
                 response.str_response = None
 
         return response
