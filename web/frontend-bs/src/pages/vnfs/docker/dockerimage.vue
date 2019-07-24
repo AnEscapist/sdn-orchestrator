@@ -1,23 +1,23 @@
 <template>
 <div class="content">
   <div class="container-fluid">
-      <table width='100%'>
-          <tr>
-              <td width='91%'>
-                  <font-awesome-icon :icon="['fas', 'clone']" size=lg color='rgb(0, 0, 0)' /> <strong> Image details - </strong>
-                  {{name}}
-              </td>
-              <td>
-                  <router-link to="docker_i">
-                    <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeImage()'>
-                      <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
-                      Remove
-                    </button>
-                  </router-link>
-              </td>
-          </tr>
-      </table>
-      <hr>
+    <table width='100%'>
+      <tr>
+        <td width='91%'>
+          <font-awesome-icon :icon="['fas', 'clone']" size=lg color='rgb(0, 0, 0)' /> <strong> Image details - </strong>
+          {{name}}
+        </td>
+        <td>
+          <router-link to="docker_i">
+            <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeImage()'>
+              <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
+              Remove
+            </button>
+          </router-link>
+        </td>
+      </tr>
+    </table>
+    <hr>
 
 
     <div>
@@ -89,12 +89,12 @@
       <hr>
       <table>
         <tr id='containerLinks'>
-            <button type="button" class="btn btn-link">
-              <td>
-                <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm coler="#1b7fbd" />
-                <font size='2px'> Delete</font>
-              </td>
-            </button>
+          <button type="button" class="btn btn-link">
+            <td>
+              <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm coler="#1b7fbd" />
+              <font size='2px'> Delete</font>
+            </td>
+          </button>
           <button type="button" class="btn btn-link" @click='showInspect()'>
             <td>
               <font-awesome-icon :icon="['fas', 'info-circle']" size=sm coler="#1b7fbd" />
@@ -165,14 +165,14 @@ export default {
     showInspect() {
       this.showIns = !this.showIns
     },
-    removeImage(){
-        this.axios.get('/api/docker/remove_image', {
-            params: {
-                name: this.name
-            }
-        }).then(response => {
-            // console.log(response)
-        })
+    removeImage() {
+      this.axios.get('/api/docker/remove_image', {
+        params: {
+          name: this.name
+        }
+      }).then(response => {
+        // console.log(response)
+      })
     }
   }
 

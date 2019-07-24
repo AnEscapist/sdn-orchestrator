@@ -9,8 +9,9 @@ import DockerV from '../pages/vnfs/docker/docker_v'
 import Blank from '@/components/Blank'
 import DockerContainer from '../pages/vnfs/docker/dockercontainer'
 import DockerImage from '../pages/vnfs/docker/dockerimage'
-const dockerRoutes = [
-  {
+import DockerVolume from '../pages/vnfs/docker/dockervolume'
+
+const dockerRoutes = [{
     path: 'docker_c',
     // path: '/vnfs',
     name: 'docker_c',
@@ -35,15 +36,20 @@ const dockerRoutes = [
     component: DockerV,
   },
   {
-      path: 'dockercontainer',
-      name: 'dockercontainer',
-      component: DockerContainer,
+    path: 'dockercontainer',
+    name: 'dockercontainer',
+    component: DockerContainer,
 
   },
   {
-      path: 'dockerimage',
-      name: 'dockerimage',
-      component: DockerImage
+    path: 'dockerimage',
+    name: 'dockerimage',
+    component: DockerImage
+  },
+  {
+    path: 'dockervolume',
+    name: 'dockervolume',
+    component: DockerVolume,
   },
 ];
 

@@ -105,8 +105,8 @@ export default {
 
     this.axios.get('/api/docker/list_volumes').then(response => {
       var res = JSON.parse(response.data.result)['return']
-      var regex = /\<(.+?)\>/g;
-      var vols = res.match(regex)
+      var vols = res.slice(1, -1).split(',')
+
       this.volumes = vols.length
 
     })

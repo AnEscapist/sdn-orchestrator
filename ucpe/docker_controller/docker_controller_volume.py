@@ -30,3 +30,16 @@ def inspect_volume(name):
 		return inspect_volume_message(name, inspection, func)
 	except docker.errors.APIError as ae:
 		return api_error(ae, func)
+
+def remove_volume(name):
+	func = remove_volume
+	try:
+		volume = dcli.volumes.get(name)
+	except docker.errors.APIError as ae:
+		return api_error(ae, func)
+
+	try:
+		volume.remove()
+	except docker.errors.APIError as ae:
+		return api_error(ae, func)
+	return remove_volume_message(name, func)

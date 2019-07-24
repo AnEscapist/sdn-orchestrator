@@ -7,25 +7,65 @@
       <table width="100%">
         <tr>
           <th>Name</th>
+          <th>Drivers</th>
           <th>Created</th>
         </tr>
 
 
         <tr v-for='(vol,i) in volumes' id='volInfoCard'>
-          <router-link :to="{path: 'dockerimage', params: {name: vol}, query: {name: vol}}">
+          <router-link :to="{path: 'dockervolume', query: {name: vol}}">
             <td width='10%'>{{vol}}</td>
           </router-link>
-          <td width='25%'>{----</td>
-          <!-- <td width='25%'>{{createTimes[i]}}</td>
-          <td width='10%'>
-            &nbsp&nbsp
-            <font-awesome-icon v-show="busy[i] == 'yes'" :icon="['fas', 'check-circle']" size=sm color='#00bd56' />
-            <font-awesome-icon v-show="busy[i] == 'no'" :icon="['fas', 'times-circle']" size=sm color='rgb(251, 0, 0)' />
-          </td> -->
+          <td>{{drivers[i]}}</td>
+          <td>{{createdAt[i]}}</td>
         </tr>
       </table>
+      <hr>
+      <button type="button" class="btn btn-primary btn-sm" @click='showCreate = !showCreate'>
+        <font-awesome-icon :icon="['fas', 'plus']" size=sm color='rgb(255, 255, 255)' />
+        Create
+      </button>
+    </card>
+
+    <card v-show="showCreate">
+
+      <font-awesome-icon :icon="['far', 'plus-square']" size=lg color='rgb(0, 0, 0)' /> <strong> Create Volume</strong>
+
+      <hr>
+      <div class="pull-choice">
+        <table>
+          <tr>
+            <td>
+              <form class="form-inline">
+                <strong style="font-size:15px">Name: &nbsp</strong>
+                <input type="text" placeholder="e.g. myVolume" v-model="newName">
+              </form>
+            </td>
+
+          </tr>
+        </table>
+        <br>
+        <table>
+          <tr>
+            <td width='43%'></td>
+            <td width='42%'></td>
+            <td>
+              <button type="button" class="btn btn-secondary btn-sm" @click='showCreate = false'>
+                Cancel
+              </button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary btn-sm" @click="createVol(newName)">
+                  <font-awesome-icon :icon="['fas', 'plus']" size=sm /> <strong style="font-size:13px"> Create</strong>
+                </button>
+            </td>
+          </tr>
+        </table>
+
+      </div>
 
     </card>
+
   </div>
 </div>
 </template>
@@ -46,34 +86,37 @@ export default {
   data() {
     return {
       volumes: [],
-      createdTimes: [],
-      inspect: ''
+      createdAt: [],
+      inspect: '',
+      drivers: [],
+      newName: '',
+
+      showCreate: false,
     }
   },
   mounted() {
     this.axios.get('/api/docker/list_volumes').then(response => {
       var res = JSON.parse(response.data.result)['return']
-      var regex = /\<(.+?)\>/g;
-      var vols = res.match(regex)
+      var vols = res.slice(1, -1).split(',')
       var i;
       for (i = 0; i < vols.length; i++) {
-        this.volumes.push(vols[i].substring(vols[i].indexOf(':') + 2, vols[i].indexOf('>')))
+        this.volumes.push(vols[i].trim().slice(1, -1))
       }
 
+      this.createdAt = []
+      this.drivers = []
       var j;
       for (j = 0; j < this.volumes.length; j++) {
-        this.createTimes = []
+
         this.axios.get('/api/docker/inspect_volume', {
           params: {
             name: this.volumes[j]
           }
         }).then(response => {
-          console.log(response.data.result)
           var inspect = JSON.parse(response.data.result)['return']
           this.inspect = inspect
-          // console.log(inspect)
-          // this.sizes.push((parseFloat(inspect['Size']) / 1000000).toFixed(1))
-          // this.createTimes.push(inspect['Created'].split('.')[0].split('T').join(' / '))
+          this.createdAt.push(inspect['CreatedAt'].slice(0, -1).split('T').join(' / '))
+          this.drivers.push(inspect['Driver'])
         })
       }
       // console.log(this.volumes)
@@ -94,6 +137,17 @@ export default {
         type: this.type[color]
       })
     },
+
+    createVol(newName){
+        this.axios.get('/api/docker/create_volume', {
+          params: {
+            name: newName,
+          }
+        }).then(response => {
+          // console.log(JSON.parse(response.data.result))
+          this.reload()
+        })
+    }
 
   }
 }
@@ -118,6 +172,8 @@ a {
   font-size: 13px;
 }
 
+
+
 input {
 
   border: 2px solid rgb(200, 200, 200);
@@ -129,7 +185,6 @@ p {
   font-size: 12px;
   font-weight: bold;
 }
-
 
 #volInfoCard {
   font-family: Arial, sans-serif;
