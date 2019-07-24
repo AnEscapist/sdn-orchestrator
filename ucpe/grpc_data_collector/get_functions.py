@@ -191,6 +191,22 @@ def get_linux_bridge_details(br):
             return item
 
 
+def ovs_list_ports(br):
+    proc = subprocess.Popen(['ovs-vsctl', 'list-ports', br], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    var = proc.stdout.read().decode('utf-8').split()
+    # print(var)
+    return var
+
+
+def ovs_list_ports_number(br):
+    list1 = ovs_list_ports(br)
+    tmp = list()
+    for i in list1:
+        proc = subprocess.Popen(['ovs-vsctl', 'get', 'Interface', i, 'ofport'], stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        tmp.append(proc.stdout.read().decode('utf-8').strip())
+    print(tmp)
+
 def sriov_totalvfs(device):
     dpdk.get_device_details(dpdk.network_devices)
     dev_id = dpdk.dev_id_from_dev_name(device)
