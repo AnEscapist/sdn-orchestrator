@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, abort,jsonify, request
 from jinja2 import TemplateNotFound
 from web.backend.zmq_web import call_ucpe_function
+import os
 
 docker_routes = Blueprint('docker_page', __name__, template_folder='templates')
 
@@ -195,4 +196,6 @@ def create_volume():
 @docker_routes.route('/docker/console_container')
 def console_container():
     container_id = request.args.get('container_id')
-    return f'{container_id}.'
+    cmd = 'sudo node ../../docker-browser-console/server.js ' + container_id
+    # os.system(cmd)
+    return f'{cmd}.'
