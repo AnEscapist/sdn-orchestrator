@@ -8,12 +8,12 @@
           {{name}}
         </td>
         <td>
-          <router-link to="docker_i">
-            <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeImage()'>
+          <!-- <router-link to="docker_v"> -->
+            <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeVolume()'>
               <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
               Remove
             </button>
-          </router-link>
+          <!-- </router-link> -->
         </td>
       </tr>
     </table>
@@ -78,9 +78,9 @@ export default {
 
   data: function() {
     return {
-        created: '',
-        mountPoint: '',
-        driver: '',
+      created: '',
+      mountPoint: '',
+      driver: '',
     }
 
 
@@ -104,7 +104,17 @@ export default {
     })
 
   },
-  methods: {}
+  methods: {
+    removeVolume() {
+      this.axios.get('/api/docker/remove_volume', {
+        params: {
+          name: this.name
+        }
+      }).then(response => {
+        console.log(response)
+      })
+    }
+  }
 
 }
 </script>

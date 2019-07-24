@@ -170,6 +170,11 @@ class DockerController(object):
         func = inspect_volume
         return _call_function(func, **kwargs)
 
+    @staticmethod
+    def docker_controller_remove_volume(**kwargs):
+        func = remove_volume
+        return _call_function(func, **kwargs)
+
 # =====================================private functions======================#
 
 
