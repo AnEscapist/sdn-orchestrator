@@ -111,7 +111,7 @@ export default {
           name: this.name
         }
       }).then(response => {
-        console.log(response)
+        // console.log(response)
       })
     }
   }
