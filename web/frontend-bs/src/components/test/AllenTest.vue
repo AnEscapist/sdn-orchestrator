@@ -1,58 +1,46 @@
 <template>
+
   <div>
     <table>
       <tr>
-        <!-- Check All -->
-        <input type='checkbox' @click='checkAll()' v-model='isCheckAll'> Check All
+        <td>
+          <form>
+            <div class="form-row">
+              <label for="vlanAction">Action</label>
+              <select id="vlanAction"
+                      v-model="form.action"
+                      class="custom-select mr-sm-2">
+                <option v-for="action in actionsAvailable">{{action}}</option>
+              </select>
+            </div>
+          </form>
+          <br>
+          Your selection: {{form.action}}
+        </td>
+        <td>
+          <!-- Check All -->
+          <input type='checkbox' @click='checkAll()' v-model='isCheckAll'> Check All
 
-        <!-- Checkboxes list -->
-        <ul>
-          <li v-for='lang in langsdata'>
-            <input type='checkbox' v-bind:value='lang' v-model='languages' @change='updateCheckall()'>{{ lang }}
-          </li>
-        </ul>
+          <!-- Checkboxes list -->
+          <ul>
+            <li v-for='port in portList'>
+              <input type='checkbox' v-bind:value='port' v-model='ports' @change='updateCheckall()'>{{ port }}
+            </li>
+          </ul>
 
-        <!-- Print -->
-        <input type='button' @click='printValues()' value='Print Selected Values'>
+          <!-- Print -->
+          <input type='button' @click='printValues()' value='Select these Ports'>
 
-        <br>
-        Selected items : {{ selectedlang }}
+          <br>
+          Selected items : {{ form.selectedPorts }}
 
-        <!--        <td>-->
-        <!--          <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">-->
-        <!--          <label for="jack">  Bob</label>-->
-        <!--        </td>-->
-        <!--        <td>-->
-        <!--          <input type="checkbox" id="john" value="John" v-model="checkedNames">-->
-        <!--          <label for="john">  John</label>-->
-        <!--        </td>-->
-        <!--        <td>-->
-        <!--          <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">-->
-        <!--          <label for="mike">  Mike</label>-->
-        <!--        </td>-->
-        <!--      </tr>-->
-        <!--      <tr>-->
-        <!--        <th>-->
-        <!--          <input type="checkbox" id="jack" value="Jack"  onclick="selectAll()" v-model="checkedNames">-->
-        <!--          <label for="jack"> Select all </label>-->
-        <!--        </th>-->
-        <!--        <td>-->
-        <!--          <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">-->
-        <!--          <label for="jack"> Long name </label>-->
-        <!--        </td>-->
-        <!--        <td>-->
-        <!--          <input type="checkbox" id="john" value="John" v-model="checkedNames">-->
-        <!--          <label for="john">  John</label>-->
-        <!--        </td>-->
-        <!--        <td>-->
-        <!--          <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">-->
-        <!--          <label for="mike">  Mike</label>-->
-        <!--        </td>-->
+        </td>
+
+
       </tr>
     </table>
 
     <!--    <br>-->
-    <!--    <span>Checked names: {{ checkedNames }}</span>-->
     <!--    <h1>{{test}}</h1>-->
   </div>
 </template>
@@ -67,10 +55,17 @@
                 checkedNames: [],
                 test: "Hello",
                 isCheckAll: false,
-                langsdata: ["ge1","ge2","ge3","ge4","ge5","ge6","ge7","ge8","ge9","ge10",
-                            "ge11","ge12","ge13","ge14","ge15","ge16","ge17","ge18","ge19","ge20"],
-                languages: [],
-                selectedlang: ""
+                portList: ["ge1", "ge2", "ge3", "ge4", "ge5", "ge6", "ge7", "ge8", "ge9", "ge10",
+                    "ge11", "ge12", "ge13", "ge14", "ge15", "ge16", "ge17", "ge18", "ge19", "ge20",
+                    "ge21", "ge22", "ge23", "ge24", "ge25", "ge26", "ge27", "ge28", "ge29", "ge30",
+                    "ge31", "ge32", "ge33", "ge34", "ge35", "xe0", "xe1", "xe2", "xe3", "xe4",
+                    "xe5", "xe6", "xe7", "xe8", "xe9", "xe10", "xe11", "xe12"],
+                ports: [],
+                form: {
+                    selectedPorts: "",
+                    action: "Show VLANs"
+                },
+                actionsAvailable: ["Show VLANs", "Create VLAN"]
             }
         },
         // mounted() {
@@ -84,25 +79,29 @@
             checkAll: function () {
 
                 this.isCheckAll = !this.isCheckAll;
-                this.languages = [];
+                this.ports = [];
                 if (this.isCheckAll) { // Check all
-                    for (var key in this.langsdata) {
-                        this.languages.push(this.langsdata[key]);
+                    for (var key in this.portList) {
+                        this.ports.push(this.portList[key]);
                     }
                 }
             },
             updateCheckall: function () {
-                if (this.languages.length == this.langsdata.length) {
+                if (this.ports.length == this.portList.length) {
                     this.isCheckAll = true;
                 } else {
                     this.isCheckAll = false;
                 }
             },
-            printValues: function(){
-                this.selectedlang = "";
+            printValues: function () {
+                this.form.selectedPorts = "";
+                var key;
                 // Read Checked checkboxes value
-                for (var key in this.languages) {
-                    this.selectedlang += this.languages[key]+", ";
+                for (key = 0; key < this.ports.length - 1; key++) {
+                    this.form.selectedPorts += this.ports[key] + ", ";
+                }
+                if (this.ports.length>0) {
+                    this.form.selectedPorts += this.ports[key];
                 }
             }
         }
