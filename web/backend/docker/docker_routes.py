@@ -196,8 +196,7 @@ def create_volume():
 @docker_routes.route('/docker/console_container')
 def console_container():
     container_id = request.args.get('container_id')
-    stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
-    os.system(stop_port)
+    
     cmd = 'sudo node ../docker-browser-console/server.js ' + container_id
     os.system(cmd)
     return f'{cmd}.'
