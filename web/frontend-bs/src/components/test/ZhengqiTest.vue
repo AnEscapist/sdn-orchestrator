@@ -100,8 +100,16 @@ export default {
       var client = JSON.parse(res['return'])
       this.client = client
       this.networks = client['Plugins']['Network'].length
-      this.volumes = client['Plugins']['Volume'].length
+      // this.volumes = client['Plugins']['Volume'].length
     });
+
+    this.axios.get('/api/docker/list_volumes').then(response => {
+      var res = JSON.parse(response.data.result)['return']
+      var regex = /\<(.+?)\>/g;
+      var vols = res.match(regex)
+      this.volumes = vols.length
+
+    })
     // this.axios.get("/api/docker/inspect_container", {
     //   params: {
     //     id: 'c33833f1cd43',

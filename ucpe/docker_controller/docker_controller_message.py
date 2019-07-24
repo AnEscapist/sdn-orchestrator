@@ -343,3 +343,11 @@ def list_volumes_message(volumes_list, func):
         'return': f'{volumes_list}'
     }
     return json_str(message)
+
+def inspect_volume_message(name, inspection, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Volume {name} inspected.',
+        'return': inspection
+    }
+    return json_str(message)

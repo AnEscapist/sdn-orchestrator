@@ -4,8 +4,14 @@
       ok-title="Create VNF"
       @show="onShow"
       @ok="onCreateVNF"
+      :ok-disabled="!isFormValid"
       id="vm-create-modal">
       <form>
+<!--        <h1>validity: {{isFormValid}}</h1>-->
+<!--        <h2>name: {{!!form.vmName.match(/^[a-zA-Z][-_a-zA-Z0-9]*$/)}} </h2>-->
+<!--&lt;!&ndash;        <h2>exist: {{vmList.contains(form.vmName)}}</h2>&ndash;&gt;-->
+<!--        <h2>exist: {{vmList.includes(form.vmName)}}</h2>-->
+<!--        <h2>vmList: {{vmList}}</h2>-->
         <div class="form-row">
           <!--          <div class="form-group col-md-6">-->
           <!--            <label for="inputEmail4">Email</label>-->
@@ -21,6 +27,14 @@
                  v-model="form.vmName"
                  id="vmName"
                  placeholder="name">
+          <div class="text-danger">
+            <ul>
+              <li v-if="formErrors.badStartingCharacter">VNF name must start with a letter</li>
+              <li v-if="formErrors.badCharacters">VNF name can only contain alphanumeric characters, underscores, and dashes.</li>
+              <li v-if="formErrors.vmExists && !formErrors.agent">VNF with name "{{form.vmName}}" already exists</li>
+              <li v-if="formErrors.agent">VNF name "agent" is reserved</li>
+            </ul>
+          </div>
         </div>
         <div class="form-row">
           <label for="vmImageName">Image</label>
@@ -85,7 +99,7 @@
     data() {
       return {
         form: {
-          vmName: "",
+          vmName: "a",
           vmImage: "Vyatta Router",
           vmCPUs: 1,
           vmMemory: '4 GB',
@@ -93,12 +107,25 @@
           hugepagesEnabled: false
         },
         show: true,
+        formErrors: {
+          badStartingCharacter: false,
+          badCharacters: false,
+          vmExists: false,
+          agent: false,
+          nameIsEmpty: true
+        }
       }
     },
     computed: {
       ...mapGetters([
-        'vmCreateForm', 'vmVCPUOptions', 'vmMemoryOptions', 'vmHugepageMemoryOptions', 'vmImagesAvailable'
-      ])
+        'vmCreateForm', 'vmVCPUOptions', 'vmMemoryOptions', 'vmHugepageMemoryOptions', 'vmImagesAvailable', 'vmList'
+      ]),
+      vmName(){
+        return this.form.vmName
+      },
+      isFormValid(){
+        return Object.values(this.formErrors).every(error => !error)
+      }
     },
     methods: {
       ...mapActions([
@@ -117,6 +144,18 @@
         this.updateVMHugepageMemoryAvailable();
         this.updateVMImagesAvailable();
         this.clearForm();
+      },
+      validateName(){
+        this.formErrors.badStartingCharacter = this.form.vmName.length > 0 && !this.form.vmName.match(/^[a-zA-Z]/);
+        this.formErrors.agent = this.form.vmName === 'agent'; //todo: make constant
+        this.formErrors.vmExists = this.vmList.includes(this.form.vmName);
+        this.formErrors.badCharacters = this.form.vmName.length > 0 && !this.form.vmName.match(/^[a-zA-Z][-_a-zA-Z0-9]*$/);
+        this.formErrors.nameIsEmpty = this.form.vmName.length === 0;
+      }
+    },
+    watch: {
+      vmName: function() {
+        this.validateName()
       }
     }
   }
