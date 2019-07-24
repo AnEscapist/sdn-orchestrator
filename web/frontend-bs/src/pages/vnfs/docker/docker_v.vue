@@ -32,7 +32,7 @@ export default {
   },
   mounted() {
       this.axios.get('/api/docker/list_volumes').then(response => {
-          console.log('abc')
+          console.log(response)
       })
 
 
