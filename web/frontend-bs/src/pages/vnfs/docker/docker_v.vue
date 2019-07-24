@@ -68,7 +68,7 @@ export default {
             name: this.volumes[j]
           }
         }).then(response => {
-          console.log(response)
+          console.log(response.data.result)
           var inspect = JSON.parse(response.data.result)['return']
           this.inspect = inspect
           // console.log(inspect)
