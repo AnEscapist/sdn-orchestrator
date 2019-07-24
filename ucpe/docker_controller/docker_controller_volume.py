@@ -14,11 +14,14 @@ def create_volume(name):
 
 def list_volumes():
 	func = list_volumes
+	name_list = []
 	try:
 		volumes_list = dcli.volumes.list()
+		for vol in volumes_list:
+			name_list.append(vol.name)
 	except docker.errors.APIError as ae:
 		return api_error(ae, func)
-	return list_volumes_message(volumes_list, func)
+	return list_volumes_message(name_list, func)
 
 def inspect_volume(name):
 	func = inspect_volume
