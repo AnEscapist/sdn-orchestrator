@@ -31,6 +31,7 @@
             <ul>
               <li v-if="formErrors.badStartingCharacter">VNF name must start with a letter</li>
               <li v-if="formErrors.badCharacters">VNF name can only contain alphanumeric characters, underscores, and dashes.</li>
+              <li v-if="formErrors.nameExceedsCharLimit">VNF name can be at most 20 characters long.</li>
               <li v-if="formErrors.vmExists && !formErrors.agent">VNF with name "{{form.vmName}}" already exists</li>
               <li v-if="formErrors.agent">VNF name "agent" is reserved</li>
             </ul>
@@ -112,7 +113,8 @@
           badCharacters: false,
           vmExists: false,
           agent: false,
-          nameIsEmpty: true
+          nameExceedsCharLimit: false,
+          nameIsEmpty: true,
         }
       }
     },
@@ -150,6 +152,7 @@
         this.formErrors.agent = this.form.vmName === 'agent'; //todo: make constant
         this.formErrors.vmExists = this.vmList.includes(this.form.vmName);
         this.formErrors.badCharacters = this.form.vmName.length > 0 && !this.form.vmName.match(/^[a-zA-Z][-_a-zA-Z0-9]*$/);
+        this.formErrors.nameExceedsCharLimit = this.form.vmName.length > 20;
         this.formErrors.nameIsEmpty = this.form.vmName.length === 0;
       }
     },
