@@ -222,7 +222,7 @@ def define_vm_from_xml(ucpe, xml, verbose=True):
     return _libvirt_connection_call(func, ucpe, success_message, fail_message, verbose=verbose)
 
 
-def define_vm_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_hugepage_memory=4, vm_use_hugepages=False, vm_vcpu_count=1, verbose=True):
+def define_vm_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_hugepage_memory=4, vm_use_hugepages=False, vm_vcpu_count=1, vm_bridge_name=None, verbose=True):
     if vm_use_hugepages:
         vm_memory = vm_hugepage_memory
     image_file_name = os.path.basename(vm_image_path)
@@ -231,19 +231,20 @@ def define_vm_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_hugepage
     request = libvirt_pb2.CopyRequest(vm_name=vm_name, image_file_name=image_file_name)
     response = stub.CopyImage(request)
     #todo: error handling
-    xml = _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=vm_memory, vm_use_hugepages=vm_use_hugepages, vm_vcpu_count=vm_vcpu_count,
+    xml = _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=vm_memory, vm_use_hugepages=vm_use_hugepages, vm_vcpu_count=vm_vcpu_count, vm_bridge_name=vm_bridge_name,
                                verbose=True)
     return define_vm_from_xml(ucpe, xml, verbose=verbose)
 
 
-def _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_use_hugepages=False, vm_vcpu_count=1, verbose=True):
-    xsl = _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vcpu_count)
+def _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_use_hugepages=False, vm_vcpu_count=1, vm_bridge_name=None, verbose=True):
+    xsl = _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vcpu_count, vm_bridge_name=vm_bridge_name)
     BLANK_XML = "<blank></blank>"  # xsl contains the entire xml text
     dom = LET.fromstring(BLANK_XML)
     xslt = LET.fromstring(xsl)
     transform = LET.XSLT(xslt)
     newdom = transform(dom)
     xml = LET.tostring(newdom, pretty_print=True).decode("utf-8")
+    print(xml, "printed")
     return xml
 
 
@@ -277,17 +278,20 @@ def _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vc
 
     if vm_bridge_name is not None:
         devices = root.find(basepath + 'devices', namespaces)
-        _add_bridge_interface(devices, vm_bridge_name)
+        interfaces = _get_bridge_interface_element(devices, vm_bridge_name)
+        insertion_point = 1
+        devices.insert(insertion_point, interfaces)
 
     xsl = ET.tostring(root).decode("utf-8")
     return xsl
 
-def _add_bridge_interface(devices, vm_bridge_name, interface_model_type='virtio', interface_link_state='up'):
+def _get_bridge_interface_element(devices, vm_bridge_name, interface_model_type='virtio', interface_link_state='up'):
     # devices is an Element in an ElementTree
-    interfaces = ET.SubElement(devices, "interfaces", {"type": "bridge"})
-    source = ET.SubElement(interfaces, "source", {"bridge":  vm_bridge_name})
-    model = ET.SubElement(interfaces, "model", {"type":  interface_model_type})
-    link_state = ET.SubElement(interfaces, "link_state", {"state":  interface_link_state})
+    interface = ET.Element("interface", {"type": "bridge"})
+    source = ET.SubElement(interface, "source", {"bridge":  vm_bridge_name})
+    model = ET.SubElement(interface, "model", {"type":  interface_model_type})
+    link = ET.SubElement(interface, "link", {"state":  interface_link_state})
+    return interface
 
 
 def _register_all_namespaces(filename):
@@ -604,7 +608,7 @@ def _call_function(func, **kwargs):
 if __name__ == '__main__':
     # test:
     UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
-    # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH, use_hugepages=True)
+    define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr")
     # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
     # start_vm(DEFAULT_UCPE, "test")
     # print(start_vms(DEFAULT_UCPE, ["test", "cloud"]))
