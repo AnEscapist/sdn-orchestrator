@@ -9,7 +9,7 @@
 <!--                         size=sm-->
 <!--                         color='rgb(255,255,255)'/>-->
       <i class="fas fa-terminal"></i>
-      Console
+      {{params.data.name}}
     </button>
   </div>
 </template>
@@ -35,7 +35,7 @@
             window.open(url, '_blank');
           },
           redirectToConsole(vm_name){
-            this.prepareVMConsole().then(this.openURLInNewTab(this.vncURL))
+            this.prepareVMConsole(vm_name).then(this.openURLInNewTab(this.vncURL))
           }
         }
     })

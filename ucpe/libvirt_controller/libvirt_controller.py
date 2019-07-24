@@ -24,6 +24,9 @@ import datetime
 
 import subprocess
 
+import sys
+sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
+
 
 
 class LibvirtController():
