@@ -39,6 +39,11 @@
                  @selection-changed="onSelectionChanged"
       >
       </AgGridVue>
+      <Button
+        @click="debug"
+      >
+        Google
+      </Button>
     </div>
   </div>
 </template>
@@ -48,12 +53,13 @@
   import { AgGridVue } from "ag-grid-vue"
   import VMActionsButtonGroup from '../../Buttons/vnfs/vms/VMActionsButtonGroup'
   import CreateVMModal from '../../Modals/vnfs/vms/CreateVMModal'
+  import VMConsoleRenderer from './VMConsoleRenderer'
 
   const AGENT_NAME = 'agent'; //todo: this is bad
 
   export default {
     name: "VMTableNew",
-    components: { AgGridVue, VMActionsButtonGroup, CreateVMModal },
+    components: { AgGridVue, VMActionsButtonGroup, CreateVMModal, VMConsoleRenderer },
     data() {
       return {
         vmTableColumns: [
@@ -67,34 +73,40 @@
           { headerName: 'Memory Usage', field: 'memory usage', sortable: true },
           { headerName: 'Memory Allocated', field: 'memory allocated', sortable: true },
           { headerName: 'CPUs', field: 'cpus', sortable: true },
+          {headerName: 'Console', cellRendererFramework: VMConsoleRenderer, pinned: true}
         ],
         gridOptions: {
           rowSelection: "multiple",
           domLayout: "autoHeight",
           rowMultiSelectWithClick: true,
           suppressCellSelection: true,
-          suppressHorizontalScroll: true,
+          // suppressHorizontalScroll: true,
         },
         filterText: ''
       }
     },
     computed: {
       ...mapGetters([
-        'vnfList', 'vnfCount', 'vmList', 'vmInfo', 'vmSelection', 'vmFilterText', 'vmStateFromName', 'vmAtLeastOneSelected'
+        'vnfList', 'vnfCount', 'vmList', 'vmInfo', 'vmSelection', 'vmFilterText', 'vmStateFromName', 'vmAtLeastOneSelected', "vmAtLeastOneSelected", 'vmWebServerIPV4'
       ]),
     },
     mounted() {
       this.gridApi = this.gridOptions.api;
       this.gridColumnApi = this.gridOptions.columnApi;
+      this.updateVMWebServerIPV4()
     },
     methods: {
       ...mapActions([
-        'updateVMSelection', 'updateVMFilterText', 'startSelectedVMs', 'pauseSelectedVMs', 'killSelectedVMs', 'deleteSelectedVMs'
+        'updateVMSelection', 'updateVMFilterText', 'startSelectedVMs', 'pauseSelectedVMs', 'killSelectedVMs', 'deleteSelectedVMs', 'updateVMWebServerIPV4'
       ]),
       onSelectionChanged() {
         let selection = this.gridApi.getSelectedRows();
         this.updateVMSelection(selection.map(row => row.name)); //todo: figure out why this warning happens
       },
+      debug(){
+        console.log("debug")
+        window.open("https://google.com", '_blank');
+      }
     },
     watch: {
       filterText: function () {
@@ -102,6 +114,7 @@
       }
     }
   }
+
 </script>
 
 <style scoped>
@@ -113,5 +126,10 @@
 
   .btn-secondary {
     background-color: #4a148c;
+  }
+
+  .btn:focus, .btn:active {
+    outline: none !important;
+    box-shadow: none !important;
   }
 </style>

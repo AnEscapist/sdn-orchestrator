@@ -4,6 +4,7 @@ sys.path.append('/home/att-pc-7/Zhengqi/Project/sdn-orchestrator/')
 sys.path.append('/home/att/projects/sdn-orchestrator/')
 sys.path.append('/home/allen/sdn-orchestrator/')
 from flask import Flask, escape, request, jsonify
+from web.backend.utils.util_routes import util_routes
 from web.backend.vms.vm_routes import vm_routes
 from web.backend.docker.docker_routes import docker_routes
 from web.backend.grpc.grpc_routes import grpc_routes
@@ -11,6 +12,7 @@ from web.backend.bcm.bcm_routes import bcm_routes
 import web.backend.zmq_web as zmq_web
 
 app = Flask(__name__)
+app.register_blueprint(util_routes, url_prefix='/utils')
 app.register_blueprint(vm_routes, url_prefix='/vms')
 app.register_blueprint(docker_routes)
 app.register_blueprint(grpc_routes)

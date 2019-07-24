@@ -93,6 +93,14 @@ def create_vm(controller_id, ucpe_sn):
 def get_vm_images(controller_id, ucpe_sn):
     return jsonify({"images": sorted(IMAGE_FILES.keys())})
 
+@vm_routes.route('/console/<controller_id>/<ucpe_sn>/<vm_name>')
+def prepare_vm_console(controller_id, ucpe_sn, vm_name):
+    method = 'prepare_vm_console'
+    body = {"username": HOST_USERNAME, "hostname": HOST_IP, 'vm_name': vm_name}
+    message_data = get_message_data(method, body)
+    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
+    return jsonify(response)
+
 def parseMemoryGB(memoryStr):
     return int(memoryStr.split(" ")[0])
 

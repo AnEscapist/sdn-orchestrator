@@ -14,7 +14,8 @@ const state = {
     memoryAvailable: 0,
     hugepageMemoryAvailable: 0,
   },
-  vmBridgesAvailable: []
+  vmBridgesAvailable: [],
+  vmWebServerIPV4: ''
 };
 
 const mutations = {
@@ -47,6 +48,9 @@ const mutations = {
   },
   SET_VM_BRIDGES_AVAILABLE(state, payload) {
     state.vmBridgesAvailable = payload
+  },
+  SET_VM_WEB_SERVER_IPV4(state, payload){
+    state.vmWebServerIPV4 = payload
   }
 };
 
@@ -132,6 +136,14 @@ const actions = {
       commit('SET_VM_BRIDGES_AVAILABLE', eval(response.data.result.return)) //solved all of our problems just now
     })
   },
+  updateVMWebServerIPV4({commit}){
+    return axios.get('/api/utils/ipv4').then((response) => {
+      commit('SET_VM_WEB_SERVER_IPV4', response.data.ipv4)
+    })
+  },
+  prepareVMConsole({commit}, vm_name){
+    return axios.get(getURL('console') + `/${vm_name}`)
+  },
 };
 
 const getters = {
@@ -147,7 +159,8 @@ const getters = {
   vmMemoryOptions: state => getOneToNArray(state.vmCreateForm.memoryAvailable),
   vmHugepageMemoryOptions: state => getOneToNArray(state.vmCreateForm.hugepageMemoryAvailable),
   vmImagesAvailable: state => state.vmImagesAvailable,
-  vmBridgesAvailable: state => state.vmBridgesAvailable
+  vmBridgesAvailable: state => state.vmBridgesAvailable,
+  vmWebServerIPV4: state => state.vmWebServerIPV4 //todo: move this to somewhere reasonable
 };
 
 function getURL(endpoint) {
