@@ -194,4 +194,5 @@ def create_volume():
 
 @docker_routes.route('/docker/console_container')
 def console_container():
-    return 'this is test sring.'
+    container_id = request.args.get('container_id')
+    return f'{container_id}.'
