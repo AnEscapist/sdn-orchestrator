@@ -6,10 +6,7 @@ from ucpe.docker_controller.docker_controller_message import *
 
 def create_volume(name):
 	func = create_volume
-	try:
-		dcli.volumes.create(name)
-	except docker.errors.APIError as ae:
-        return api_error(ae, func)
+	dcli.volumes.create(name)
 	return create_volume_message(name, create_volume)
 
 def list_volumes():
