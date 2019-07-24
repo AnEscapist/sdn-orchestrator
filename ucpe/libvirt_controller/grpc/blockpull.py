@@ -6,4 +6,3 @@ def blockpull(vm_name, save_path, base_path):
     out,err = p.communicate()
     return out,err
 
-

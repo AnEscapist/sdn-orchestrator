@@ -11,13 +11,13 @@ HOST_USERNAME = 'potato'  # todo: remove the need for this (ask if one account p
 JSON_RPC_VERSION = '2.0'
 JSON_RPC_ID = 0  # todo: ask tyler what id to put
 
-IMAGE_BASE_PATH = '/var/third-party/base'
+IMAGE_ACTIVE_PATH = '/var/third-party/active'
 # todo: put these in a database
 IMAGE_FILES = {
     'Vyatta Router': 'vyatta.qcow2',
     'Ubuntu 16.04': 'ubuntu_16.qcow2',
-    'AT&T Storage': 'blah1',
-    'AT&T Monitor': 'blah2'
+    'AT&T Storage': 'storage.qcow2',
+    'AT&T Monitor': 'monitor.qcow2'
 }
 
 def get_method(method_suffix):
@@ -30,74 +30,39 @@ def get_message_data(method_suffix, body):
 
 
 @vm_routes.route('/all_vm_info/<controller_id>/<ucpe_sn>')
-def vm_info(controller_id, ucpe_sn):
+def all_vm_info(controller_id, ucpe_sn):
     method = 'get_all_vm_info'
-    body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_name": "test"}
-    message_data = get_message_data(method, body)
-    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
-    print(type(response['result']['return']))
-    return jsonify(response)
-
-
-@vm_routes.route('/post', methods=['POST'])
-def test_post():
-    print(request.is_json)
-    data = request.get_json()
-    print("received post", data['vm_names'])
-    return "good job\n"
-
-
-# TODO: DRY up the below
-
-@vm_routes.route('/start_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
-def start_selected_vms(controller_id, ucpe_sn):
-    method = 'start_vms'
-    data = request.get_json()
-    body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
+    body = {"username": HOST_USERNAME, "hostname": HOST_IP}
     message_data = get_message_data(method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
     return jsonify(response)
-
 
 @vm_routes.route('/start_or_resume_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
 def start_or_resume_selected_vms(controller_id, ucpe_sn):
     method = 'start_or_resume_vms'
-    data = request.get_json()
-    body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
-    message_data = get_message_data(method, body)
-    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
-    return jsonify(response)
-
+    return _handle_state_change(method, controller_id, ucpe_sn)
 
 @vm_routes.route('/pause_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
 def pause_selected_vms(controller_id, ucpe_sn):
     method = 'suspend_vms'
-    data = request.get_json()
-    body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
-    message_data = get_message_data(method, body)
-    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
-    return jsonify(response)
-
+    return _handle_state_change(method, controller_id, ucpe_sn)
 
 @vm_routes.route('/kill_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
 def kill_selected_vms(controller_id, ucpe_sn):
     method = 'destroy_vms'
-    data = request.get_json()
-    body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
-    message_data = get_message_data(method, body)
-    response = call_ucpe_function(message_data, controller_id, ucpe_sn)
-    return jsonify(response)
-
+    return _handle_state_change(method, controller_id, ucpe_sn)
 
 @vm_routes.route('/delete_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
 def delete_selected_vms(controller_id, ucpe_sn):
     method = 'delete_vms'
+    return _handle_state_change(method, controller_id, ucpe_sn)
+
+def _handle_state_change(method, controller_id, ucpe_sn):
     data = request.get_json()
     body = {"username": HOST_USERNAME, "hostname": HOST_IP, "vm_names": data["vm_names"]}
     message_data = get_message_data(method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
     return jsonify(response)
-
 
 @vm_routes.route('/create_vm/<controller_id>/<ucpe_sn>', methods=['POST'])
 def create_vm(controller_id, ucpe_sn):
@@ -107,7 +72,7 @@ def create_vm(controller_id, ucpe_sn):
     # TODO: database for image paths
     form = data["form"]
     image_file = IMAGE_FILES[form['vmImage']]
-    image_path = os.path.join(IMAGE_BASE_PATH, image_file)
+    image_path = os.path.join(IMAGE_ACTIVE_PATH, image_file)
     body = {
         "username": HOST_USERNAME,
         "hostname": HOST_IP,
@@ -120,3 +85,8 @@ def create_vm(controller_id, ucpe_sn):
     message_data = get_message_data(method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
     return jsonify(response)
+
+@vm_routes.route('/images/<controller_id>/<ucpe_sn>')
+def get_vm_images(controller_id, ucpe_sn):
+    return jsonify({"images": sorted(IMAGE_FILES.keys())})
+

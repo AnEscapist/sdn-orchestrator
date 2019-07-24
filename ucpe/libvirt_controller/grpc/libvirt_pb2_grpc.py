@@ -19,6 +19,11 @@ class LibvirtStub(object):
         request_serializer=libvirt__pb2.BlockPullRequest.SerializeToString,
         response_deserializer=libvirt__pb2.Response.FromString,
         )
+    self.CopyImage = channel.unary_unary(
+        '/Libvirt/CopyImage',
+        request_serializer=libvirt__pb2.CopyRequest.SerializeToString,
+        response_deserializer=libvirt__pb2.Response.FromString,
+        )
 
 
 class LibvirtServicer(object):
@@ -32,12 +37,24 @@ class LibvirtServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def CopyImage(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_LibvirtServicer_to_server(servicer, server):
   rpc_method_handlers = {
       'BlockPull': grpc.unary_unary_rpc_method_handler(
           servicer.BlockPull,
           request_deserializer=libvirt__pb2.BlockPullRequest.FromString,
+          response_serializer=libvirt__pb2.Response.SerializeToString,
+      ),
+      'CopyImage': grpc.unary_unary_rpc_method_handler(
+          servicer.CopyImage,
+          request_deserializer=libvirt__pb2.CopyRequest.FromString,
           response_serializer=libvirt__pb2.Response.SerializeToString,
       ),
   }

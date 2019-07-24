@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\rlibvirt.proto\">\n\x10\x42lockPullRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\x12\x0c\n\x04\x62\x61se\x18\x03 \x01(\t\"&\n\x08Response\x12\x0b\n\x03out\x18\x01 \x01(\t\x12\r\n\x05\x65rror\x18\x02 \x01(\t26\n\x07Libvirt\x12+\n\tBlockPull\x12\x11.BlockPullRequest\x1a\t.Response\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\rlibvirt.proto\">\n\x10\x42lockPullRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x0c\n\x04path\x18\x02 \x01(\t\x12\x0c\n\x04\x62\x61se\x18\x03 \x01(\t\"7\n\x0b\x43opyRequest\x12\x0f\n\x07vm_name\x18\x01 \x01(\t\x12\x17\n\x0fimage_file_name\x18\x02 \x01(\t\"&\n\x08Response\x12\x0b\n\x03out\x18\x01 \x01(\t\x12\r\n\x05\x65rror\x18\x02 \x01(\t2^\n\x07Libvirt\x12+\n\tBlockPull\x12\x11.BlockPullRequest\x1a\t.Response\"\x00\x12&\n\tCopyImage\x12\x0c.CopyRequest\x1a\t.Response\"\x00\x62\x06proto3')
 )
 
 
@@ -71,6 +71,44 @@ _BLOCKPULLREQUEST = _descriptor.Descriptor(
 )
 
 
+_COPYREQUEST = _descriptor.Descriptor(
+  name='CopyRequest',
+  full_name='CopyRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='vm_name', full_name='CopyRequest.vm_name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='image_file_name', full_name='CopyRequest.image_file_name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=81,
+  serialized_end=136,
+)
+
+
 _RESPONSE = _descriptor.Descriptor(
   name='Response',
   full_name='Response',
@@ -104,11 +142,12 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=81,
-  serialized_end=119,
+  serialized_start=138,
+  serialized_end=176,
 )
 
 DESCRIPTOR.message_types_by_name['BlockPullRequest'] = _BLOCKPULLREQUEST
+DESCRIPTOR.message_types_by_name['CopyRequest'] = _COPYREQUEST
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -118,6 +157,13 @@ BlockPullRequest = _reflection.GeneratedProtocolMessageType('BlockPullRequest', 
   # @@protoc_insertion_point(class_scope:BlockPullRequest)
   })
 _sym_db.RegisterMessage(BlockPullRequest)
+
+CopyRequest = _reflection.GeneratedProtocolMessageType('CopyRequest', (_message.Message,), {
+  'DESCRIPTOR' : _COPYREQUEST,
+  '__module__' : 'libvirt_pb2'
+  # @@protoc_insertion_point(class_scope:CopyRequest)
+  })
+_sym_db.RegisterMessage(CopyRequest)
 
 Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Message,), {
   'DESCRIPTOR' : _RESPONSE,
@@ -134,8 +180,8 @@ _LIBVIRT = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=121,
-  serialized_end=175,
+  serialized_start=178,
+  serialized_end=272,
   methods=[
   _descriptor.MethodDescriptor(
     name='BlockPull',
@@ -143,6 +189,15 @@ _LIBVIRT = _descriptor.ServiceDescriptor(
     index=0,
     containing_service=None,
     input_type=_BLOCKPULLREQUEST,
+    output_type=_RESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='CopyImage',
+    full_name='Libvirt.CopyImage',
+    index=1,
+    containing_service=None,
+    input_type=_COPYREQUEST,
     output_type=_RESPONSE,
     serialized_options=None,
   ),

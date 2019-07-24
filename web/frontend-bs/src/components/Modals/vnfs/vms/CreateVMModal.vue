@@ -5,8 +5,6 @@
       @show="onShow"
       @ok="onCreateVNF"
       id="vm-create-modal">
-      <h2>{{vmCreateForm.hugepageMemoryAvailable}} blah {{vmCreateForm.memoryAvailable}}</h2>
-      <h2>{{vmVCPUOptions}}</h2>
       <form>
         <div class="form-row">
           <!--          <div class="form-group col-md-6">-->
@@ -29,8 +27,7 @@
           <select id="vmImageName"
                   v-model="form.vmImage"
                   class="custom-select mr-sm-2">
-            <option selected>Vyatta Router</option>
-            <option>...</option>
+            <option v-for="image in vmImagesAvailable">{{image}}</option>
           </select>
         </div>
         <div class="form-row">
@@ -39,26 +36,25 @@
             <select id="vmCPUCount"
                     v-model="form.vmCPUs"
                     class="custom-select mr-sm-2">
-              <option selected>1</option>
-              <option>...</option>
+              <option v-for="option in vmVCPUOptions">{{option}}</option>
             </select>
           </div>
           <div v-if="!form.hugepagesEnabled"
                class="form-group col-md-4">
             <label for="vmMemory">Memory</label>
             <select id="vmMemory"
+                    v-model="form.vmMemory"
                     class="custom-select mr-sm-2">
-              <option selected>4 GB</option>
-              <option>...</option>
+              <option v-for="option in vmMemoryOptions">{{option}} GB</option>
             </select>
           </div>
           <div v-if="form.hugepagesEnabled"
+               v-model="form.vmHugepageMemory"
                class="form-group col-md-4">
             <label for="vmHugepageMemory">Hugepage Memory</label>
             <select id="vmHugepageMemory"
                     class="custom-select mr-sm-2">
-              <option selected>4 GB</option>
-              <option>...</option>
+              <option v-for="option in vmHugepageMemoryOptions">{{option}} GB</option>
             </select>
           </div>
           <div class="form-group col-md-4">
@@ -77,9 +73,9 @@
 
 <script>
   import Switches from 'vue-switches';
-  import { ToggleButton } from 'vue-js-toggle-button'
+  import { ToggleButton } from 'vue-js-toggle-button';
   import axios from 'axios';
-  import {mapGetters, mapActions} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex';
 
   export default {
     name: "CreateVMModal",
@@ -92,7 +88,8 @@
           vmName: "",
           vmImage: "Vyatta Router",
           vmCPUs: 1,
-          vmMemory: 4,
+          vmMemory: '4 GB',
+          vmHugepageMemory: '4 GB',
           hugepagesEnabled: false
         },
         show: true,
@@ -100,23 +97,25 @@
     },
     computed: {
       ...mapGetters([
-        'vmCreateForm', 'vmVCPUOptions', 'vmMemoryOptions', 'vmHugepageMemoryOptions'
+        'vmCreateForm', 'vmVCPUOptions', 'vmMemoryOptions', 'vmHugepageMemoryOptions', 'vmImagesAvailable'
       ])
     },
     methods: {
       ...mapActions([
-        'createVM', 'updateVCPUsAvailable', 'updateMemoryAvailable', 'updateHugepageMemoryAvailable'
+        'createVM', 'updateVMVCPUsAvailable', 'updateVMMemoryAvailable', 'updateVMHugepageMemoryAvailable', 'updateVMImagesAvailable'
       ]),
       onCreateVNF(){
         this.createVM({...this.form}).then(this.clearForm());
       },
       clearForm(){
         this.form.vmName = "";
+        this.form.vmHugepageMemory = 0;
       },
       onShow(){
-        this.updateVCPUsAvailable();
-        this.updateMemoryAvailable();
-        this.updateHugepageMemoryAvailable();
+        this.updateVMVCPUsAvailable();
+        this.updateVMMemoryAvailable();
+        this.updateVMHugepageMemoryAvailable();
+        this.updateVMImagesAvailable();
         this.clearForm();
       }
     }

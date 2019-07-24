@@ -5,6 +5,7 @@ import VNFLayout from '../layout/vnfs/VNFLayout'
 import VNFDashboard from '../pages/vnfs/VNFDashboard'
 import DockerC from '../pages/vnfs/docker/docker_c'
 import DockerI from '../pages/vnfs/docker/docker_i'
+import DockerV from '../pages/vnfs/docker/docker_v'
 import Blank from '@/components/Blank'
 import DockerContainer from '../pages/vnfs/docker/dockercontainer'
 import DockerImage from '../pages/vnfs/docker/dockerimage'
@@ -27,6 +28,11 @@ const dockerRoutes = [
     path: 'docker_i',
     name: 'docker_i',
     component: DockerI,
+  },
+  {
+    path: 'docker_v',
+    name: 'docker_v',
+    component: DockerV,
   },
   {
       path: 'dockercontainer',
