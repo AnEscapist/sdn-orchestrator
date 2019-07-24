@@ -1,8 +1,7 @@
-
 <template>
 
   <div>
-    <table>
+    <table width="1000">
       <tr>
         <td>
           <form>
@@ -17,117 +16,45 @@
           </form>
           <br>
           Your selection: {{form.action}}
+          <br>
+          <br>
         </td>
+
+    </tr>
+      <tr>
         <td>
-          <div>
-            <!-- Check All -->
-            <input type='checkbox' @click='checkAll()' v-model='isCheckAll'> Check All
-
-            <!-- Checkboxes list -->
-            <table width="400">
-            <tr v-for='row in portList'>
-              <td v-for='port in row'>
-                <input type='checkbox' v-bind:value='port' v-model='ports' @change='updateCheckall()'>
-                <label :for="port"> {{port}}</label>
-              </td>
-            </tr>
-            </table>
 
 
-            <!-- Print -->
-            <input type='button' @click='printValues()' value='Select these Ports'>
-
-            <br>
-
-              Selected items : {{ form.selectedPorts }}
-
-
-
-          </div>
-        </td>
-        <td>
           <b-modal id="bcmportwindow" scrollable>
-            <h1>
-              text
-              scroll
-            </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1><h1>
-            text
-            scroll
-          </h1>
+            <div>
+              <!-- Check All -->
+              <input type='checkbox' @click='checkAll()' v-model='isCheckAll'> Check All
+
+              <!-- Checkboxes list -->
+              <table width="400">
+                <tr v-for='row in portList'>
+                  <td v-for='port in row'>
+                    <input type='checkbox' v-bind:value='port' v-model='ports' @change='updateCheckall()'>
+                    <label :for="port"> {{port}}</label>
+                  </td>
+                </tr>
+              </table>
+            </div>
           </b-modal>
           <button type="button"
-                  class="btn btn-dark btn-sm"
+                  class="btn btn-dark btn-lg"
                   v-b-modal="'bcmportwindow'"
           >
-            <font-awesome-icon :icon="['fas', 'trash-alt']"
-                               size=sm
-                               color='rgb(255, 255, 255)'/>
-            Remove
+            Select Ports
           </button>
+          <div>
+            Selected items : {{ form.selectedPorts }}
+          </div>
+          <br>
+          <br>
         </td>
+      </tr>
+      <tr>
         <td>
           <input
             class="form-control"
@@ -142,11 +69,11 @@
               </li>
             </ul>
           </div>
-          <br>
+
           <button type="button"
                   @click="testButton"
                   :ok-disabled="!isFormValid"
-                  class="btn btn-dark btn-sm">
+                  class="btn btn-dark btn-lg">
             Do the thing
           </button>
           <br>
@@ -209,7 +136,7 @@
             vlanid() {
                 return this.form.vlanid
             },
-            selection(){
+            selection() {
                 return this.form.action
             },
             isFormValid() {
@@ -222,7 +149,7 @@
                 this.isCheckAll = !this.isCheckAll;
                 this.ports = [];
                 if (this.isCheckAll) { // Check all
-                    for(var row = 0; row < this.portList.length; row++) {
+                    for (var row = 0; row < this.portList.length; row++) {
                         for (var key in this.portList[row]) {
                             console.log(key);
                             this.ports.push(this.portList[row][key]);
@@ -263,8 +190,11 @@
             vlanid: function () {
                 this.validateName()
             },
-            selection: function() {
+            selection: function () {
                 this.validateName()
+            },
+            ports: function(){
+                this.printValues()
             }
         }
     }
