@@ -204,7 +204,7 @@ def ovs_list_ports_number(br):
     for i in list1:
         proc = subprocess.Popen(['ovs-vsctl', 'get', 'Interface', i, 'ofport'], stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
-        tmp.append(proc.stdout.read().decode('utf-8'))
+        tmp.append(proc.stdout.read().decode('utf-8').strip())
     print(tmp)
 
 def sriov_totalvfs(device):
