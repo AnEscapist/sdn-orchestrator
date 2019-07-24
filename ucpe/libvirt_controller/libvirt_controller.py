@@ -222,22 +222,22 @@ def define_vm_from_xml(ucpe, xml, verbose=True):
     return _libvirt_connection_call(func, ucpe, success_message, fail_message, verbose=verbose)
 
 
-def define_vm_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_hugepage_memory=4, use_hugepages=False, vm_vcpu_count=1, verbose=True):
-    if use_hugepages:
+def define_vm_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_hugepage_memory=4, vm_use_hugepages=False, vm_vcpu_count=1, verbose=True):
+    if vm_use_hugepages:
         vm_memory = vm_hugepage_memory
-    image_file_name = os.path.basename(image_path)
+    image_file_name = os.path.basename(vm_image_path)
     channel = grpc.insecure_channel('10.10.81.100:50061')
     stub = libvirt_pb2_grpc.LibvirtStub(channel)
     request = libvirt_pb2.CopyRequest(vm_name=vm_name, image_file_name=image_file_name)
     response = stub.CopyImage(request)
     #todo: error handling
-    xml = _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=vm_memory, use_hugepages=use_hugepages, vm_vcpu_count=vm_vcpu_count,
+    xml = _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=vm_memory, vm_use_hugepages=vm_use_hugepages, vm_vcpu_count=vm_vcpu_count,
                                verbose=True)
     return define_vm_from_xml(ucpe, xml, verbose=verbose)
 
 
-def _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_use_hugepages=False, vm_vcpu_count=1, verbose=True):
-    xsl = _get_modified_xsl(vm_name, image_path, vm_memory, vm_use_hugepages, vm_vcpu_count)
+def _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_use_hugepages=False, vm_vcpu_count=1, verbose=True):
+    xsl = _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vcpu_count)
     BLANK_XML = "<blank></blank>"  # xsl contains the entire xml text
     dom = LET.fromstring(BLANK_XML)
     xslt = LET.fromstring(xsl)
@@ -247,7 +247,7 @@ def _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_use_hugepage
     return xml
 
 
-def _get_modified_xsl(vm_name, image_path, vm_memory, vm_use_hugepages, vm_vcpu_count, vm_bridge_name=None):
+def _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vcpu_count, vm_bridge_name=None):
     dirname = os.path.dirname(__file__)
     xsl_path = os.path.join(dirname, "template.xsl")  # todo: possibly stick this in a constant
 
@@ -273,7 +273,7 @@ def _get_modified_xsl(vm_name, image_path, vm_memory, vm_use_hugepages, vm_vcpu_
     vcpu.text = str(vm_vcpu_count)
 
     source = root.find(basepath + 'devices/disk/source', namespaces)
-    source.set('file', image_path)
+    source.set('file', vm_image_path)
 
     if vm_bridge_name is not None:
         devices = root.find(basepath + 'devices', namespaces)
