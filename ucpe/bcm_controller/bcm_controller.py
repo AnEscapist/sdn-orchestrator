@@ -11,6 +11,11 @@ import grpc
 hostname = "10.10.81.250:50051"
 
 class BCMController:
+    @staticmethod
+    def bcm_controller_show_active_ports(**kwargs):
+        func = show_active_ports
+        return _call_function(func, **kwargs)
+
 
     @staticmethod
     def bcm_controller_create_vlan(**kwargs):
@@ -46,6 +51,14 @@ class BCMController:
     def bcm_controller_show_pvlans(**kwargs):
         func = show_pvlans
         return _call_function(func, **kwargs)
+
+
+def show_active_ports():
+    channel = grpc.insecure_channel(hostname)
+    stub = autobcm_pb2_grpc.AutoBCMStub(channel)
+    request = autobcm_pb2.ConfigRequest()
+    response = stub.ShowActivePorts(request)
+    return response.message
 
 
 def create_vlan(vlanid, pbm='', ubm=''):

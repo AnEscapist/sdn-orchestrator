@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='autobcm',
   syntax='proto3',
   serialized_options=_b('\n\033io.grpc.examples.helloworldB\017HelloWorldProtoP\001\242\002\003HLW'),
-  serialized_pb=_b('\n\rautobcm.proto\x12\x07\x61utobcm\"9\n\rConfigRequest\x12\x0e\n\x06vlanid\x18\x01 \x01(\x05\x12\x0b\n\x03pbm\x18\x02 \x01(\t\x12\x0b\n\x03ubm\x18\x03 \x01(\t\"\x1e\n\x0b\x43onfigReply\x12\x0f\n\x07message\x18\x01 \x01(\t2\xb8\x03\n\x07\x41utoBCM\x12<\n\nCreateVLAN\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12:\n\x08\x41\x64\x64Ports\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12:\n\x08SetPVLAN\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12;\n\tShowVLANs\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12=\n\x0b\x44\x65stroyVLAN\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12=\n\x0bRemovePorts\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12<\n\nShowPVLANs\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x42\x36\n\x1bio.grpc.examples.helloworldB\x0fHelloWorldProtoP\x01\xa2\x02\x03HLWb\x06proto3')
+  serialized_pb=_b('\n\rautobcm.proto\x12\x07\x61utobcm\"9\n\rConfigRequest\x12\x0e\n\x06vlanid\x18\x01 \x01(\x05\x12\x0b\n\x03pbm\x18\x02 \x01(\t\x12\x0b\n\x03ubm\x18\x03 \x01(\t\"\x1e\n\x0b\x43onfigReply\x12\x0f\n\x07message\x18\x01 \x01(\t2\xfb\x03\n\x07\x41utoBCM\x12\x41\n\x0fShowActivePorts\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12<\n\nCreateVLAN\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12:\n\x08\x41\x64\x64Ports\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12:\n\x08SetPVLAN\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12;\n\tShowVLANs\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12=\n\x0b\x44\x65stroyVLAN\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12=\n\x0bRemovePorts\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x12<\n\nShowPVLANs\x12\x16.autobcm.ConfigRequest\x1a\x14.autobcm.ConfigReply\"\x00\x42\x36\n\x1bio.grpc.examples.helloworldB\x0fHelloWorldProtoP\x01\xa2\x02\x03HLWb\x06proto3')
 )
 
 
@@ -129,12 +129,21 @@ _AUTOBCM = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   serialized_start=118,
-  serialized_end=558,
+  serialized_end=625,
   methods=[
+  _descriptor.MethodDescriptor(
+    name='ShowActivePorts',
+    full_name='autobcm.AutoBCM.ShowActivePorts',
+    index=0,
+    containing_service=None,
+    input_type=_CONFIGREQUEST,
+    output_type=_CONFIGREPLY,
+    serialized_options=None,
+  ),
   _descriptor.MethodDescriptor(
     name='CreateVLAN',
     full_name='autobcm.AutoBCM.CreateVLAN',
-    index=0,
+    index=1,
     containing_service=None,
     input_type=_CONFIGREQUEST,
     output_type=_CONFIGREPLY,
@@ -143,7 +152,7 @@ _AUTOBCM = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='AddPorts',
     full_name='autobcm.AutoBCM.AddPorts',
-    index=1,
+    index=2,
     containing_service=None,
     input_type=_CONFIGREQUEST,
     output_type=_CONFIGREPLY,
@@ -152,7 +161,7 @@ _AUTOBCM = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='SetPVLAN',
     full_name='autobcm.AutoBCM.SetPVLAN',
-    index=2,
+    index=3,
     containing_service=None,
     input_type=_CONFIGREQUEST,
     output_type=_CONFIGREPLY,
@@ -161,7 +170,7 @@ _AUTOBCM = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='ShowVLANs',
     full_name='autobcm.AutoBCM.ShowVLANs',
-    index=3,
+    index=4,
     containing_service=None,
     input_type=_CONFIGREQUEST,
     output_type=_CONFIGREPLY,
@@ -170,7 +179,7 @@ _AUTOBCM = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='DestroyVLAN',
     full_name='autobcm.AutoBCM.DestroyVLAN',
-    index=4,
+    index=5,
     containing_service=None,
     input_type=_CONFIGREQUEST,
     output_type=_CONFIGREPLY,
@@ -179,7 +188,7 @@ _AUTOBCM = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='RemovePorts',
     full_name='autobcm.AutoBCM.RemovePorts',
-    index=5,
+    index=6,
     containing_service=None,
     input_type=_CONFIGREQUEST,
     output_type=_CONFIGREPLY,
@@ -188,7 +197,7 @@ _AUTOBCM = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='ShowPVLANs',
     full_name='autobcm.AutoBCM.ShowPVLANs',
-    index=6,
+    index=7,
     containing_service=None,
     input_type=_CONFIGREQUEST,
     output_type=_CONFIGREPLY,

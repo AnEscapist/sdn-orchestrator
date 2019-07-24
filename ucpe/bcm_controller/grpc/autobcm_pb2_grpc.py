@@ -14,6 +14,11 @@ class AutoBCMStub(object):
     Args:
       channel: A grpc.Channel.
     """
+    self.ShowActivePorts = channel.unary_unary(
+        '/autobcm.AutoBCM/ShowActivePorts',
+        request_serializer=autobcm__pb2.ConfigRequest.SerializeToString,
+        response_deserializer=autobcm__pb2.ConfigReply.FromString,
+        )
     self.CreateVLAN = channel.unary_unary(
         '/autobcm.AutoBCM/CreateVLAN',
         request_serializer=autobcm__pb2.ConfigRequest.SerializeToString,
@@ -55,9 +60,16 @@ class AutoBCMServicer(object):
   """define the service
   """
 
-  def CreateVLAN(self, request, context):
+  def ShowActivePorts(self, request, context):
     """Configure the Broadcom Shell
     """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def CreateVLAN(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
@@ -107,6 +119,11 @@ class AutoBCMServicer(object):
 
 def add_AutoBCMServicer_to_server(servicer, server):
   rpc_method_handlers = {
+      'ShowActivePorts': grpc.unary_unary_rpc_method_handler(
+          servicer.ShowActivePorts,
+          request_deserializer=autobcm__pb2.ConfigRequest.FromString,
+          response_serializer=autobcm__pb2.ConfigReply.SerializeToString,
+      ),
       'CreateVLAN': grpc.unary_unary_rpc_method_handler(
           servicer.CreateVLAN,
           request_deserializer=autobcm__pb2.ConfigRequest.FromString,
