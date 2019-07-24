@@ -85,6 +85,14 @@ class gRPCDataCollector(object):
         return modify_execute(func_name(), f"ovs add_dpdk_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}"
                               f"{kwargs['body']['str_param3']}")
 
+    @staticmethod
+    def grpc_modify_ovs_docker_add_port(**kwargs):
+        if 'param5' not in kwargs['body']:
+            kwargs['body']['str_param5'] = None
+        return modify_execute(func_name(), "ovs_docker add_port "
+        f"{kwargs['body']['str_param1']} {kwargs['body']['str_param2']} {kwargs['body']['str_param3']} "
+        f"{kwargs['body']['str_param4']} {kwargs['body']['str_param5']}")
+
 
 # ==================== private functions ===============================
 
