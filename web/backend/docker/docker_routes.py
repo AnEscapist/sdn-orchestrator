@@ -197,5 +197,5 @@ def create_volume():
 def console_container():
     container_id = request.args.get('container_id')
     cmd = 'sudo node ../../docker-browser-console/server.js ' + container_id
-    # os.system(cmd)
+    os.system(cmd)
     return f'{cmd}.'
