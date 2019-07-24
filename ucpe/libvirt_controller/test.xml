@@ -35,9 +35,16 @@
         <!-- for linux bridge interfaces
         <interface type="bridge">
         <source bridge="mgmtbr"/>
-        <target dev="vnet5"/>
         <model type="virtio"/>
-        <alias name="net0"/>
+        <link state="up"/>
+        </interface>
+        -->
+        <!-- for linux bridge interfaces
+        <interface type="bridge">
+        <source bridge="mgmtbr"/>
+        <target dev="vnet5"/> optional
+        <model type="virtio"/>
+        <alias name="net0"/> optional
         <link state="up"/>
         </interface>
         -->

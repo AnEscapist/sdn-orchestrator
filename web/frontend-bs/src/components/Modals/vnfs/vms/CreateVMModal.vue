@@ -1,6 +1,7 @@
 <!--Todo
       -CONSTANTS
-
+    NOTES:
+      -Filesizes MUST be inputted in GB (there's some bad hardcoding that you can get rid of)
 -->
 <template>
   <div>

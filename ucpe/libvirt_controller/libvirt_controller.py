@@ -23,6 +23,7 @@ from hurry.filesize import alternative
 import datetime
 
 
+
 class LibvirtController():
 
     @staticmethod
@@ -235,8 +236,8 @@ def define_vm_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_hugepage_me
     return define_vm_from_xml(ucpe, xml, verbose=verbose)
 
 
-def _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, use_hugepages=False, vm_vcpu_count=1, verbose=True):
-    xsl = _get_modified_xsl(vm_name, image_path, vm_memory, use_hugepages, vm_vcpu_count)
+def _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, vm_use_hugepages=False, vm_vcpu_count=1, verbose=True):
+    xsl = _get_modified_xsl(vm_name, image_path, vm_memory, vm_use_hugepages, vm_vcpu_count)
     BLANK_XML = "<blank></blank>"  # xsl contains the entire xml text
     dom = LET.fromstring(BLANK_XML)
     xslt = LET.fromstring(xsl)
@@ -246,11 +247,11 @@ def _get_xml_from_params(ucpe, vm_name, image_path, vm_memory=4, use_hugepages=F
     return xml
 
 
-def _get_modified_xsl(vm_name, image_path, vm_memory, use_hugepages, vm_vcpu_count):
+def _get_modified_xsl(vm_name, image_path, vm_memory, vm_use_hugepages, vm_vcpu_count, vm_bridge_name=None):
     dirname = os.path.dirname(__file__)
     xsl_path = os.path.join(dirname, "template.xsl")  # todo: possibly stick this in a constant
 
-    if use_hugepages:  # todo: clean up
+    if vm_use_hugepages:  # todo: clean up
         xsl_path = os.path.join(dirname, "template_hugepages.xsl")
 
     namespaces = _register_all_namespaces(xsl_path)
@@ -258,7 +259,7 @@ def _get_modified_xsl(vm_name, image_path, vm_memory, use_hugepages, vm_vcpu_cou
     tree = ET.parse(xsl_path)  # todo: consider storing the template in text
     root = tree.getroot()
 
-    if use_hugepages:
+    if vm_use_hugepages:
         hugepages = root.find('xsl:variable[@name="hugepages_memory"]', namespaces)
         hugepages.text = str(vm_memory) + "G"  # todo: hardcoding the unit might be bad
 
@@ -274,8 +275,19 @@ def _get_modified_xsl(vm_name, image_path, vm_memory, use_hugepages, vm_vcpu_cou
     source = root.find(basepath + 'devices/disk/source', namespaces)
     source.set('file', image_path)
 
+    if vm_bridge_name is not None:
+        devices = root.find(basepath + 'devices', namespaces)
+        _add_bridge_interface(devices, vm_bridge_name)
+
     xsl = ET.tostring(root).decode("utf-8")
     return xsl
+
+def _add_bridge_interface(devices, vm_bridge_name, interface_model_type='virtio', interface_link_state='up'):
+    # devices is an Element in an ElementTree
+    interfaces = ET.SubElement(devices, "interfaces", {"type": "bridge"})
+    source = ET.SubElement(interfaces, "source", {"bridge":  vm_bridge_name})
+    model = ET.SubElement(interfaces, "model", {"type":  interface_model_type})
+    link_state = ET.SubElement(interfaces, "link_state", {"state":  interface_link_state})
 
 
 def _register_all_namespaces(filename):

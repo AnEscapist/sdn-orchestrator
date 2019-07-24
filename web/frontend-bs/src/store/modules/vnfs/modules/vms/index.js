@@ -113,13 +113,13 @@ const actions = {
     })
   },
   updateVMMemoryAvailable({ commit }) {
-    return axios.get('/api/grpc/avail_mem').then((response) => {
-      commit('SET_MEMORY_AVAILABLE', parseMemoryInt(response.data.result.return))
+    return axios.get('/api/grpc/avail_mem_bytes').then((response) => {
+      commit('SET_MEMORY_AVAILABLE', parseMemoryIntGBFromBytes(response.data.result.return))
     })
   },
   updateVMHugepageMemoryAvailable({ commit }) {
-    return axios.get('/api/grpc/hugepage_free_mem').then((response) => {
-      commit('SET_HUGEPAGE_MEMORY_AVAILABLE', parseMemoryInt(response.data.result.return))
+    return axios.get('/api/grpc/hugepage_free_mem_bytes').then((response) => {
+      commit('SET_HUGEPAGE_MEMORY_AVAILABLE', parseMemoryIntGBFromBytes(response.data.result.return))
     })
   },
   updateVMImagesAvailable({ commit }) {
@@ -154,8 +154,11 @@ function getURL(endpoint) {
   return `${URL_PREFIX}/${endpoint}/${URL_SUFFIX}`;
 }
 
-function parseMemoryInt(memoryStr) {
-  return parseInt(memoryStr.split(" ")[0])
+function parseMemoryIntGBFromBytes(memoryStr) {
+  //memoryStr: memory in bytes, ex. '12355'
+  //return: memory in gigabytes, as an int
+  let bytes_in_gigabyte = Math.pow(1024, 3);
+  return parseInt((parseInt(memoryStr)/bytes_in_gigabyte));
 }
 
 function getOneToNArray(n) {
