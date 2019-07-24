@@ -72,7 +72,7 @@ def create_vm(controller_id, ucpe_sn):
     # TODO: database for image paths
     form = data["form"]
     image_file = IMAGE_FILES[form['vmImage']]
-    image_path = os.path.join(IMAGE_ACTIVE_PATH, image_file)
+    image_path = os.path.join(IMAGE_ACTIVE_PATH, form['vmName'], image_file)
     body = {
         "username": HOST_USERNAME,
         "hostname": HOST_IP,
