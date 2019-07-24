@@ -17,5 +17,5 @@ def list_volumes():
 	try:
 		volumes_list = dcli.volumes.list()
 	except docker.errors.APIError as ae:
-        return api_error(ae, func)
+		return api_error(ae, func)
 	return list_volumes_message(volumes_list, func)
