@@ -78,9 +78,10 @@ def create_vm(controller_id, ucpe_sn):
         "hostname": HOST_IP,
         "vm_name": form['vmName'],
         "image_path": image_path,
-        "vm_memory": form['vmMemory'],
+        "vm_memory": parseMemoryGB(form['vmMemory']),
         "vm_vcpu_count": form['vmCPUs'],
-        "use_hugepages": form['hugepagesEnabled']
+        "use_hugepages": form['hugepagesEnabled'],
+        "vm_hugepage_memory": parseMemoryGB(form['vmHugepageMemory'])
     }
     message_data = get_message_data(method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
@@ -89,4 +90,7 @@ def create_vm(controller_id, ucpe_sn):
 @vm_routes.route('/images/<controller_id>/<ucpe_sn>')
 def get_vm_images(controller_id, ucpe_sn):
     return jsonify({"images": sorted(IMAGE_FILES.keys())})
+
+def parseMemoryGB(memoryStr):
+    return int(memoryStr.split(" ")[0])
 
