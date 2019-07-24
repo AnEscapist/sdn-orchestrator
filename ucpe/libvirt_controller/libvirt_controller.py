@@ -244,7 +244,7 @@ def _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_use_hugep
     transform = LET.XSLT(xslt)
     newdom = transform(dom)
     xml = LET.tostring(newdom, pretty_print=True).decode("utf-8")
-    print(xml)
+    print(xml, "printed")
     return xml
 
 
@@ -287,11 +287,11 @@ def _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vc
 
 def _get_bridge_interface_element(devices, vm_bridge_name, interface_model_type='virtio', interface_link_state='up'):
     # devices is an Element in an ElementTree
-    interfaces = ET.Element("interfaces", {"type": "bridge"})
-    source = ET.SubElement(interfaces, "source", {"bridge":  vm_bridge_name})
-    model = ET.SubElement(interfaces, "model", {"type":  interface_model_type})
-    link_state = ET.SubElement(interfaces, "link_state", {"state":  interface_link_state})
-    return interfaces
+    interface = ET.Element("interface", {"type": "bridge"})
+    source = ET.SubElement(interface, "source", {"bridge":  vm_bridge_name})
+    model = ET.SubElement(interface, "model", {"type":  interface_model_type})
+    link = ET.SubElement(interface, "link", {"state":  interface_link_state})
+    return interface
 
 
 def _register_all_namespaces(filename):
