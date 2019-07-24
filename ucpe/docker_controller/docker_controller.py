@@ -168,7 +168,7 @@ class DockerController(object):
     @staticmethod
     def docker_controller_inspect_volume(**kwargs):
         func = inspect_volume
-        return _call_functionl(func, **kwargs)
+        return _call_function(func, **kwargs)
 
 # =====================================private functions======================#
 
