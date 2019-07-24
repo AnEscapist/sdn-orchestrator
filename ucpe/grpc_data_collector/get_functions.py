@@ -193,7 +193,7 @@ def get_linux_bridge_details(br):
 
 def ovs_list_ports(br):
     proc = subprocess.Popen(['ovs-vsctl', 'list-ports', br], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print(proc.stdout.read())
+    print(proc.stdout.read().decode('utf-8').split())
 
 
 def sriov_totalvfs(device):
