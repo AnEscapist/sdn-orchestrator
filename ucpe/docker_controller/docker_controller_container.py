@@ -248,7 +248,7 @@ def remove_container(id_name):
         return api_error(ae, func)
 
 
-def container_stats(id_name decode=True):
+def container_stats(id_name, decode=True):
     #check parameters: decode and stream, if real time stats wanted
     func = container_stats
     try:
