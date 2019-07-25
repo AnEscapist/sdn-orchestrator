@@ -46,6 +46,7 @@
                 </b-modal>
                 <button type="button"
                         class="btn btn-dark btn-lg"
+                        :disabled="!canSelectPBM"
                         v-b-modal="'bcmportwindow'"
                 >
                   Select Ports
@@ -76,6 +77,7 @@
                 <button type="button"
                         class="btn btn-dark btn-lg"
                         v-b-modal="'bcmportwindow2'"
+                        :disabled="!canSelectUBM"
                 >
                   Select Untagged Ports
                 </button>
@@ -99,6 +101,7 @@
                 <input
                   class="form-control"
                   v-model="form.vlanid"
+                  :disabled="!canSelectVLANID"
                   id="VLAN ID"
                   placeholder="VLAN ID">
                 <div class="text-danger">
@@ -125,7 +128,12 @@
           </table>
         </td>
         <td>
-          <table width="500">
+          <table width="20">
+<!--            Just an empty table for the sake of spacing-->
+          </table>
+        </td>
+        <td>
+          <table width="400">
 
             <label for="PortStatus">
               Port Status
@@ -210,6 +218,7 @@
             }
         },
         mounted() {
+            this.validateName();
             axios.get('/api/bcm/show_active_ports/').then((response) => {
                 this.portStatus = response.data.result.result
             })
@@ -223,6 +232,25 @@
             },
             isFormValid() {
                 return Object.values(this.formErrors).every(error => !error)
+            },
+            canSelectUBM(){
+                return this.form.action == "Add ports to VLAN" ||
+                  this.form.action == "Create VLAN";
+            },
+            canSelectPBM(){
+                const action = this.form.action;
+                return action == "Add ports to VLAN" ||
+                  action == "Remove ports from VLAN" ||
+                  action == "Create VLAN" ||
+                  action == "Set port-based VLANs";
+            },
+            canSelectVLANID(){
+                const action = this.form.action;
+                return action == "Add ports to VLAN" ||
+                    action == "Remove ports from VLAN" ||
+                    action == "Create VLAN" ||
+                    action == "Set port-based VLANs" ||
+                  action == "Destroy VLAN";
             },
             portStatusList() {
                 const raw = this.portStatus.split(/[\n]/);
@@ -319,6 +347,9 @@
                         url = '/api/bcm/create_vlan/' + this.form.vlanid + '/';
                         if(this.form.selectedPorts.length > 0){
                             url +=this.form.selectedPorts;
+                            if(this.form.selectedPorts2.length > 0){
+                                url += '/' + this.form.selectedPorts2;
+                            }
                         }
                         break;
                     case "Destroy VLAN":
