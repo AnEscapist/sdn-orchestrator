@@ -26,10 +26,10 @@
     </button>
 
     <router-link to="docker_c">
-      <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeContainer()'>
-        <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
-        Remove
-      </button>
+    <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeContainer()'>
+      <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
+      Remove
+    </button>
     </router-link>
 
 
@@ -129,6 +129,14 @@
             </td>
             <!-- </router-link> -->
           </button>
+          <button v-show="port_listening=='yes'" type="button" class="btn btn-danger btn-xs" @click='stopConsole()' color='red'>
+            <!-- <router-link target="_blank" :to="{ path: 'consolecontainer', query: {short_id: this.short_id} }"> -->
+            <td>
+              <font-awesome-icon :icon="['far', 'times-circle']" size=1x />
+              <!-- <font size='1px'> stop console</font> -->
+            </td>
+            <!-- </router-link> -->
+          </button>
 
 
         </tr>
@@ -177,6 +185,7 @@ export default {
       showEdit: true,
       showStats: false,
       newName: '',
+      port_listening: 'no',
     }
 
 
@@ -186,6 +195,11 @@ export default {
 
   },
   mounted() {
+    this.axios.get('/api/docker/check_port').then(response => {
+      // console.log(typeof(response.data))
+      this.port_listening = response.data
+    })
+
     this.axios.get("/api/docker/inspect_container", {
       params: {
         id_name: this.short_id
@@ -202,39 +216,44 @@ export default {
     });
 
     this.axios.get('/api/docker/container_stats', {
-        params: {
-            id_name: this.short_id
-        }
+      params: {
+        id_name: this.short_id
+      }
     }).then(response => {
-        // console.log(response.data.result)
-        var stats = JSON.parse(response.data.result)['return']
-        this.stats = stats
+      // console.log(response.data.result)
+      var stats = JSON.parse(response.data.result)['return']
+      this.stats = stats
     })
 
   },
   methods: {
     changeStatus(change_to) {
-      this.axios.get("/api/docker/change_status", {
-        params: {
-          id_name: this.short_id,
-          change_to: change_to
-        }
-      }).then(response => {
-        // console.log(response)
-        var res = JSON.parse(response.data.result)['return']
-        var status = res.substring(res.indexOf('[') + 1, res.indexOf(']'))
+      this.axios.get('/api/docker/kill_port').then(response => {
 
-        this.update()
+        this.axios.get("/api/docker/change_status", {
+          params: {
+            id_name: this.short_id,
+            change_to: change_to
+          }
+        }).then(response => {
+          // console.log(response)
+          var res = JSON.parse(response.data.result)['return']
+          var status = res.substring(res.indexOf('[') + 1, res.indexOf(']'))
 
-      });
+          this.update()
+
+        });
+
+      })
+
 
     },
     showInspect() {
-        this.showStats = false;
+      this.showStats = false;
       this.showIns = !this.showIns;
     },
     showStatistic() {
-        this.showIns = false;
+      this.showIns = false;
       this.showStats = !this.showStats
     },
     renameContainer(newName) {
@@ -256,24 +275,36 @@ export default {
     },
 
     removeContainer() {
-      this.axios.get('/api/docker/remove_container', {
-        params: {
-          id_name: this.id,
-        }
-      }).then(response => {
-        // console.log(response.data.result)
+      this.axios.get('/api/docker/kill_port').then(response => {
+
+        this.axios.get('/api/docker/remove_container', {
+          params: {
+            id_name: this.id,
+          }
+        }).then(response => {
+          // console.log(this.id)
+          // console.log(response.data.result)
+        })
+
       })
+
     },
 
     killContainer() {
-      this.axios.get('/api/docker/kill_container', {
-        params: {
-          id_name: this.id,
-        }
-      }).then(response => {
-        this.update()
+
+      this.axios.get('/api/docker/kill_port').then(response => {
+
+        this.axios.get('/api/docker/kill_container', {
+          params: {
+            id_name: this.id,
+          }
+        }).then(response => {
+          this.update()
+
+        })
 
       })
+
     },
 
     update() {
@@ -295,6 +326,7 @@ export default {
     },
 
     goConsole(id) {
+      this.port_listening = 'yes'
       //
       this.axios.get('/api/docker/kill_port').then(response => {
         // console.log(response)
@@ -321,6 +353,12 @@ export default {
       // document.getElementById("console").innerHTML = '<object type="text/html" data="hello.html" ></object>';
 
 
+    },
+    stopConsole() {
+      this.axios.get('/api/docker/kill_port').then(response => {
+        // console.log(response)
+        this.reload()
+      })
     },
 
     setBtn(status) {
@@ -424,5 +462,13 @@ hr {
   padding-top: 0;
   margin-top: 0px;
 
+}
+
+.btn-group-xs>.btn,
+.btn-xs {
+  padding: .25rem .4rem;
+  font-size: .875rem;
+  line-height: .5;
+  border-radius: .2rem;
 }
 </style>
