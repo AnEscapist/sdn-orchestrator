@@ -299,7 +299,7 @@ def container_stats_message(id_name, stats, func):
     message = {
         'function': f'<{func.__name__}>',
         'success message': f'Container {id_name} stats obtained.',
-        'return': f'{stats}'
+        'return': stats
     }
     return json_str(message)
 
