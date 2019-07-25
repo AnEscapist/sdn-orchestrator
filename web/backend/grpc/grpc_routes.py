@@ -95,3 +95,18 @@ def linux_bridge_list():
         "jsonrpc": "2.0", "id": 0
     }
     return jsonify(call_ucpe_function(messagedata))
+
+
+@grpc_routes.route('/grpc/ovs_docker_add_port')
+def ovs_docker_add_port():
+    bridge = request.args.get('bridge')
+    interface = request.args.get('interface')
+    container = request.args.get('container')
+    port = request.args.get('port')
+    ipaddress = request.args.get('ipaddress')
+    messagedata = {"method": "grpc_modify_ovs_docker_add_port", "params": {
+        "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": f'{bridge}', "str_param2": f'{interface}',
+                 "str_param3": f'{container}', "str_param4": f'{port}', "str_param5": f'{ipaddress}'}},
+        "jsonrpc": "2.0", "id": 0
+    }
+    return jsonify(call_ucpe_function(messagedata))
