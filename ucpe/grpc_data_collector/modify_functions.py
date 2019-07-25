@@ -47,7 +47,7 @@ def ovs_add_dpdk_port(bridge, port_name, port):
 def ovs_docker_add_port(bridge, interface, container, port, ipaddress):
     # bridge1 = 'br0'
     bridge1 = bridge
-    tmp_name = f'{container}-{interface}'
+    tmp_name = f'{container}_{interface}'
     tmp_var = get_functions.ovs_list_ports_number(bridge1)
     tmp_int = int(port)
     # print(tmp_int)

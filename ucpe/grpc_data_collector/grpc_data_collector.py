@@ -147,7 +147,7 @@ def modify_execute(name, input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'str_param1': 'br0', 'str_param2': 'test_port', 'str_param3': 'abc', 'str_param4': '6',
+    kwargs = {'body': {'str_param1': 'br0', 'str_param2': 'test_port', 'str_param3': 'test_con', 'str_param4': '6',
                        'str_param5': '10.10.81.155'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
