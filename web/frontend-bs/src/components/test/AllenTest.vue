@@ -104,16 +104,16 @@
                   <ul>
                     <li v-if="formErrors.badCharacters">VLAN ID must be a number.
                     </li>
-                    <li v-if="formErrors.nameIsEmpty">You must specify a VLAN ID.
+                    <li v-if="formErrors.fieldIsEmpty">You must specify a VLAN ID.
                     </li>
                   </ul>
                 </div>
 
                 <button type="button"
                         @click="sendRequest"
-                        :ok-disabled="!isFormValid"
+                        :disabled="!isFormValid"
                         class="btn btn-dark btn-lg">
-                  Do the thing
+                  Run
                 </button>
                 <br>
 
@@ -169,7 +169,7 @@
             return {
                 checkedPortNames: "",
                 checkedPortNames2: "",
-                bottomText: "Hello",
+                bottomText: "",
                 portStatus: "",
                 isCheckAll: false,
                 isCheckAll2: false,
@@ -296,8 +296,9 @@
             validateName() {
                 console.log("called Validate")
                 this.formErrors.badCharacters = this.form.vlanid.length > 0 && !this.form.vlanid.match(/^[0-9]*$/);
-                this.formErrors.nameIsEmpty = this.form.vlanid.length === 0 && (this.form.action != "Show VLANs"
+                this.formErrors.fieldIsEmpty = this.form.vlanid.length === 0 && (this.form.action != "Show VLANs"
                     && this.form.action != "Show port-based VLANs");
+                console.log(this.isFormValid);
             },
             generateURL() {
                 var url = '';
