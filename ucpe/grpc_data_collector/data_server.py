@@ -156,6 +156,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                 response.status = f"Deleting all ports connected to {request.str_param1} from {request.str_param2}"
                 print(response.status)
                 response.str_response = str(get_functions.get_interfaces(request.str_param1))
+                print(response.str_response)
                 response.status = "Deletion successful"
         return response
 
