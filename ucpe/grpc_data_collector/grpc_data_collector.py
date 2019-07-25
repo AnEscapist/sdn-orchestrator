@@ -151,7 +151,7 @@ def main():
                        'str_param5': '10.10.81.155'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
-    print(tmp.grpc_modify_ovs_docker_add_port(**kwargs))
+    print(tmp.grpc_get_linux_bridges_all(**kwargs))
 
 
 if __name__ == '__main__':
