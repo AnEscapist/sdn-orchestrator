@@ -1,13 +1,17 @@
 <template>
   <div>
     <card>
-      <h1>Roger's Playground</h1>
-      <h2>VNF Count: {{vnfCount}}</h2>
-      <h2>VNF List: {{vnfList}}</h2>
-      <h2>VM List: {{vmList}}</h2>
-      <h2>VM Info: {{vmInfo}}</h2>
-      <VMTableOld/>
-      <AgTableExample class="centered-table"/>
+<!--      <h1>Roger's Playground</h1>-->
+<!--      <h2>VNF Count: {{vnfCount}}</h2>-->
+<!--      <h2>VNF List: {{vnfList}}</h2>-->
+<!--      <h2>VM List: {{vmList}}</h2>-->
+<!--      <h2>VM Info: {{vmInfo}}</h2>-->
+<!--      <VMTableOld/>-->
+<!--      <AgTableExample class="centered-table"/>-->
+      <font-awesome-icon :icon="['fas', 'cubes']" size=lg color='rgb(111, 111, 111)' />
+      <strong> VNF List </strong>
+<!--      <span class="badge badge-success">Running</span>-->
+      <hr>
       <VMTableNew class="centered-table"/>
     </card>
   </div>

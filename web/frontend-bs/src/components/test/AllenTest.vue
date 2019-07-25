@@ -44,14 +44,19 @@
                     </table>
                   </div>
                 </b-modal>
-                <button type="button"
-                        class="btn btn-dark btn-lg"
-                        :disabled="!canSelectPBM"
-                        v-b-modal="'bcmportwindow'"
-                >
-                  Select Ports
-                </button>
-
+                <div id="PBMButton">
+                  <button type="button"
+                          class="btn btn-dark btn-lg"
+                          :disabled="!canSelectPBM"
+                          v-b-modal="'bcmportwindow'"
+                  >
+                    Select Ports
+                  </button>
+                  <div>
+                    Selected ports : {{ checkedPortNames }}
+                  </div>
+                </div>
+                <br>
               </td>
             </tr>
             <tr>
@@ -67,51 +72,53 @@
                     <table width="400">
                       <tr v-for='row in portList'>
                         <td v-for='port in row'>
-                          <input type='checkbox' v-bind:value='port' v-model='ports2' @change='updateCheckall2()'>
+                          <input type='checkbox' v-bind:value='port' :disabled="!portIsSelected(port)" v-model='ports2' @change='updateCheckall2()'>
                           <label :for="port"> {{port}}</label>
                         </td>
                       </tr>
                     </table>
                   </div>
-                </b-modal>
-                <button type="button"
-                        class="btn btn-dark btn-lg"
-                        v-b-modal="'bcmportwindow2'"
-                        :disabled="!canSelectUBM"
-                >
-                  Select Untagged Ports
-                </button>
 
+                </b-modal>
+                <div id="UBMButton">
+                  <button type="button"
+                          class="btn btn-dark btn-lg"
+                          v-b-modal="'bcmportwindow2'"
+                          :disabled="!canSelectUBM"
+                  >
+                    Select Untagged Ports
+                  </button>
+                  <div>
+                    Selected untagged ports : {{ checkedPortNames2 }}
+                  </div>
+                </div>
               </td>
             </tr>
             <tr>
               <td>
-                <div>
-                  Selected ports : {{ checkedPortNames }}
-                </div>
-                <div>
-                  Selected untagged ports : {{ checkedPortNames2 }}
-                </div>
                 <br>
               </td>
             </tr>
             <tr>
               <td>
-                <label for="VLAN ID">VLAN ID</label>
-                <input
-                  class="form-control"
-                  v-model="form.vlanid"
-                  :disabled="!canSelectVLANID"
-                  id="VLAN ID"
-                  placeholder="VLAN ID">
-                <div class="text-danger">
-                  <ul>
-                    <li v-if="formErrors.badCharacters">VLAN ID must be a number.
-                    </li>
-                    <li v-if="formErrors.fieldIsEmpty">You must specify a VLAN ID.
-                    </li>
-                  </ul>
+                <div id="VLANTextField">
+                  <label for="VLAN ID">VLAN ID</label>
+                  <input
+                    class="form-control"
+                    v-model="form.vlanid"
+                    :disabled="!canSelectVLANID"
+                    id="VLAN ID"
+                    placeholder="VLAN ID">
+                  <div class="text-danger">
+                    <ul>
+                      <li v-if="formErrors.badCharacters">VLAN ID must be a number.
+                      </li>
+                      <li v-if="formErrors.fieldIsEmpty">You must specify a VLAN ID.
+                      </li>
+                    </ul>
+                  </div>
                 </div>
+
 
                 <button type="button"
                         @click="sendRequest"
@@ -120,10 +127,7 @@
                   Run
                 </button>
                 <br>
-
               </td>
-
-
             </tr>
           </table>
         </td>
@@ -219,6 +223,7 @@
         },
         mounted() {
             this.validateName();
+            this.renderButtons();
             axios.get('/api/bcm/show_active_ports/').then((response) => {
                 this.portStatus = response.data.result.result
             })
@@ -252,6 +257,7 @@
                     action == "Set port-based VLANs" ||
                   action == "Destroy VLAN";
             },
+
             portStatusList() {
                 const raw = this.portStatus.split(/[\n]/);
                 const firsthalf = raw.slice(0,22);
@@ -337,6 +343,9 @@
                     && this.form.action != "Show port-based VLANs");
                 console.log(this.isFormValid);
             },
+            portIsSelected(port){
+                return this.ports.includes(port);
+            },
             generateURL() {
                 var url = '';
                 switch (this.form.action) {
@@ -392,6 +401,29 @@
                 axios.get(url).then((response)=>{
                     this.portStatus = response.data.result.result;
                 })
+            },
+            renderButtons(){
+                var x = document.getElementById("PBMButton");
+                if(!this.canSelectPBM){
+                    x.style.display="none";
+                }
+                else{
+                    x.style.display="block";
+                }
+                x = document.getElementById("UBMButton");
+                if(!this.canSelectUBM){
+                    x.style.display="none";
+                }
+                else{
+                    x.style.display="block";
+                }
+                x = document.getElementById("VLANTextField");
+                if(!this.canSelectVLANID){
+                    x.style.display="none";
+                }
+                else{
+                    x.style.display="block";
+                }
             }
         },
         watch: {
@@ -399,7 +431,8 @@
                 this.validateName()
             },
             selection: function () {
-                this.validateName()
+                this.validateName();
+                this.renderButtons()
             },
             ports: function () {
                 this.printValues()
@@ -410,3 +443,14 @@
         }
     }
 </script>
+<style>
+  #UBMButton{
+    width:400px;
+  }
+  #PBMButton{
+    width:400px;
+  }
+  #VLANTextField{
+    width:500px;
+  }
+</style>

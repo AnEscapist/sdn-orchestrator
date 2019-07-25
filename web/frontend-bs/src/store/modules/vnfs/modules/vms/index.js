@@ -87,16 +87,19 @@ const actions = {
   },
   startSelectedVMs({ commit, dispatch }) {
     axios.post(getURL('start_or_resume_selected_vms'), { 'vm_names': state.vmSelection }).then((response) => {
+      dispatch('updateVMSelection', []);
       dispatch('updateVMInfo')
     });
   },
   pauseSelectedVMs({ commit, dispatch }) {
     axios.post(getURL('pause_selected_vms'), { 'vm_names': state.vmSelection }).then((response) => {
+      dispatch('updateVMSelection', []);
       dispatch('updateVMInfo')
     });
   },
   killSelectedVMs({ commit, dispatch }) {
     axios.post(getURL('kill_selected_vms'), { 'vm_names': state.vmSelection }).then((response) => {
+      dispatch('updateVMSelection', []);
       dispatch('updateVMInfo')
     });
   },
@@ -147,6 +150,8 @@ const actions = {
   },
 };
 
+const MAX_OVS_INTERFACES = 4;
+
 const getters = {
   vmList: state => state.vmList,
   vmInfo: state => state.vmInfo,
@@ -161,7 +166,8 @@ const getters = {
   vmHugepageMemoryOptions: state => getOneToNArray(state.vmCreateForm.hugepageMemoryAvailable),
   vmImagesAvailable: state => state.vmImagesAvailable,
   vmBridgesAvailable: state => state.vmBridgesAvailable,
-  vmWebServerIPV4: state => state.vmWebServerIPV4 //todo: move this to somewhere reasonable
+  vmWebServerIPV4: state => state.vmWebServerIPV4, //todo: move this to somewhere reasonable
+  vmOVSInterfaceOptions: state => getZeroToNArray(MAX_OVS_INTERFACES)
 };
 
 function getURL(endpoint) {
@@ -175,8 +181,12 @@ function parseMemoryIntGBFromBytes(memoryStr) {
   return parseInt((parseInt(memoryStr)/bytes_in_gigabyte));
 }
 
+function getZeroToNArray(n) {
+  return Array.from(Array(n).keys())
+}
+
 function getOneToNArray(n) {
-  return Array.from(Array(n).keys()).map(x => x + 1)
+  return getZeroToNArray(n).map(x => x+1)
 }
 
 const methods = {};

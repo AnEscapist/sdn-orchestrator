@@ -4,6 +4,7 @@ import libvirt
 import paramiko
 import socket
 from contextlib import contextmanager
+import os
 
 # URI Parameters, as documented here:
 # https://libvirt.org/docs/libvirt-appdev-guide-python/en-US/html/libvirt_application_development_guide_using_python-Connections-Remote_URIs.html
@@ -97,6 +98,11 @@ def get_domain(ucpe, vm_name, verbose=False):
     finally:
         if conn:
             conn.close()
+
+def get_file_basename_no_extension(filepath):
+    basename = os.path.basename(filepath)
+    basename_no_ext, ext = os.path.splitext(basename)
+    return basename_no_ext
 
 
 def state(libvirt_domain):

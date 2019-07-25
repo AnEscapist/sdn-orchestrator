@@ -3,7 +3,7 @@
     <button type="button"
             :disabled="params.data.state !== 'Running'"
             class="btn btn-outline-success btn-sm"
-            @click="redirectToConsole(params.data.name)"
+            @click.stop="redirectToConsole(params.data.name)"
     >
       <!--      <h2>{{!!vmSelection}}</h2>-->
       <!--      <font-awesome-icon :icon="['fas', 'terminal']"-->
@@ -13,7 +13,7 @@
       <i class="fas fa-terminal"></i>
       </span>
       <span v-if="loading"
-           class="spinner-border spinner-border-sm text-success"
+           class="spinner-border spinner-border-sm text-warning"
            role="status">
       </span>
       {{params.data.name}}
@@ -52,11 +52,9 @@
           const success = true;
           return resolve({ success });
         }).then(() => {
-          this.prepareVMConsole(vm_name).then(() => {
-            this.loading = false;
-          }).catch(err => console.log(err)).then(() => {
+          this.prepareVMConsole(vm_name).catch(err => console.log(err)).then(() => {
             this.openURLInNewTab(this.vncURL)
-          });
+          }).then(() => this.loading=false);
         })
       }
     }
@@ -64,5 +62,8 @@
 </script>
 
 <style scoped>
-
+  .btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
 </style>

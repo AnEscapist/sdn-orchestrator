@@ -12,7 +12,7 @@
       :ok-disabled="!isFormValid"
       id="vm-create-modal">
       <form>
-<!--        <h2>{{typeof(JSON.parse(vmBridgesAvailable))}}</h2>-->
+        <!--        <h2>{{typeof(JSON.parse(vmBridgesAvailable))}}</h2>-->
         <!--        <h1>validity: {{isFormValid}}</h1>-->
         <!--        <h2>name: {{!!form.vmName.match(/^[a-zA-Z][-_a-zA-Z0-9]*$/)}} </h2>-->
         <!--&lt;!&ndash;        <h2>exist: {{vmList.contains(form.vmName)}}</h2>&ndash;&gt;-->
@@ -67,10 +67,10 @@
                class="form-group col-md-4">
             <label for="vmMemory">Memory</label>
             <select
-                    :disabled="isOutOfMemory"
-                    id="vmMemory"
-                    v-model="form.vmMemory"
-                    class="custom-select mr-sm-2">
+              :disabled="isOutOfMemory"
+              id="vmMemory"
+              v-model="form.vmMemory"
+              class="custom-select mr-sm-2">
               <option v-for="option in vmMemoryOptions">{{option}} GB</option>
               <option v-if="isOutOfMemory">0 GB</option>
             </select>
@@ -109,16 +109,30 @@
              class="alert alert-danger">
           <span><strong>Out of Memory -</strong>  Cannot allocate sufficient hugepage memory.</span>
         </div>
-        <div
-             class="form-group col-md-4">
-          <label for="vmBridges">Bridge</label>
-<!--          todo: error handling on no bridge-->
-          <select
-                  id="vmBridges"
-                  v-model="form.vmBridge"
-                  class="custom-select mr-sm-2">
-            <option v-for="bridge in vmBridgesAvailable">{{bridge}}</option>
-          </select>
+        <div class="form-row">
+          <div
+            class="form-group col-md-4">
+            <label for="vmBridges">Bridge</label>
+            <!--          todo: error handling on no bridge-->
+            <select
+              id="vmBridges"
+              v-model="form.vmBridge"
+              class="custom-select mr-sm-2">
+              <option>No Bridge</option>
+              <option v-for="bridge in vmBridgesAvailable">{{bridge}}</option>
+            </select>
+          </div>
+          <div
+            class="form-group col-md-4">
+            <label for="vmOVSInterfaces">OVS Interfaces</label>
+            <!--          todo: error handling on no bridge-->
+            <select
+              id="vmOVSInterfaces"
+              v-model="form.vmOVSInterfaceCount"
+              class="custom-select mr-sm-2">
+              <option v-for="i in vmOVSInterfaceOptions">{{i}}</option>
+            </select>
+          </div>
         </div>
       </form>
     </b-modal>
@@ -145,8 +159,8 @@
           vmMemory: '4 GB',
           vmHugepageMemory: '4 GB',
           hugepagesEnabled: false,
-          vmAddBridgeInterface: true,
-          vmBridge: 'mgmtbr'
+          vmBridge: 'No Bridge',
+          vmOVSInterfaceCount: 0
         },
         show: true,
         formErrors: {
@@ -158,12 +172,12 @@
           nameIsEmpty: true,
           memoryError: false
         },
-        charLimit: 15 //todo: make this a constant
+        charLimit: 15, //todo: make this a constant
       }
     },
     computed: {
       ...mapGetters([
-        'vmCreateForm', 'vmVCPUOptions', 'vmMemoryOptions', 'vmHugepageMemoryOptions', 'vmImagesAvailable', 'vmList', 'vmBridgesAvailable'
+        'vmCreateForm', 'vmVCPUOptions', 'vmMemoryOptions', 'vmHugepageMemoryOptions', 'vmImagesAvailable', 'vmList', 'vmBridgesAvailable', 'vmOVSInterfaceOptions'
       ]),
       vmName() {
         return this.form.vmName
@@ -216,7 +230,7 @@
       onHugepageToggle() {
         this.checkForMemoryError()
       },
-      checkForMemoryError(){
+      checkForMemoryError() {
         this.formErrors.memoryError = (!this.hugepagesEnabled && this.isOutOfMemory) || (this.hugepagesEnabled && this.isOutOfHugepageMemory)
       },
       validateName() {
