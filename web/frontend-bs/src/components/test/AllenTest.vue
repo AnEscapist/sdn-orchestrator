@@ -220,7 +220,16 @@
                         url = '/api/bcm/show_vlans/';
                         break;
                     case "Create VLAN":
-                        url = '/api/bcm/create_vlan/' + this.form.vlanid + '/' + this.form.selectedPorts;
+                        url = '/api/bcm/create_vlan/' + this.form.vlanid + '/';
+                        if(this.form.selectedPorts.length > 0){
+                            url +=this.form.selectedPorts;
+                        }
+                        break;
+                    case "Destroy VLAN":
+                        url = '/api/bcm/destroy_vlan/' + this.form.vlanid;
+                        break;
+                    case "Add ports to VLAN":
+                        url = '/api/bcm/add_ports/' + this.form.vlanid + '/' + this.form.selectedPorts;
                         break;
                     case "Show port-based VLANs":
                         url = '/api/bcm/show_pvlans/';
