@@ -95,6 +95,7 @@
             </tr>
             <tr>
               <td>
+                <label for="VLAN ID">VLAN ID</label>
                 <input
                   class="form-control"
                   v-model="form.vlanid"
@@ -125,16 +126,12 @@
         </td>
         <td>
           <table width="500">
-            <tr>
-              <td>
-                <button type="button"
-                        @click="showPorts"
-                        class="btn btn-dark btn-lg">
-                  Update Port Status
-                </button>
-              </td>
-            </tr>
-            <tr>
+
+            <label for="PortStatus">
+              Port Status
+            </label>
+            <tr id="PortStatus">
+
               <td>
                 <li v-for="line in portStatusList[0]">
                   {{line}}
@@ -146,12 +143,24 @@
                 </li>
               </td>
             </tr>
+            <tr>
+              <td>
+                <button type="button"
+                        @click="showPorts"
+                        class="btn btn-dark btn-lg">
+                  Update Port Status
+                </button>
+              </td>
+            </tr>
           </table>
         </td>
       </tr>
     </table>
     <div>
-      <li v-for="line in bottomText.split(/[\n]/)">
+      <label for="output">
+        Output
+      </label>
+      <li id="output"  v-for="line in bottomText.split(/[\n]/)">
         {{line}}
       </li>
     </div>
