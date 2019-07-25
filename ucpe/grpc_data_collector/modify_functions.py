@@ -63,7 +63,7 @@ def ovs_docker_add_port(bridge, interface, container, port, ipaddress):
 
 
 def ovs_docker_del_port(bridge, container):
-    for i in get_functions.get_interfaces(bridge):
+    for i in get_functions.ovs_list_ports(bridge):
         if i.rstrip('_', 1)[0] == container:
             subprocess.run(['sudo', 'ovs-docker', 'del-ports', bridge, i])
             subprocess.run(['sudo', 'ovs-vsctl', 'del-port', bridge, i])
