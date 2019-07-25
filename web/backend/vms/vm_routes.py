@@ -2,6 +2,8 @@ from flask import Blueprint, request, render_template, abort, jsonify
 from jinja2 import TemplateNotFound
 from web.backend.zmq_web import call_ucpe_function
 import os
+import subprocess
+from multiprocessing import Process
 
 vm_routes = Blueprint('vms', __name__)
 
@@ -95,11 +97,26 @@ def get_vm_images(controller_id, ucpe_sn):
 
 @vm_routes.route('/console/<controller_id>/<ucpe_sn>/<vm_name>')
 def prepare_vm_console(controller_id, ucpe_sn, vm_name):
-    method = 'prepare_vm_console'
+    get_vnc_port_method = 'get_vm_vnc_port'
     body = {"username": HOST_USERNAME, "hostname": HOST_IP, 'vm_name': vm_name}
-    message_data = get_message_data(method, body)
+    message_data = get_message_data(get_vnc_port_method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
-    return jsonify(response)
+    vnc_port = response['return']
+
+    global vnc_process
+    if vnc_process is not None:
+        vnc_process.terminate()
+    #todo: error handling
+    vnc_process = Process(target = prepare_vm_console_helper, args=(HOST_IP, vnc_port))
+    vnc_process.start()
+    return jsonify(started=True)
+
+def prepare_vm_console_helper(hostname, port):
+    launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
+    p = subprocess.Popen([launch_script_path, '--vnc', f'{hostname}:{port}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print('in the process', p.args)
+    p.communicate()
+
 
 def parseMemoryGB(memoryStr):
     return int(memoryStr.split(" ")[0])
