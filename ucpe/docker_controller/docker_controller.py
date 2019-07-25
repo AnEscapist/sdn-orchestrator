@@ -66,6 +66,11 @@ class DockerController(object):
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def docker_controller_container_stats(**kwargs):
+        func = container_stats
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def docker_controller_remove_container(**kwargs):
         func = remove_container
         return _call_function(func, **kwargs)

@@ -79,6 +79,14 @@ def kill_container():
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
 
+@docker_routes.route('/docker/container_stats')
+def container_stats():
+    id_name = request.args.get('id_name')
+    messagedata = {"method": "docker_controller_container_stats", "params": {
+        "body": {'id_name': id_name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))
+
 
 @docker_routes.route('/docker/remove_container')
 def remove_container():
@@ -199,7 +207,8 @@ def create_volume():
 def console_container():
     container_id = request.args.get('container_id')
 
-    path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
+    # path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-consol/index.html'
+    path = 'http://10.10.81.4:8080/console.html' #ip address of the server
     # webbrowser.open(path, new=1)
     # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
     # code = os.system(stop_port)
