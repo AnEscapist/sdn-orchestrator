@@ -108,28 +108,28 @@
 
           <table width='100%'>
             <tr>
-              <td width='33%'>
+              <!-- <td width='33%'>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">OVS Interface</span>
                   </div>
                   <input v-model='ovs_int' type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                 </div>
-              </td>
+              </td> -->
               <td width='33%'>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Interface Port</span>
+                    <span class="input-group-text" id="inputGroup-sizing-default">Interfaces</span>
                   </div>
-                  <input v-model='int_port' type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                  <input v-model='int_port' placeholder="e.g.: 7, 8"type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                 </div>
               </td>
               <td width='33%'>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Interface IP</span>
+                    <span class="input-group-text" id="inputGroup-sizing-default">Interfaces ip</span>
                   </div>
-                  <input v-model='int_ip' type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                  <input v-model='int_ip' placeholder="e.g.: 10.10.81.123/24, 10.10.81.155/24" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                 </div>
               </td>
 
@@ -149,7 +149,7 @@
             </td>
             <td>
 
-              <button type="button" class="btn btn-primary btn-sm" @click='create_container(create_name, create_image, create_port, ovs_int, int_port, int_ip)'>
+              <button type="button" class="btn btn-primary btn-sm" @click='create_container(create_name, create_image, create_port, int_port, int_ip)'>
                 Create
               </button>
             </td>
@@ -193,9 +193,9 @@ export default {
       create_image: '',
       create_port: '',
 
-      ovs_int: '',
+      // ovs_int: '',
       int_port: '',
-      int_ip: 'e.g. 10.10.81.123/24',
+      int_ip: '',
 
 
     }
@@ -285,7 +285,7 @@ export default {
     },
 
 
-    create_container(create_name, create_image, create_port, ovs_int, int_port, int_ip) {
+    create_container(create_name, create_image, create_port, int_port, int_ip) {
       // console.log(create_port)
       this.axios.get('/api/docker/create_container', {
         params: {
@@ -294,18 +294,32 @@ export default {
           create_port: create_port,
         }
       }).then(response => {
-          // console.log(response)
-        this.axios.get('/api/grpc/ovs_docker_add_port', {
+        // console.log(response)
 
-          params: {
-            ovs_int: ovs_int,
-            int_port: int_port,
-            int_ip: int_ip,
-            create_name: create_name,
-          }
-        }).then(response => {
-          // console.log(response)
-        })
+        //===========call Jesse's function for advanced configuration========
+        // add ovs interfaces and set the ports and ip addresses
+        var int_port_list = int_port.split(',')
+        var int_ip_list = int_ip.split(',')
+        console.log(int_port_list)
+
+        var i;
+        for (i = 0; i < int_port_list.length; i++) {
+
+          this.axios.get('/api/grpc/ovs_docker_add_port', {
+
+            params: {
+              ovs_int: create_name + '_eth' + i,
+              int_port: int_port_list[i].trim(),
+              int_ip: int_ip_list[i].trim(),
+              create_name: create_name,
+            }
+          }).then(response => {
+            // console.log(response)
+          })
+
+        }
+        //====================end advanced configuration======================
+
 
         this.showCreate = false
         this.reload()

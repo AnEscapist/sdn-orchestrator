@@ -151,9 +151,9 @@
   </div>
 
   <div class="container-fluid" v-show="showStats">
-    <font-awesome-icon :icon="['fas', 'chart-area']" size=lg color='rgb(0, 0, 0)' /> <strong> Inspect</strong>
+    <font-awesome-icon :icon="['fas', 'chart-area']" size=lg color='rgb(0, 0, 0)' /> <strong> Stats</strong>
     <hr>
-
+    <pre><span class="inner-pre">{{stats}}</span></pre>
   </div>
 
 </div>
@@ -206,7 +206,9 @@ export default {
             id_name: this.short_id
         }
     }).then(response => {
-        console.log(response)
+        // console.log(response.data.result)
+        var stats = JSON.parse(response.data.result)['return']
+        this.stats = stats
     })
 
   },
@@ -228,9 +230,11 @@ export default {
 
     },
     showInspect() {
+        this.showStats = false;
       this.showIns = !this.showIns;
     },
     showStatistic() {
+        this.showIns = false;
       this.showStats = !this.showStats
     },
     renameContainer(newName) {
