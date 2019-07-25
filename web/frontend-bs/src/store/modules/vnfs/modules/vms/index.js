@@ -142,6 +142,7 @@ const actions = {
     })
   },
   prepareVMConsole({commit}, vm_name){
+    console.log("prepare vm console called")
     return axios.get(getURL('console') + `/${vm_name}`)
   },
 };

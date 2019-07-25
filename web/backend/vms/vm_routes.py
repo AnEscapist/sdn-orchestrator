@@ -2,8 +2,10 @@ from flask import Blueprint, request, render_template, abort, jsonify
 from jinja2 import TemplateNotFound
 from web.backend.zmq_web import call_ucpe_function
 import os
+import time
 import subprocess
 from multiprocessing import Process
+from threading import Thread
 
 vm_routes = Blueprint('vms', __name__)
 
@@ -95,28 +97,46 @@ def create_vm(controller_id, ucpe_sn):
 def get_vm_images(controller_id, ucpe_sn):
     return jsonify({"images": sorted(IMAGE_FILES.keys())})
 
+global vnc_process
+vnc_subprocess = None
+
 @vm_routes.route('/console/<controller_id>/<ucpe_sn>/<vm_name>')
 def prepare_vm_console(controller_id, ucpe_sn, vm_name):
     get_vnc_port_method = 'get_vm_vnc_port'
     body = {"username": HOST_USERNAME, "hostname": HOST_IP, 'vm_name': vm_name}
     message_data = get_message_data(get_vnc_port_method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
-    vnc_port = response['return']
+    print(response)
+    vnc_port = response['result']['return']
 
-    global vnc_process
-    if vnc_process is not None:
-        vnc_process.terminate()
+    # if vnc_process is not None:
+    #     vnc_process.terminate()
+    #     print("terminating")
     #todo: error handling
-    vnc_process = Process(target = prepare_vm_console_helper, args=(HOST_IP, vnc_port))
-    vnc_process.start()
-    return jsonify(started=True)
+    # vnc_process = Process(target = prepare_vm_console_helper, args=(HOST_IP, vnc_port))
+    # vnc_process.start()
+    local_vnc_port = 6080
+    subprocess.Popen(f'exec fuser -k {local_vnc_port}/tcp', shell=True)
+    print("starting sleep")
+    time.sleep(3)
+    print("ending sleep")
+    # result = prepare_vm_console_helper(HOST_IP, vnc_port)
+    console_thread = Thread(target=prepare_vm_console_helper, args=(HOST_IP, vnc_port))
+    console_thread.start()
+    return jsonify(result="attempted to start vnc console", warning="no error handling") # todo: error handling
 
 def prepare_vm_console_helper(hostname, port):
-    launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
-    p = subprocess.Popen([launch_script_path, '--vnc', f'{hostname}:{port}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print('in the process', p.args)
-    p.communicate()
-
+    # global vnc_subprocess
+    # if vnc_subprocess is not None:
+    #     print("terminating")
+    try:
+        launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
+        vnc_subprocess = subprocess.Popen(f'exec {launch_script_path} --vnc {hostname}:{port}', shell=True)
+        print('in the process', vnc_subprocess.args)
+        vnc_subprocess.communicate()
+        return "success"
+    except:
+        return "failure"
 
 def parseMemoryGB(memoryStr):
     return int(memoryStr.split(" ")[0])

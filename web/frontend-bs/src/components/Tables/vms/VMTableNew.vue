@@ -70,13 +70,14 @@
             checkboxSelection: params => params.data.name !== AGENT_NAME
           }, //todo: find better way to do this
           { headerName: 'State', field: 'state', sortable: true },
+          {headerName: 'Console', cellRendererFramework: VMConsoleRenderer},
           { headerName: 'Memory Usage', field: 'memory usage', sortable: true },
           { headerName: 'Memory Allocated', field: 'memory allocated', sortable: true },
           { headerName: 'CPUs', field: 'cpus', sortable: true },
-          {headerName: 'Console', cellRendererFramework: VMConsoleRenderer, pinned: true}
         ],
         gridOptions: {
           rowSelection: "multiple",
+          rowHeight: 34,
           domLayout: "autoHeight",
           rowMultiSelectWithClick: true,
           suppressCellSelection: true,
@@ -102,6 +103,9 @@
       onSelectionChanged() {
         let selection = this.gridApi.getSelectedRows();
         this.updateVMSelection(selection.map(row => row.name)); //todo: figure out why this warning happens
+      },
+      onGridReady(params){
+        params.api.sizeColumnsToFit()
       },
       debug(){
         console.log("debug")
