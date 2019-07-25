@@ -228,6 +228,7 @@ def prepare_vm_console(ucpe, vm_name):
 def prepare_vm_console_helper(hostname, port):
     launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
     p = subprocess.Popen([launch_script_path, '--vnc', f'{hostname}:{port}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print('in the process', p.args)
     p.communicate()
 
 
@@ -647,7 +648,7 @@ def _call_function(func, **kwargs):
 if __name__ == '__main__':
     # test:
     UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
-    print(prepare_vm_console(DEFAULT_UCPE, 'test2'))
+    # print(prepare_vm_console(DEFAULT_UCPE, 'test2'))
     # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr")
     # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
     # start_vm(DEFAULT_UCPE, "test")
@@ -684,3 +685,10 @@ if __name__ == '__main__':
     # print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
     # print(LibvirtController.libvirt_controller_destroy_vm(**DEFAULT_KWARGS))
     # LibvirtController.libvirt_controller_undefine_vm(**DEFAULT_KWARGS)
+    # from threading import Thread
+    # def test():
+    #     print(LibvirtController.libvirt_controller_prepare_vm_console(**{'body':{'hostname': '10.10.81.100', 'username': 'potato', 'vm_name': 'test2'}}))
+    # test_thread = Thread(target=test)
+    # test_thread.start()
+    # print("done")
+
