@@ -256,7 +256,7 @@ def container_stats(id_name):
     except requests.exceptions.HTTPError:
         return cnf_error(id_name, func)
     try:
-        stats = container.stats(decode=True)
+        stats = container.stats(stream=False)
         return container_stats_message(id_name, stats, func)
     except docker.errors.APIError as ae:
         return api_error(ae, func)
