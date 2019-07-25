@@ -50,10 +50,14 @@
                 >
                   Select Ports
                 </button>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <div>
-                  Selected items : {{ form.selectedPorts }}
+                  Selected items : {{ checkedPortNames }}
                 </div>
-                <br>
                 <br>
               </td>
             </tr>
@@ -122,7 +126,7 @@
         components: {Table},
         data() {
             return {
-                checkedNames: [],
+                checkedPortNames: "",
                 bottomText: "Hello",
                 portStatus: "",
                 isCheckAll: false,
@@ -134,10 +138,9 @@
                     ["ge21", "ge22", "ge23", "ge24"],
                     ["ge25", "ge26", "ge27", "ge28"],
                     ["ge29", "ge30", "ge31", "ge32"],
-                    ["ge33", "ge34", "ge35"],
                     ["xe0", "xe1", "xe2", "xe3"],
                     ["xe4", "xe5", "xe6", "xe7"],
-                    ["xe8", "xe9", "xe10", "xe11"], ["xe12"]],
+                    ["xe8", "xe9", "xe10", "xe11"]],
                 ports: [],
                 form: {
                     selectedPorts: "",
@@ -152,13 +155,11 @@
                     "Remove ports from VLAN", "Show port-based VLANs", "Set port-based VLANs"]
             }
         },
-        // mounted() {
-        //     axios.get('/api/bcm/show_vlans/').then((response) => {
-        //         this.test = response.data.result.result
-        //     }).then(() => {
-        //         console.log(this.test)
-        //     })
-        // },
+        mounted() {
+            axios.get('/api/bcm/show_active_ports/').then((response) => {
+                this.portStatus = response.data.result.result
+            })
+        },
         computed: {
             vlanid() {
                 return this.form.vlanid
@@ -194,13 +195,16 @@
             },
             printValues: function () {
                 this.form.selectedPorts = "";
+                this.checkedPortNames = "";
                 var key;
                 // Read Checked checkboxes value
                 for (key = 0; key < this.ports.length - 1; key++) {
-                    this.form.selectedPorts += this.ports[key] + ", ";
+                    this.form.selectedPorts += this.ports[key] + ",";
+                    this.checkedPortNames += this.ports[key] + ", ";
                 }
                 if (this.ports.length > 0) {
                     this.form.selectedPorts += this.ports[key];
+                    this.checkedPortNames += this.ports[key];
                 }
             },
             validateName() {
@@ -216,9 +220,9 @@
                         url = '/api/bcm/show_vlans/';
                         break;
                     case "Create VLAN":
-                        url = '/api/bcm/create_vlan/' + this.form.vlanid;
+                        url = '/api/bcm/create_vlan/' + this.form.vlanid + '/' + this.form.selectedPorts;
                         break;
-                    case "Show PVLANs":
+                    case "Show port-based VLANs":
                         url = '/api/bcm/show_pvlans/';
                         break;
                     default:

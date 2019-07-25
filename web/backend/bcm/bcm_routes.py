@@ -14,11 +14,11 @@ def show_pvlans():
     return jsonify(call_ucpe_function(messagedata))
 
 
-@bcm_routes.route('/create_vlan/<vlanid>')
-def create_vlan(vlanid):
+@bcm_routes.route('/create_vlan/<vlanid>/<pbm>')
+def create_vlan(vlanid,pbm):
     messagedata = {"method": "bcm_controller_create_vlan", "params": {
         "body": {"hostname": "10.10.81.250", "port": "50051",
-                 "vlanid": int(vlanid)}},
+                 "vlanid": int(vlanid), "pbm": pbm}},
                    "jsonrpc": "2.0", "id": 0
                    }
     return jsonify(call_ucpe_function(messagedata))
