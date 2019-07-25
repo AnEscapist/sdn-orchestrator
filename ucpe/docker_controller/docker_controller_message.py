@@ -295,6 +295,14 @@ def inspect_container_message(id_name, inspection, func):
     }
     return json_str(message)
 
+def container_stats_message(id_name, stats, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Container {id_name} stats obtained.',
+        'return': stats
+    }
+    return json_str(message)
+
 #=========================docker network============================
 
 def create_network_message(net_id, func):

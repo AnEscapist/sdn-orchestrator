@@ -48,7 +48,7 @@ def create_container():
     name = request.args.get('create_name')
     port = request.args.get('create_port')
     messagedata = {"method": "docker_controller_create_container", "params": {
-        "body": {'image_name': image_name, 'name': name, 'port': port, "username": "potato", "hostname": "10.10.81.100", "all": "True", "autostart": 1,
+        "body": {'image_name': image_name, 'name': name, 'ports': port, "username": "potato", "hostname": "10.10.81.100", "all": "True", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
 
     return jsonify(call_ucpe_function(messagedata))
@@ -75,6 +75,14 @@ def change_status():
 def kill_container():
     id_name = request.args.get('id_name')
     messagedata = {"method": "docker_controller_kill_container", "params": {
+        "body": {'id_name': id_name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))
+
+@docker_routes.route('/docker/container_stats')
+def container_stats():
+    id_name = request.args.get('id_name')
+    messagedata = {"method": "docker_controller_container_stats", "params": {
         "body": {'id_name': id_name, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
@@ -199,7 +207,8 @@ def create_volume():
 def console_container():
     container_id = request.args.get('container_id')
 
-    path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
+    # path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-consol/index.html'
+    path = 'http://10.10.81.4:8080/console.html' #ip address of the server
     # webbrowser.open(path, new=1)
     # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
     # code = os.system(stop_port)
@@ -209,17 +218,21 @@ def console_container():
     os.system(cmd)
     return f'{cmd}.'
 
-# @docker_routes.route('/docker/kill_port')
-# def kill_port():
-#     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#     result = sock.connect_ex(('127.0.0.1',10000))
-#     # return str(result)
-#     if str(result) == '0':
-#         # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
-#         stop_port = 'sudo fuser -k 10000/tcp6'
-#         os.system(stop_port)
-#     else:
-#         pass
-#         # return '111' + str(result)
-#     sock.close()
-#     return 'port clear'
+@docker_routes.route('/docker/kill_port')
+def kill_port():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = sock.connect_ex(('127.0.0.1',10000))
+    # return str(result)
+    if str(result) == '0':
+        # return 'listening'
+        # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
+        stop_port = 'sudo fuser -k 10000/tcp'
+        os.system(stop_port)
+        return 'port 10000 stopped!'
+    else:
+        # return 'not listening'
+
+        return 'port 1000 not listening'
+        # return '111' + str(result)
+    # sock.close()
+    # return 'port clear'

@@ -114,7 +114,7 @@
               <font size='2px'> Inspect</font>
             </td>
           </button>
-          <button type="button" class="btn btn-link">
+          <button type="button" class="btn btn-link" @click='showStatistic()'>
             <td>
               <font-awesome-icon :icon="['fas', 'chart-area']" size=sm coler="#1b7fbd" />
               <font size='2px'> Stats</font>
@@ -122,11 +122,11 @@
           </button>
 
           <button type="button" class="btn btn-link" @click='goConsole(id)'>
-              <!-- <router-link target="_blank" :to="{ path: 'consolecontainer', query: {short_id: this.short_id} }"> -->
-              <td>
-                <font-awesome-icon :icon="['fas', 'terminal']" size=sm coler="#1b7fbd" />
-                <font size='2px'> Console</font>
-              </td>
+            <!-- <router-link target="_blank" :to="{ path: 'consolecontainer', query: {short_id: this.short_id} }"> -->
+            <td>
+              <font-awesome-icon :icon="['fas', 'terminal']" size=sm coler="#1b7fbd" />
+              <font size='2px'> Console</font>
+            </td>
             <!-- </router-link> -->
           </button>
 
@@ -149,6 +149,13 @@
     <hr>
     <pre><span class="inner-pre">{{inspect}}</span></pre>
   </div>
+
+  <div class="container-fluid" v-show="showStats">
+    <font-awesome-icon :icon="['fas', 'chart-area']" size=lg color='rgb(0, 0, 0)' /> <strong> Stats</strong>
+    <hr>
+    <pre><span class="inner-pre">{{stats}}</span></pre>
+  </div>
+
 </div>
 </template>
 
@@ -165,8 +172,10 @@ export default {
       name: '',
       createTime: '',
       inspect: '',
+      stats: '',
       showIns: false,
       showEdit: true,
+      showStats: false,
       newName: '',
     }
 
@@ -192,6 +201,16 @@ export default {
       this.createTime = inspect['Created']
     });
 
+    this.axios.get('/api/docker/container_stats', {
+        params: {
+            id_name: this.short_id
+        }
+    }).then(response => {
+        // console.log(response.data.result)
+        var stats = JSON.parse(response.data.result)['return']
+        this.stats = stats
+    })
+
   },
   methods: {
     changeStatus(change_to) {
@@ -211,7 +230,12 @@ export default {
 
     },
     showInspect() {
+        this.showStats = false;
       this.showIns = !this.showIns;
+    },
+    showStatistic() {
+        this.showIns = false;
+      this.showStats = !this.showStats
     },
     renameContainer(newName) {
       this.showEdit = !this.showEdit
@@ -271,10 +295,20 @@ export default {
     },
 
     goConsole(id) {
-    //
-    // this.axios.get('/api/docker/kill_port').then(response => {
-    //     console.log(response)
-    // })
+      //
+      this.axios.get('/api/docker/kill_port').then(response => {
+        // console.log(response)
+
+        this.axios.get('/api/docker/console_container', {
+          params: {
+            container_id: id
+          }
+        }).then(response => {
+          // console.log('response', response)
+          // this.reload()
+        })
+
+      })
 
       // var path = '/#/ucpe/123/vnfs/dockercontainer?short_id=' + this.short_id
       // var path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
@@ -285,14 +319,8 @@ export default {
 
       // console.log(id)
       // document.getElementById("console").innerHTML = '<object type="text/html" data="hello.html" ></object>';
-      this.axios.get('/api/docker/console_container', {
-        params: {
-          container_id: id
-        }
-      }).then(response => {
-        // console.log('response', response)
-        this.reload()
-      })
+
+
     },
 
     setBtn(status) {

@@ -247,4 +247,19 @@ def remove_container(id_name):
     except docker.errors.APIError as ae:
         return api_error(ae, func)
 
+
+def container_stats(id_name):
+    #check parameters: decode and stream, if real time stats wanted
+    func = container_stats
+    try:
+        container = dcli.containers.get(id_name)
+    except requests.exceptions.HTTPError:
+        return cnf_error(id_name, func)
+    try:
+        stats = container.stats(stream=False)
+        return container_stats_message(id_name, stats, func)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+
+
 #======================docker container end============================
