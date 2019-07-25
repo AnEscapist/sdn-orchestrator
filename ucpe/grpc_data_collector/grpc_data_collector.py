@@ -104,8 +104,8 @@ def interpret_params(input_string, **kwargs):
     # print(**kwargs)
     tmp = input_string.split(" ")
     count = len(tmp)
-    print(count)
-    print(tmp)
+    # print(count)
+    # print(tmp)
     kwargs['body'] = dict()
     # print(tmp[1])
     kwargs['body']['command'] = tmp[0]
@@ -120,7 +120,7 @@ def interpret_params(input_string, **kwargs):
                     kwargs['body']['str_param4'] = tmp[5]
                     if count > 6:
                         kwargs['body']['str_param5'] = tmp[6]
-    print(str(kwargs))
+    # print(str(kwargs))
     return kwargs
 
 

@@ -33,7 +33,7 @@ def run(request_type, hostname=HOSTNAME, port=PORT, str_param1=None, str_param2=
                                      str_param2=f'{str_param2}', str_param3=f'{str_param3}', str_param4=f'{str_param4}',
                                      str_param5=f'{str_param5}')
 
-    print(requested)
+    # print(requested)
     response = None
 
     if request_type == 'get':
