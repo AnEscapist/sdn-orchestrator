@@ -156,6 +156,7 @@
 import Card from '@/components/Cards/Card.vue'
 export default {
   name: "DockerContainer",
+  inject: ['reload'],
   data: function() {
     return {
       status: '',
@@ -270,6 +271,11 @@ export default {
     },
 
     goConsole(id) {
+    //
+    // this.axios.get('/api/docker/kill_port').then(response => {
+    //     console.log(response)
+    // })
+
       // var path = '/#/ucpe/123/vnfs/dockercontainer?short_id=' + this.short_id
       // var path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
       // var path = 'https://www.google.com'
@@ -284,7 +290,8 @@ export default {
           container_id: id
         }
       }).then(response => {
-        console.log('response', response)
+        // console.log('response', response)
+        this.reload()
       })
     },
 
