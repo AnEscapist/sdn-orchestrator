@@ -206,6 +206,8 @@ def ovs_list_ports_number(br):
                                 stderr=subprocess.PIPE)
         tmp.append(proc.stdout.read().decode('utf-8').strip())
     print(tmp)
+    return tmp
+
 
 def sriov_totalvfs(device):
     dpdk.get_device_details(dpdk.network_devices)

@@ -122,17 +122,14 @@
           </button>
 
           <button type="button" class="btn btn-link" @click='goConsole(id)'>
-            <router-link target="_blank" :to="{ path: 'consolecontainer', query: {short_id: this.short_id} }">
+              <!-- <router-link target="_blank" :to="{ path: 'consolecontainer', query: {short_id: this.short_id} }"> -->
               <td>
                 <font-awesome-icon :icon="['fas', 'terminal']" size=sm coler="#1b7fbd" />
                 <font size='2px'> Console</font>
               </td>
-            </router-link>
+            <!-- </router-link> -->
           </button>
 
-          <!-- <router-link :to="{ path: 'consolecontainer', query: {short_id: containers_id[i]} }">
-
-          </router-link> -->
 
         </tr>
       </table>
@@ -273,7 +270,11 @@ export default {
     },
 
     goConsole(id) {
-      var path = '/#/ucpe/123/vnfs/dockercontainer?short_id=' + this.short_id
+      // var path = '/#/ucpe/123/vnfs/dockercontainer?short_id=' + this.short_id
+      // var path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
+      // var path = 'https://www.google.com'
+      // var path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
+      // var path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
       // window.open(path)
 
       // console.log(id)

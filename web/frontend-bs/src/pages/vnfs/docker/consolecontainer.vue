@@ -4,6 +4,10 @@
     <card>
         hello
       <div id="console"></div>
+      <!-- <div v-html="/home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html"> </div> -->
+      <!-- <iframe src="///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html" scrolling="yes" style="width: 100%;height: 500px;" frameborder="0"></iframe> -->
+
+      <!-- <iframe src='http://www.google.com' scrolling="yes" style="width: 100%;height: 500px;" frameborder="0"></iframe> -->
     </card>
 
   </div>
@@ -15,28 +19,32 @@
 import Card from '@/components/Cards/Card.vue'
 export default {
   name: "ConsoleContainer",
-  data: {}
+
 }
 </script>
 
 <style scoped>
 #console {
-  /* background: red; */
-  position: absolute;
-  left: 100px;
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
-  padding: 100px;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    padding: 20px;
 }
 
 .docker-browser-console .terminal-cursor {
-  background-color: #ccc;
+    background-color: rgb(255, 0, 0);
 }
 
 .docker-browser-console {
-  font-family: monospace;
-  background-color: black;
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    height: 100%;
+    font-family: monospace;
+    background-color: white;
 }
 
 /* .container-fluid {
