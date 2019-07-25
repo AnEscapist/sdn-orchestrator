@@ -199,7 +199,8 @@ def create_volume():
 def console_container():
     container_id = request.args.get('container_id')
 
-    path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
+    # path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-consol/index.html'
+    path = 'http://10.10.81.4:8080/console.html' #ip address of the server
     # webbrowser.open(path, new=1)
     # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
     # code = os.system(stop_port)
