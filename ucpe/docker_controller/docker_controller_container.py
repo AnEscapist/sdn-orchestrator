@@ -248,7 +248,7 @@ def remove_container(id_name):
         return api_error(ae, func)
 
 
-def container_stats(id_name, decode=True):
+def container_stats(id_name):
     #check parameters: decode and stream, if real time stats wanted
     func = container_stats
     try:
@@ -256,7 +256,7 @@ def container_stats(id_name, decode=True):
     except requests.exceptions.HTTPError:
         return cnf_error(id_name, func)
     try:
-        stats = container.stats()
+        stats = container.stats(decode=True)
         return container_stats_message(id_name, stats, func)
     except docker.errors.APIError as ae:
         return api_error(ae, func)
