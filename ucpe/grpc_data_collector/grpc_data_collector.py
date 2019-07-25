@@ -87,8 +87,8 @@ class gRPCDataCollector(object):
 
     @staticmethod
     def grpc_modify_ovs_docker_add_port(**kwargs):
-        if 'param5' not in kwargs['body']:
-            kwargs['body']['str_param5'] = None
+        if 'str_param5' not in kwargs['body']:
+            kwargs['body']['str_param5'] = ''
         return modify_execute(func_name(), "ovs_docker add_port "
         f"{kwargs['body']['str_param1']} {kwargs['body']['str_param2']} {kwargs['body']['str_param3']} "
         f"{kwargs['body']['str_param4']} {kwargs['body']['str_param5']}")
@@ -101,9 +101,12 @@ def func_name():
 
 
 def interpret_params(input_string, **kwargs):
+    # print(**kwargs)
     tmp = input_string.split(" ")
     count = len(tmp)
-    # print(tmp[0])
+    print(count)
+    print(tmp)
+    kwargs['body'] = dict()
     # print(tmp[1])
     kwargs['body']['command'] = tmp[0]
     kwargs['body']['str_request'] = tmp[1]
@@ -113,7 +116,11 @@ def interpret_params(input_string, **kwargs):
             kwargs['body']['str_param2'] = tmp[3]
             if count > 4:
                 kwargs['body']['str_param3'] = tmp[4]
-    # print(str(**kwargs))
+                if count > 5:
+                    kwargs['body']['str_param4'] = tmp[5]
+                    if count > 6:
+                        kwargs['body']['str_param5'] = tmp[6]
+    print(str(kwargs))
     return kwargs
 
 
@@ -140,10 +147,11 @@ def modify_execute(name, input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'str_param1': '66:00.1', 'str_param2': 'igb'}}
+    kwargs = {'body': {'str_param1': 'br0', 'str_param2': 'test_port', 'str_param3': 'test_grpc', 'str_param4': '6',
+                       'str_param5': '10.10.81.155'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
-    print(tmp.grpc_get_hugepages_freemem(**kwargs))
+    print(tmp.grpc_modify_ovs_docker_add_port(**kwargs))
 
 
 if __name__ == '__main__':

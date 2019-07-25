@@ -101,13 +101,13 @@ def linux_bridge_list():
 def ovs_docker_add_port():
     bridge = 'br0'
     interface = request.args.get('ovs_int')
-    print(interface)
+    # print(interface)
     container = request.args.get('create_name')
-    print(container)
+    # print(container)
     port = request.args.get('int_port')
-    print(port)
+    # print(port)
     ipaddress = request.args.get('int_ip')
-    print(ipaddress)
+    # print(ipaddress)
     messagedata = {"method": "grpc_modify_ovs_docker_add_port", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": f'{bridge}', "str_param2": f'{interface}',
                  "str_param3": f'{container}', "str_param4": f'{port}', "str_param5": f'{ipaddress}'}},

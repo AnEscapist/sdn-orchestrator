@@ -54,7 +54,7 @@ def ovs_docker_add_port(bridge, interface, container, port, ipaddress):
         tmp_int = tmp_int + 1
     tmp_num = str(tmp_int)
     ovsdocker_list = ['sudo', '/usr/local/bin/ovs-docker', 'add-port', bridge1, tmp_name, container, tmp_num]
-    if ipaddress is not None:
+    if ipaddress != '':
         ovsdocker_list.append(f"--ipaddress=\"{ipaddress}\"")
     subprocess.run(ovsdocker_list)
     return [True, tmp_int]
