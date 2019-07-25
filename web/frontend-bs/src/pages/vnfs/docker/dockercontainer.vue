@@ -114,7 +114,7 @@
               <font size='2px'> Inspect</font>
             </td>
           </button>
-          <button type="button" class="btn btn-link">
+          <button type="button" class="btn btn-link" @click='showStatistic()'>
             <td>
               <font-awesome-icon :icon="['fas', 'chart-area']" size=sm coler="#1b7fbd" />
               <font size='2px'> Stats</font>
@@ -149,6 +149,13 @@
     <hr>
     <pre><span class="inner-pre">{{inspect}}</span></pre>
   </div>
+
+  <div class="container-fluid" v-show="showStats">
+    <font-awesome-icon :icon="['fas', 'chart-area']" size=lg color='rgb(0, 0, 0)' /> <strong> Inspect</strong>
+    <hr>
+
+  </div>
+
 </div>
 </template>
 
@@ -165,8 +172,10 @@ export default {
       name: '',
       createTime: '',
       inspect: '',
+      stats: '',
       showIns: false,
       showEdit: true,
+      showStats: false,
       newName: '',
     }
 
@@ -192,6 +201,14 @@ export default {
       this.createTime = inspect['Created']
     });
 
+    this.axios.get('/api/docker/container_stats', {
+        params: {
+            id_name: this.short_id
+        }
+    }).then(response => {
+        console.log(response)
+    })
+
   },
   methods: {
     changeStatus(change_to) {
@@ -212,6 +229,9 @@ export default {
     },
     showInspect() {
       this.showIns = !this.showIns;
+    },
+    showStatistic() {
+      this.showStats = !this.showStats
     },
     renameContainer(newName) {
       this.showEdit = !this.showEdit
