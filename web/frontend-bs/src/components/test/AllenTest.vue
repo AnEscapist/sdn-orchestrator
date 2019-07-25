@@ -55,8 +55,40 @@
             </tr>
             <tr>
               <td>
+
+
+                <b-modal id="bcmportwindow2" title="Select Untagged Ports" scrollable>
+                  <div>
+                    <!-- Check All -->
+                    <input type='checkbox' @click='checkAll2()' v-model='isCheckAll2'> Check All
+
+                    <!-- Checkboxes list -->
+                    <table width="400">
+                      <tr v-for='row in portList'>
+                        <td v-for='port in row'>
+                          <input type='checkbox' v-bind:value='port' v-model='ports2' @change='updateCheckall2()'>
+                          <label :for="port"> {{port}}</label>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </b-modal>
+                <button type="button"
+                        class="btn btn-dark btn-lg"
+                        v-b-modal="'bcmportwindow2'"
+                >
+                  Select Untagged Ports
+                </button>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <div>
-                  Selected items : {{ checkedPortNames }}
+                  Selected ports : {{ checkedPortNames }}
+                </div>
+                <div>
+                  Selected untagged ports : {{ checkedPortNames2 }}
                 </div>
                 <br>
               </td>
@@ -127,9 +159,11 @@
         data() {
             return {
                 checkedPortNames: "",
+                checkedPortNames2: "",
                 bottomText: "Hello",
                 portStatus: "",
                 isCheckAll: false,
+                isCheckAll2: false,
                 portList: [["ge1", "ge2", "ge3", "ge4"],
                     ["ge5", "ge6", "ge7", "ge8"],
                     ["ge9", "ge10", "ge11", "ge12"],
@@ -142,8 +176,10 @@
                     ["xe4", "xe5", "xe6", "xe7"],
                     ["xe8", "xe9", "xe10", "xe11"]],
                 ports: [],
+                ports2: [],
                 form: {
                     selectedPorts: "",
+                    selectedPorts2: "",
                     action: "Show VLANs",
                     vlanid: ""
                 },
@@ -179,8 +215,19 @@
                 if (this.isCheckAll) { // Check all
                     for (var row = 0; row < this.portList.length; row++) {
                         for (var key in this.portList[row]) {
-                            console.log(key);
                             this.ports.push(this.portList[row][key]);
+                        }
+                    }
+                }
+            },
+            checkAll2: function () {
+
+                this.isCheckAll2 = !this.isCheckAll2;
+                this.ports2 = [];
+                if (this.isCheckAll2) { // Check all
+                    for (var row = 0; row < this.portList.length; row++) {
+                        for (var key in this.portList[row]) {
+                            this.ports2.push(this.portList[row][key]);
                         }
                     }
                 }
@@ -188,6 +235,14 @@
             updateCheckall: function () {
                 const length = 48;
                 if (this.ports.length == length) {
+                    this.isCheckAll = true;
+                } else {
+                    this.isCheckAll = false;
+                }
+            },
+            updateCheckall2: function () {
+                const length = 48;
+                if (this.ports2.length == length) {
                     this.isCheckAll = true;
                 } else {
                     this.isCheckAll = false;
@@ -205,6 +260,20 @@
                 if (this.ports.length > 0) {
                     this.form.selectedPorts += this.ports[key];
                     this.checkedPortNames += this.ports[key];
+                }
+            },
+            printValues2: function () {
+                this.form.selectedPorts2 = "";
+                this.checkedPortNames2 = "";
+                var key;
+                // Read Checked checkboxes value
+                for (key = 0; key < this.ports2.length - 1; key++) {
+                    this.form.selectedPorts2 += this.ports2[key] + ",";
+                    this.checkedPortNames2 += this.ports2[key] + ", ";
+                }
+                if (this.ports2.length > 0) {
+                    this.form.selectedPorts2 += this.ports2[key];
+                    this.checkedPortNames2 += this.ports2[key];
                 }
             },
             validateName() {
@@ -229,10 +298,21 @@
                         url = '/api/bcm/destroy_vlan/' + this.form.vlanid;
                         break;
                     case "Add ports to VLAN":
-                        url = '/api/bcm/add_ports/' + this.form.vlanid + '/' + this.form.selectedPorts;
+                        url = '/api/bcm/add_ports/' + this.form.vlanid + '/' + this.form.selectedPorts + '/';
+                        if(this.form.selectedPorts2.length > 0){
+                            url +=this.form.selectedPorts2;
+                        }
+                        break;
+                    case "Remove ports from VLAN":
+                        url = '/api/bcm/remove_ports/' + this.form.vlanid + '/' +
+                          this.form.selectedPorts;
                         break;
                     case "Show port-based VLANs":
                         url = '/api/bcm/show_pvlans/';
+                        break;
+                    case "Set port-based VLANs":
+                        url = '/api/bcm/set_pvlans/' + this.form.vlanid + '/' +
+                          this.form.selectedPorts;
                         break;
                     default:
                         console.log("Failed to translate get request");
@@ -265,6 +345,9 @@
             },
             ports: function () {
                 this.printValues()
+            },
+            ports2: function() {
+                this.printValues2()
             }
         }
     }
