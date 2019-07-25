@@ -147,9 +147,10 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                     response.status = f'Interface {request.str_param2} added'
                 else:
                     response.status = f'Request failed'
-                response.str_response = None
                 if request.str_param4 != str(proc[1]):
                     response.str_response = f"Using port {str(proc[1])}"
+                else:
+                    response.str_response = f"Using port {request.str_param4}"
 
         return response
 
