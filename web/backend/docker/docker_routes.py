@@ -201,8 +201,6 @@ def console_container():
 
     path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
     # webbrowser.open(path, new=1)
-    print('abc===============')
-
     # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
     # code = os.system(stop_port)
     # print(code)
