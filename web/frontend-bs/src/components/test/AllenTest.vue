@@ -136,7 +136,14 @@
             </tr>
             <tr>
               <td>
-                {{portStatus}}
+                <li v-for="line in portStatusList[0]">
+                  {{line}}
+                </li>
+              </td>
+              <td>
+                <li v-for="line in portStatusList[1]">
+                  {{line}}
+                </li>
               </td>
             </tr>
           </table>
@@ -144,7 +151,9 @@
       </tr>
     </table>
     <div>
-      {{bottomText}}
+      <li v-for="line in bottomText.split(/[\n]/)">
+        {{line}}
+      </li>
     </div>
     <!--    <br>-->
     <!--    <h1>{{test}}</h1>-->
@@ -205,6 +214,14 @@
             },
             isFormValid() {
                 return Object.values(this.formErrors).every(error => !error)
+            },
+            portStatusList() {
+                const raw = this.portStatus.split(/[\n]/);
+                const firsthalf = raw.slice(0,22);
+                console.log("This is the first half" + firsthalf);
+                const secondhalf = raw.slice(22,45);
+                console.log("This is the second half" + secondhalf);
+                return [firsthalf,secondhalf];
             }
         },
         methods: {
