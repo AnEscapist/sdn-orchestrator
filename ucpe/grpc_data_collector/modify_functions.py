@@ -40,13 +40,21 @@ def dpdk_enable(driver):
 
 def ovs_add_dpdk_port(bridge, port_name, port):
     subprocess.run(['sudo', 'ovs-vsctl', 'add-port', bridge, port_name, '--', 'set', 'Interface', port_name,
-                           'type=dpdk', f'options:dpdk-devargs={port}'])
+                    'type=dpdk', f'options:dpdk-devargs={port}'])
     return True
 
 
 def ovs_docker_add_port(bridge, interface, container, port, ipaddress):
-    ovsdocker_list = ['sudo', '/usr/local/bin/ovs-docker', 'add-port', bridge, interface, container, port]
+    bridge1 = 'br0'
+    # bridge1 = bridge
+    tmp_name = f'{container}-{interface}'
+    tmp_var = get_functions.ovs_list_ports_number(bridge1)
+    tmp_int = int(port)
+    while port in tmp_var:
+        tmp_int = tmp_int + 1
+    tmp_num = str(tmp_int)
+    ovsdocker_list = ['sudo', '/usr/local/bin/ovs-docker', 'add-port', bridge1, tmp_name, container, tmp_num]
     if ipaddress is not None:
         ovsdocker_list.append(f"--ipaddress=\"{ipaddress}\"")
     subprocess.run(ovsdocker_list)
-    return True
+    return [True, tmp_int]
