@@ -122,11 +122,11 @@
           </button>
 
           <button type="button" class="btn btn-link" @click='goConsole(id)'>
-              <!-- <router-link target="_blank" :to="{ path: 'consolecontainer', query: {short_id: this.short_id} }"> -->
-              <td>
-                <font-awesome-icon :icon="['fas', 'terminal']" size=sm coler="#1b7fbd" />
-                <font size='2px'> Console</font>
-              </td>
+            <!-- <router-link target="_blank" :to="{ path: 'consolecontainer', query: {short_id: this.short_id} }"> -->
+            <td>
+              <font-awesome-icon :icon="['fas', 'terminal']" size=sm coler="#1b7fbd" />
+              <font size='2px'> Console</font>
+            </td>
             <!-- </router-link> -->
           </button>
 
@@ -271,10 +271,20 @@ export default {
     },
 
     goConsole(id) {
-    //
-    // this.axios.get('/api/docker/kill_port').then(response => {
-    //     console.log(response)
-    // })
+      //
+      this.axios.get('/api/docker/kill_port').then(response => {
+        // console.log(response)
+
+        this.axios.get('/api/docker/console_container', {
+          params: {
+            container_id: id
+          }
+        }).then(response => {
+          // console.log('response', response)
+          // this.reload()
+        })
+
+      })
 
       // var path = '/#/ucpe/123/vnfs/dockercontainer?short_id=' + this.short_id
       // var path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
@@ -285,14 +295,8 @@ export default {
 
       // console.log(id)
       // document.getElementById("console").innerHTML = '<object type="text/html" data="hello.html" ></object>';
-      this.axios.get('/api/docker/console_container', {
-        params: {
-          container_id: id
-        }
-      }).then(response => {
-        // console.log('response', response)
-        this.reload()
-      })
+
+
     },
 
     setBtn(status) {

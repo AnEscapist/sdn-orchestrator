@@ -48,7 +48,7 @@ def create_container():
     name = request.args.get('create_name')
     port = request.args.get('create_port')
     messagedata = {"method": "docker_controller_create_container", "params": {
-        "body": {'image_name': image_name, 'name': name, 'port': port, "username": "potato", "hostname": "10.10.81.100", "all": "True", "autostart": 1,
+        "body": {'image_name': image_name, 'name': name, 'ports': port, "username": "potato", "hostname": "10.10.81.100", "all": "True", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
 
     return jsonify(call_ucpe_function(messagedata))
@@ -209,17 +209,21 @@ def console_container():
     os.system(cmd)
     return f'{cmd}.'
 
-# @docker_routes.route('/docker/kill_port')
-# def kill_port():
-#     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#     result = sock.connect_ex(('127.0.0.1',10000))
-#     # return str(result)
-#     if str(result) == '0':
-#         # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
-#         stop_port = 'sudo fuser -k 10000/tcp6'
-#         os.system(stop_port)
-#     else:
-#         pass
-#         # return '111' + str(result)
-#     sock.close()
-#     return 'port clear'
+@docker_routes.route('/docker/kill_port')
+def kill_port():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = sock.connect_ex(('127.0.0.1',10000))
+    # return str(result)
+    if str(result) == '0':
+        # return 'listening'
+        # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
+        stop_port = 'sudo fuser -k 10000/tcp'
+        os.system(stop_port)
+        return 'port 10000 stopped!'
+    else:
+        # return 'not listening'
+
+        return 'port 1000 not listening'
+        # return '111' + str(result)
+    # sock.close()
+    # return 'port clear'
