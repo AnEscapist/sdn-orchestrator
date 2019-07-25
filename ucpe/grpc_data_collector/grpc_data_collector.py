@@ -93,6 +93,11 @@ class gRPCDataCollector(object):
                                            f"{kwargs['body']['str_param2']} {kwargs['body']['str_param3']} "
                                            f"{kwargs['body']['str_param4']} {kwargs['body']['str_param5']}")
 
+    @staticmethod
+    def grpc_modify_ovs_docker_del_port(**kwargs):
+        return modify_execute(func_name(), f"ovs_docker del_port {kwargs['body']['str_param1']} "
+                                           f"{kwargs['body']['str_param2']}")
+
 
 # ==================== private functions ===============================
 

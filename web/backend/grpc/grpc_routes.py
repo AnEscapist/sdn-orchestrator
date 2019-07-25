@@ -114,3 +114,14 @@ def ovs_docker_add_port():
         "jsonrpc": "2.0", "id": 0
     }
     return jsonify(call_ucpe_function(messagedata))
+
+
+@grpc_routes.route('/grpc/ovs_docker_del_port')
+def ovs_docker_del_port():
+    bridge = 'br0'
+    container = request.args.get('container')
+    messagedata = {"method": "grpc_modify_ovs_docker_del_port", "params": {
+        "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": f'{bridge}', "str_param2": f'{container}'}},
+        "jsonrpc": "2.0", "id": 0
+    }
+    return jsonify(call_ucpe_function(messagedata))
