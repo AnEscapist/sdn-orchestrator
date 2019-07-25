@@ -300,8 +300,6 @@ export default {
         // add ovs interfaces and set the ports and ip addresses
         var int_port_list = int_port.split(',')
         var int_ip_list = int_ip.split(',')
-        console.log(int_port_list)
-
         var i;
         for (i = 0; i < int_port_list.length; i++) {
 

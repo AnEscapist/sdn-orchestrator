@@ -236,3 +236,14 @@ def kill_port():
         # return '111' + str(result)
     # sock.close()
     # return 'port clear'
+
+
+@docker_routes.route('/docker/check_port')
+def check_port():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = sock.connect_ex(('127.0.0.1',10000))
+    # return str(result)
+    if str(result) == '0':
+        return 'yes'
+    else:
+        return 'no'
