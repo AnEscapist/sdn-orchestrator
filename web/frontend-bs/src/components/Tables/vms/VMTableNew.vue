@@ -1,5 +1,5 @@
 <template>
-  <div class="centered-table mt-2">
+  <div class="w-100">
     <div>
       <div class="btn-toolbar justify-content-between"
            role="toolbar"
@@ -29,7 +29,7 @@
                class="form-control mt-2"
         />
       </div>
-      <AgGridVue style="width:1000px;"
+      <AgGridVue style="width: 1200px;"
                  class="ag-theme-balham mt-2"
                  id="vmTable"
                  :columnDefs="vmTableColumns"
@@ -39,11 +39,6 @@
                  @selection-changed="onSelectionChanged"
       >
       </AgGridVue>
-      <Button
-        @click="debug"
-      >
-        Google
-      </Button>
     </div>
   </div>
 </template>
@@ -81,7 +76,7 @@
           domLayout: "autoHeight",
           rowMultiSelectWithClick: true,
           suppressCellSelection: true,
-          // suppressHorizontalScroll: true,
+          suppressHorizontalScroll: true,
         },
         filterText: ''
       }
@@ -109,7 +104,6 @@
       },
       debug(){
         console.log("debug")
-        window.open("https://google.com", '_blank');
       }
     },
     watch: {

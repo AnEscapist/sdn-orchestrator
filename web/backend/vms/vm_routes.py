@@ -6,6 +6,7 @@ import time
 import subprocess
 from multiprocessing import Process
 from threading import Thread
+import pexpect
 
 vm_routes = Blueprint('vms', __name__)
 
@@ -75,6 +76,8 @@ def create_vm(controller_id, ucpe_sn):
     data = request.get_json()
     # TODO: database for image paths
     form = data["form"]
+    create_vm_ovs_interfaces(form['vmName'], form['vmOVSInterfaceCount'])
+
     image_file = IMAGE_FILES[form['vmImage']]
     image_path = os.path.join(IMAGE_ACTIVE_PATH, form['vmName'], image_file)
     body = {
@@ -87,11 +90,18 @@ def create_vm(controller_id, ucpe_sn):
         "vm_use_hugepages": form['hugepagesEnabled'],
         "vm_hugepage_memory": parseMemoryGB(form['vmHugepageMemory'])
     }
-    if form['vmAddBridgeInterface']:
+    if form['vmBridge'] != 'No Bridge':
         body['vm_bridge_name'] = form['vmBridge']
     message_data = get_message_data(method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
     return jsonify(response)
+
+def create_vm_ovs_interfaces(vm_name, number_of_interfaces):
+    new_interfaces = []
+    for i in range(number_of_interfaces):
+        new_interfaces.append(f'{vm_name}_eth{i}')
+    # create them by calling jesse's thing
+    return
 
 @vm_routes.route('/images/<controller_id>/<ucpe_sn>')
 def get_vm_images(controller_id, ucpe_sn):
@@ -121,8 +131,7 @@ def prepare_vm_console(controller_id, ucpe_sn, vm_name):
     time.sleep(3)
     print("ending sleep")
     # result = prepare_vm_console_helper(HOST_IP, vnc_port)
-    console_thread = Thread(target=prepare_vm_console_helper, args=(HOST_IP, vnc_port))
-    console_thread.start()
+    prepare_vm_console_helper(HOST_IP, vnc_port)
     return jsonify(result="attempted to start vnc console", warning="no error handling") # todo: error handling
 
 def prepare_vm_console_helper(hostname, port):
@@ -130,10 +139,19 @@ def prepare_vm_console_helper(hostname, port):
     # if vnc_subprocess is not None:
     #     print("terminating")
     try:
-        launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
-        vnc_subprocess = subprocess.Popen(f'exec {launch_script_path} --vnc {hostname}:{port}', shell=True)
-        print('in the process', vnc_subprocess.args)
-        vnc_subprocess.communicate()
+        def launch_console():
+            launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
+            vnc_subprocess = subprocess.Popen(f'exec {launch_script_path} --vnc {hostname}:{port}', shell=True)
+            # vnc_subprocess = pexpect.spawn(f'exec {launch_script_path} --vnc {hostname}:{port}')
+            # vnc_subprocess.expect('Navigate')
+            # Thread(target=vnc_subprocess.communicate).start()
+            # line = vnc_subprocess.stdout.readline()
+            # print("pipedline", line)
+            # while True:
+            #     line = vnc_subprocess.stdout.readline().decode('utf-8')
+            #     if not line:
+            #         print('line from stdout', line)
+        Thread(target=launch_console).start()
         return "success"
     except:
         return "failure"

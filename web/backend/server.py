@@ -20,7 +20,7 @@ app.register_blueprint(bcm_routes, url_prefix='/bcm')
 
 def serve():
     zmq_web.start()
-    app.run(threaded=True)
+    app.run(threaded=True, host='0.0.0.0')
 
 if __name__ == "__main__":
     serve()

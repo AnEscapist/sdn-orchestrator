@@ -7,7 +7,7 @@ import lxml.etree as LET
 from libvirt import virConnect
 from libvirt import virDomain
 
-from ucpe.libvirt_controller.utils import VMState, get_domain, open_connection, state, get_caller_function_name
+from ucpe.libvirt_controller.utils import VMState, get_domain, open_connection, state, get_caller_function_name, get_file_basename_no_extension
 from ucpe.libvirt_controller.errors import format_exception, OperationFailedError
 from ucpe.libvirt_controller.testing_constants import *
 from ucpe.ucpe import UCPE
@@ -174,6 +174,14 @@ def get_all_vm_states(ucpe):
 def _state_str_from_domain(domain):
     return state(domain).name
 
+def _image_name_from_xml(xml):
+    basepath = ""
+    root = ET.fromstring(xml)  # todo: consider storing the template in text
+    # root = tree.getroot()
+
+    source = root.find(basepath + 'devices/disk/source')
+    image = source.get('file')
+    return get_file_basename_no_extension(image)
 
 def get_vm_xml(ucpe, vm_name):
     func = lambda domain: virDomain.XMLDesc(domain, 0)
@@ -188,7 +196,6 @@ def get_vm_info(ucpe, vm_name):
 def get_all_vm_info(ucpe):
     func = _construct_info_dict
     return _libvirt_all_domains_observer(func, ucpe)
-
 
 def _construct_info_dict(domain):
     state, maxmem, mem, cpus, cpu_time = domain.info()
@@ -208,6 +215,8 @@ def _construct_info_dict(domain):
     else:
         info_dict['memory'] = 0
     info_dict['memory usage'] = "{:.2%}".format(info_dict['memory'] / maxmem)
+
+    info_dict['image'] = _image_name_from_xml(domain.XMLDesc(0))
     return info_dict
 
 def prepare_vm_console(ucpe, vm_name):
