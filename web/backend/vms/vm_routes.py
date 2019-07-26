@@ -105,6 +105,7 @@ def create_vm(controller_id, ucpe_sn):
     }
     if form['vmBridge'] != 'No Bridge':
         body['vm_bridge_name'] = form['vmBridge']
+        print(body['vm_bridge_name'])
     message_data = get_message_data(method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
     return jsonify(response)
@@ -141,7 +142,7 @@ def prepare_vm_console(controller_id, ucpe_sn, vm_name):
     local_vnc_port = 6080
     subprocess.Popen(f'exec fuser -k {local_vnc_port}/tcp', shell=True)
     print("starting sleep")
-    time.sleep(3)
+    time.sleep(5)
     print("ending sleep")
     # result = prepare_vm_console_helper(HOST_IP, vnc_port)
     prepare_vm_console_helper(HOST_IP, vnc_port)
