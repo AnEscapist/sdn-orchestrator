@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100">
+  <div>
     <div>
       <div class="btn-toolbar justify-content-between"
            role="toolbar"
