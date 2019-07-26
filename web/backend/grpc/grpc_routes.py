@@ -137,11 +137,11 @@ def ovs_docker_del_port():
     }
     # return jsonify(call_ucpe_function(messagedata))
     p = call_ucpe_function(messagedata)
-    # return jsonify(p)
+    return jsonify(p)
 
 
 def main():
-    proc = ovs_add_port("abcd", "dpdkvhostuser")
+    proc = ovs_add_port("abcde", "dpdkvhostuser")
     return str(proc)
 
 
