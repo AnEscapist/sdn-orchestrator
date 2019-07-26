@@ -99,8 +99,8 @@ def pull_image(repo, registry, tag=None):
             return pull_error(re, func)
     else:
         if tag == None:
+            print('docker pull ' + registry + '/' + repo)
             try:
-                print('docker pull ' + registry + '/' + repo)
                 os.system('docker pull ' + registry + '/' + repo)
                 return pull_image_message(repo, tag, registry, func)
             except TypeError as te:
@@ -108,6 +108,7 @@ def pull_image(repo, registry, tag=None):
             except requests.exceptions.HTTPError as re:
                 return pull_error(re, func)
         else:
+            print('docker pull ' + registry + '/' + repo + ':' + tag)
             try:
                 os.system('docker pull ' + registry + '/' + repo + ':' + tag)
                 return pull_image_message(repo, tag, registry, func)
