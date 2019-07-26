@@ -1,13 +1,13 @@
-import DashboardLayout from '../layout/sample-layout/TemplateLayout.vue'
+import HostInfoLayout from '../layout/host-info/HostInfoLayout.vue'
 import HostInfo from '../pages/host-data/HostInfo.vue'
 import HostInfoNetworkDevices from "../pages/host-data/HostInfoNetworkDevices";
 
 const grpcRoutes = [
     {
-        path: '/host-info',
-        name: 'DashboardLayout',
-        component: DashboardLayout,
-        redirect: '/host-info/overview',
+        path: 'host-info',
+        name: 'HostInfo',
+        component: HostInfoLayout,
+        redirect: 'host-info/overview',
         children: [
           {
             path: 'overview',

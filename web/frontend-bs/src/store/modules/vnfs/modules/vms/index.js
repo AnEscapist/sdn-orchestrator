@@ -182,7 +182,7 @@ function parseMemoryIntGBFromBytes(memoryStr) {
 }
 
 function getZeroToNArray(n) {
-  return Array.from(Array(n).keys())
+  return Array.from(Array(n+1).keys())
 }
 
 function getOneToNArray(n) {

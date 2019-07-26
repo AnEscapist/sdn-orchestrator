@@ -1,6 +1,6 @@
 const vnfSidebar = {
   color: 'black', //accepted: '', 'blue', 'azure', 'green', 'orange', 'red', 'purple', 'black';
-  backgroundImage: 'img/sidebar-5.jpg', //public/img/sidebar-5.jpg
+  backgroundImage: 'img/bigdata.jpg', //public/img/sidebar-5.jpg
   items: [
     {
       to: 'home',

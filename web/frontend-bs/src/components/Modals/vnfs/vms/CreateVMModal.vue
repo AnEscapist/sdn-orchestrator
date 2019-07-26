@@ -120,7 +120,7 @@
               class="custom-select mr-sm-2">
               <option>No Bridge</option>
               <option v-for="bridge in vmBridgesAvailable">{{bridge}}</option>
-            </select>
+          </select>
           </div>
           <div
             class="form-group col-md-4">

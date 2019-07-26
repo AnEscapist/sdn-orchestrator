@@ -11,11 +11,11 @@ const routes = [
   {
     path: '/',
     component: TemplateLayout,
-    redirect: '/admin/overview',
+    redirect: '/host-info/overview',
   },
   // ...dockerRoutes,
   // ...vmRoutes,
-  ...grpcRoutes,
+  // ...grpcRoutes,
   ...ucpeRoutes,
   // ...vnfRoutes,
   ...sampleRoutes,
