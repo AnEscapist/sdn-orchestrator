@@ -57,7 +57,7 @@
       <table width='100%'>
         <tr>
           <td width='20%'>
-            <h6>Buld</h6>
+            <h6>Build</h6>
           </td>
           <td>
             <h6>Docker {{dockerVersion}} on {{os}}, {{architecture}}</h6>
@@ -89,12 +89,12 @@
       <hr>
       <table>
         <tr id='containerLinks'>
-          <button type="button" class="btn btn-link">
+          <!-- <button type="button" class="btn btn-link">
             <td>
               <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm coler="#1b7fbd" />
               <font size='2px'> Delete</font>
             </td>
-          </button>
+          </button> -->
           <button type="button" class="btn btn-link" @click='showInspect()'>
             <td>
               <font-awesome-icon :icon="['fas', 'info-circle']" size=sm coler="#1b7fbd" />
