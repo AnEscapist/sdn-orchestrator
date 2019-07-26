@@ -107,6 +107,19 @@ def ovs_add_port(if_port, type):
     }
     return jsonify(call_ucpe_function(messagedata))
 
+#method for Roger too
+@grpc_routes.route('/grpc/ovs_del_port/<vm_name>')
+def ovs_del_port(vm_name):
+    bridge = 'br0'
+    container = request.args.get('container')
+    messagedata = {"method": "grpc_modify_ovs_del_port", "params": {
+        "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": f'{bridge}', "str_param2": f'{vm_name}'}},
+        "jsonrpc": "2.0", "id": 0
+    }
+    # return jsonify(call_ucpe_function(messagedata))
+    p = call_ucpe_function(messagedata)
+    return jsonify(p)
+
 
 @grpc_routes.route('/grpc/ovs_docker_add_port')
 def ovs_docker_add_port():
@@ -137,11 +150,12 @@ def ovs_docker_del_port():
     }
     # return jsonify(call_ucpe_function(messagedata))
     p = call_ucpe_function(messagedata)
-    # return jsonify(p)
+    return jsonify(p)
 
 
 def main():
-    proc = ovs_add_port("abcd", "dpdkvhostuser")
+    # proc = ovs_add_port("abcd", "dpdkvhostuser")
+    proc = cpu_total()
     return str(proc)
 
 
