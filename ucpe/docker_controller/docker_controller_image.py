@@ -88,7 +88,7 @@ def create_image(remote_path):
 
 def pull_image(repo, registry, tag=None):
     func = pull_image
-    if registry == 'docker hub'
+    if registry == 'docker hub':
         try:
             dcli.images.pull(repository=repo, tag=tag)
             return pull_image_message(repo, tag, registry, func)
