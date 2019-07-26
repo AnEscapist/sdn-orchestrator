@@ -82,7 +82,7 @@ class gRPCDataCollector(object):
     # bridge port type dev-address
     @staticmethod
     def grpc_modify_ovs_add_port(**kwargs):
-        return modify_execute(func_name(), f"ovs add_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}"
+        return modify_execute(func_name(), f"ovs add_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']} "
                               f"{kwargs['body']['str_param3']}")
 
     @staticmethod
@@ -109,10 +109,8 @@ def interpret_params(input_string, **kwargs):
     # print(**kwargs)
     tmp = input_string.split(" ")
     count = len(tmp)
-    # print(count)
     # print(tmp)
-    kwargs['body'] = dict()
-    # print(tmp[1])
+    # kwargs['body'] = dict()
     kwargs['body']['command'] = tmp[0]
     kwargs['body']['str_request'] = tmp[1]
     if count > 2:
@@ -152,11 +150,11 @@ def modify_execute(name, input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'str_param1': '0000:66:00.0', 'str_param2': 'vfio-pci', 'str_param3': 'test_con', 'str_param4': '6',
+    kwargs = {'body': {'str_param1': '0000:66:00.1', 'str_param2': 'igb', 'str_param3': 'dpdkvhostuser', 'str_param4': '6',
                        'str_param5': '10.10.81.155/24'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
-    print(tmp.grpc_modify_dpdk_bind(**kwargs))
+    print(tmp.grpc_get_linux_bridges_all(**kwargs))
 
 
 if __name__ == '__main__':

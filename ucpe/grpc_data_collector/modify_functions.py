@@ -21,13 +21,13 @@ devices = dpdk.devices
 dpdk.get_device_details(dpdk.network_devices)
 
 
-def dpdk_bind(device, driver, force=True):
+def dpdk_bind(device, driver, force=False):
     dev_id = dpdk.dev_id_from_dev_name(device)
     dpdk.bind_one(dev_id, driver, force)
     return True
 
 
-def dpdk_unbind(device, force=True):
+def dpdk_unbind(device, force=False):
     dev_id = dpdk.dev_id_from_dev_name(device)
     dpdk.unbind_one(dev_id, force)
     return True
