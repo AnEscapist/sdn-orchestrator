@@ -98,6 +98,7 @@ def pull_image(repo, registry, tag):
         except requests.exceptions.HTTPError as re:
             return pull_error(re, func)
     else:
+        registry = '10.10.81.100'
         if tag == '':
             print('docker pull ' + registry + '/' + repo)
             try:
