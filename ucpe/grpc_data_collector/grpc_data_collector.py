@@ -79,10 +79,10 @@ class gRPCDataCollector(object):
     def grpc_modify_dpdk_enable(**kwargs):
         return modify_execute(func_name(), f"dpdk enable {kwargs['body']['str_param1']}", **kwargs)
 
-    # bridge port br
+    # bridge port type dev-address
     @staticmethod
-    def grpc_modify_ovs_add_dpdk_port(**kwargs):
-        return modify_execute(func_name(), f"ovs add_dpdk_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}"
+    def grpc_modify_ovs_add_port(**kwargs):
+        return modify_execute(func_name(), f"ovs add_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}"
                               f"{kwargs['body']['str_param3']}")
 
     @staticmethod

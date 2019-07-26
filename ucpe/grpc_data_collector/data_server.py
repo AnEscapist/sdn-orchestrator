@@ -122,11 +122,11 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                 print('Driver enabled')
 
         elif request.command == 'ovs':
-            if request.str_request == 'add_dpdk_port':
+            if request.str_request == 'add_port':
                 response.status = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
                 print(response.str_response)
-                proc = modify_functions.ovs_add_dpdk_port(request.str_param1, request.str_param2,
-                                                                          request.str_param3)
+                proc = modify_functions.ovs_add_port(request.str_param1, request.str_param2,
+                                                     request.str_param3)
                 if proc:
                     response.status = f"Port {request.str_param2} added"
                 response.str_response = None
