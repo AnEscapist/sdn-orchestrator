@@ -100,6 +100,7 @@ def pull_image(repo, registry, tag=None):
     else:
         if tag == None:
             try:
+                return 'docker pull ' + registry + '/' + repo
                 os.system('docker pull ' + registry + '/' + repo)
                 return pull_image_message(repo, tag, registry, func)
             except TypeError as te:
