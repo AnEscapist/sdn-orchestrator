@@ -41,6 +41,7 @@ def run(request_type, hostname=HOSTNAME, port=PORT, str_param1=None, str_param2=
 
     elif request_type == 'modify':
         response = stub.ModifyData(requested)
+
     return response
 
 
