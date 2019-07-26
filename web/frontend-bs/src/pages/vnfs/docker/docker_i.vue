@@ -230,7 +230,7 @@ export default {
           // timeout: 1000
         }
       }).then(response => {
-        console.log(response)
+        // console.log(response)
         // console.log(JSON.parse(response.data.result))
         this.reload()
       })
