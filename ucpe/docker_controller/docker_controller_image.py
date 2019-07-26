@@ -105,10 +105,7 @@ def pull_image(repo, registry, tag=None):
             try:
                 os.system('docker pull ' + registry + '/' + name + ':' + tag)
                 return pull_image_message(repo, tag, registry, func)
-        except TypeError as te:
-            return type_error(te, func)
-        except requests.exceptions.HTTPError as re:
-            return pull_error(re, func)
+
 
 def remove_image(name):
     func = remove_image
