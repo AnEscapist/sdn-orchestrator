@@ -186,7 +186,7 @@ function getZeroToNArray(n) {
 }
 
 function getOneToNArray(n) {
-  return getZeroToNArray(n).map(x => x+1)
+  return getZeroToNArray(n-1).map(x => x+1)
 }
 
 const methods = {};

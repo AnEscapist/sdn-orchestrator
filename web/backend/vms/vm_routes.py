@@ -7,6 +7,9 @@ import subprocess
 from multiprocessing import Process
 from threading import Thread
 import pexpect
+from web.backend.grpc.grpc_routes import ovs_add_port
+from ucpe.libvirt_controller.utils import ovs_interface_names_from_vm_name
+
 
 vm_routes = Blueprint('vms', __name__)
 
@@ -89,7 +92,7 @@ def create_vm(controller_id, ucpe_sn):
     data = request.get_json()
     # TODO: database for image paths
     form = data["form"]
-    create_vm_ovs_interfaces(form['vmName'], form['vmOVSInterfaceCount'])
+    create_vm_ovs_interfaces(form['vmName'], int(form['vmOVSInterfaceCount']))
 
     image_file = IMAGE_FILES[form['vmImage']]
     image_path = os.path.join(IMAGE_ACTIVE_PATH, form['vmName'], image_file)
@@ -101,7 +104,8 @@ def create_vm(controller_id, ucpe_sn):
         "vm_memory": parseMemoryGB(form['vmMemory']),
         "vm_vcpu_count": form['vmCPUs'],
         "vm_use_hugepages": form['hugepagesEnabled'],
-        "vm_hugepage_memory": parseMemoryGB(form['vmHugepageMemory'])
+        "vm_hugepage_memory": parseMemoryGB(form['vmHugepageMemory']),
+        "vm_ovs_interface_count": form['vmOVSInterfaceCount'],
     }
     if form['vmBridge'] != 'No Bridge':
         body['vm_bridge_name'] = form['vmBridge']
@@ -110,10 +114,12 @@ def create_vm(controller_id, ucpe_sn):
     return jsonify(response)
 
 def create_vm_ovs_interfaces(vm_name, number_of_interfaces):
-    new_interfaces = []
-    for i in range(number_of_interfaces):
-        new_interfaces.append(f'{vm_name}_eth{i}')
+    interface_names = ovs_interface_names_from_vm_name(vm_name, number_of_interfaces)
+    print(interface_names)
     # create them by calling jesse's thing
+    # interface_type = 'dpdkvhostuser'
+    # for interface in interface_names:
+    #     ovs_add_port(interface, interface_type)
     return
 
 @vm_routes.route('/images/<controller_id>/<ucpe_sn>')
@@ -141,7 +147,7 @@ def prepare_vm_console(controller_id, ucpe_sn, vm_name):
     local_vnc_port = 6080
     subprocess.Popen(f'exec fuser -k {local_vnc_port}/tcp', shell=True)
     print("starting sleep")
-    time.sleep(3)
+    time.sleep(5)
     print("ending sleep")
     # result = prepare_vm_console_helper(HOST_IP, vnc_port)
     prepare_vm_console_helper(HOST_IP, vnc_port)
@@ -172,3 +178,7 @@ def prepare_vm_console_helper(hostname, port):
 def parseMemoryGB(memoryStr):
     return int(memoryStr.split(" ")[0])
 
+
+#test
+print(create_vm_ovs_interfaces('test_run', 1))
+# print(ovs_add_port('test_port_roger', 'dpdkvhostuser' ))

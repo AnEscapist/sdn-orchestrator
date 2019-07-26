@@ -7,7 +7,8 @@ import lxml.etree as LET
 from libvirt import virConnect
 from libvirt import virDomain
 
-from ucpe.libvirt_controller.utils import VMState, get_domain, open_connection, state, get_caller_function_name, get_file_basename_no_extension
+from ucpe.libvirt_controller.utils import VMState, get_domain, open_connection, state, get_caller_function_name, \
+    get_file_basename_no_extension, ovs_interface_names_from_vm_name
 from ucpe.libvirt_controller.errors import format_exception, OperationFailedError
 from ucpe.libvirt_controller.testing_constants import *
 from ucpe.ucpe import UCPE
@@ -25,6 +26,7 @@ import datetime
 import subprocess
 
 import sys
+
 sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
 
 from multiprocessing import Process, Queue
@@ -174,6 +176,7 @@ def get_all_vm_states(ucpe):
 def _state_str_from_domain(domain):
     return state(domain).name
 
+
 def _image_name_from_xml(xml):
     basepath = ""
     root = ET.fromstring(xml)  # todo: consider storing the template in text
@@ -182,6 +185,7 @@ def _image_name_from_xml(xml):
     source = root.find(basepath + 'devices/disk/source')
     image = source.get('file')
     return get_file_basename_no_extension(image)
+
 
 def get_vm_xml(ucpe, vm_name):
     func = lambda domain: virDomain.XMLDesc(domain, 0)
@@ -196,6 +200,7 @@ def get_vm_info(ucpe, vm_name):
 def get_all_vm_info(ucpe):
     func = _construct_info_dict
     return _libvirt_all_domains_observer(func, ucpe)
+
 
 def _construct_info_dict(domain):
     state, maxmem, mem, cpus, cpu_time = domain.info()
@@ -219,6 +224,7 @@ def _construct_info_dict(domain):
     info_dict['image'] = _image_name_from_xml(domain.XMLDesc(0))
     return info_dict
 
+
 def prepare_vm_console(ucpe, vm_name):
     global vnc_process
     if vnc_process is not None:
@@ -226,8 +232,8 @@ def prepare_vm_console(ucpe, vm_name):
     with get_domain(ucpe, vm_name) as domain:
         vnc_port = _vnc_port_from_domain(domain)
     queue = Queue()
-    #todo: error handling
-    vnc_process = Process(target = prepare_vm_console_helper, args=(ucpe.hostname, vnc_port))
+    # todo: error handling
+    vnc_process = Process(target=prepare_vm_console_helper, args=(ucpe.hostname, vnc_port))
     vnc_process.start()
     # out, err = queue.get()
     # return_dict = {"return": out}
@@ -239,9 +245,11 @@ def prepare_vm_console(ucpe, vm_name):
     #     return_dict["traceback"] = tb.format_exc()
     return {"warning": "no error handling"}
 
+
 def prepare_vm_console_helper(hostname, port):
     launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
-    p = subprocess.Popen([launch_script_path, '--vnc', f'{hostname}:{port}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen([launch_script_path, '--vnc', f'{hostname}:{port}'], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
     print('in the process', p.args)
     p.communicate()
 
@@ -276,7 +284,8 @@ def define_vm_from_xml(ucpe, xml, verbose=True):
     return _libvirt_connection_call(func, ucpe, success_message, fail_message, verbose=verbose)
 
 
-def define_vm_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_hugepage_memory=4, vm_use_hugepages=False, vm_vcpu_count=1, vm_bridge_name=None, verbose=True):
+def define_vm_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_hugepage_memory=4, vm_use_hugepages=False,
+                          vm_vcpu_count=1, vm_bridge_name=None, vm_ovs_interface_count=0, verbose=True):
     if vm_use_hugepages:
         vm_memory = vm_hugepage_memory
     image_file_name = os.path.basename(vm_image_path)
@@ -284,14 +293,18 @@ def define_vm_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_hugepage
     stub = libvirt_pb2_grpc.LibvirtStub(channel)
     request = libvirt_pb2.CopyRequest(vm_name=vm_name, image_file_name=image_file_name)
     response = stub.CopyImage(request)
-    #todo: error handling
-    xml = _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=vm_memory, vm_use_hugepages=vm_use_hugepages, vm_vcpu_count=vm_vcpu_count, vm_bridge_name=vm_bridge_name,
+    # todo: error handling
+    xml = _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=vm_memory, vm_use_hugepages=vm_use_hugepages,
+                               vm_vcpu_count=vm_vcpu_count, vm_bridge_name=vm_bridge_name,
+                               vm_ovs_interface_count=vm_ovs_interface_count,
                                verbose=True)
     return define_vm_from_xml(ucpe, xml, verbose=verbose)
 
 
-def _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_use_hugepages=False, vm_vcpu_count=1, vm_bridge_name=None, verbose=True):
-    xsl = _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vcpu_count, vm_bridge_name=vm_bridge_name)
+def _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_use_hugepages=False, vm_vcpu_count=1,
+                         vm_bridge_name=None, vm_ovs_interface_count=0, verbose=True):
+    xsl = _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vcpu_count,
+                            vm_bridge_name=vm_bridge_name, vm_ovs_interface_count=vm_ovs_interface_count)
     BLANK_XML = "<blank></blank>"  # xsl contains the entire xml text
     dom = LET.fromstring(BLANK_XML)
     xslt = LET.fromstring(xsl)
@@ -302,7 +315,8 @@ def _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_use_hugep
     return xml
 
 
-def _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vcpu_count, vm_bridge_name=None):
+def _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vcpu_count, vm_bridge_name=None,
+                      vm_ovs_interface_count=0):
     dirname = os.path.dirname(__file__)
     xsl_path = os.path.join(dirname, "template.xsl")  # todo: possibly stick this in a constant
 
@@ -330,22 +344,58 @@ def _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vc
     source = root.find(basepath + 'devices/disk/source', namespaces)
     source.set('file', vm_image_path)
 
+    # interface things
+    devices = root.find(basepath + 'devices', namespaces)
+    insertion_point = 1
+
+    # bridges
     if vm_bridge_name is not None:
-        devices = root.find(basepath + 'devices', namespaces)
-        interfaces = _get_bridge_interface_element(devices, vm_bridge_name)
-        insertion_point = 1
+        interfaces = _get_bridge_interface_element(vm_bridge_name)
         devices.insert(insertion_point, interfaces)
+
+        # ovs interfaces
+    ovs_interface_elements = _get_ovs_interface_elements(vm_name, vm_ovs_interface_count)
+    for interface_element in ovs_interface_elements[::-1]:
+        devices.insert(insertion_point, interface_element)
 
     xsl = ET.tostring(root).decode("utf-8")
     return xsl
 
-def _get_bridge_interface_element(devices, vm_bridge_name, interface_model_type='virtio', interface_link_state='up'):
+
+def _get_bridge_interface_element(vm_bridge_name, interface_model_type='virtio', interface_link_state='up'):
     # devices is an Element in an ElementTree
     interface = ET.Element("interface", {"type": "bridge"})
-    source = ET.SubElement(interface, "source", {"bridge":  vm_bridge_name})
-    model = ET.SubElement(interface, "model", {"type":  interface_model_type})
-    link = ET.SubElement(interface, "link", {"state":  interface_link_state})
+    source = ET.SubElement(interface, "source", {"bridge": vm_bridge_name})
+    model = ET.SubElement(interface, "model", {"type": interface_model_type})
+    link = ET.SubElement(interface, "link", {"state": interface_link_state})
     return interface
+
+
+def _get_ovs_interface_elements(vm_name, vm_ovs_interface_count, interface_model_type='virtio', interface_link_state='up'):
+    # todo:
+    # < !--
+    #     for dpdk vhostuser interfaces < interface
+    # type = "vhostuser" > < source
+    # mode = "client"
+    # path = "/usr/local/var/run/openvswitch/vyatta_eth0"
+    # type = "unix" / >
+    interface_names = ovs_interface_names_from_vm_name(vm_name, vm_ovs_interface_count)
+    interface_elements = []
+    for interface_name in interface_names:
+        interface_type = 'vhostuser'
+        ovs_basepath = '/usr/local/var/run/openvswitch/'
+        source_mode = 'client'
+        source_type = 'unix'
+        interface = ET.Element("interface", {"type": interface_type})
+        source = ET.SubElement(interface, "source", {
+            "mode": source_mode,
+            "path": ovs_basepath + interface_name,
+            "type": source_type
+        })
+        model = ET.SubElement(interface, "model", {"type": interface_model_type})
+        link = ET.SubElement(interface, "link", {"state": interface_link_state})
+        interface_elements.append(interface)
+    return interface_elements
 
 
 def _register_all_namespaces(filename):
@@ -663,7 +713,7 @@ if __name__ == '__main__':
     # test:
     UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
     # print(prepare_vm_console(DEFAULT_UCPE, 'test2'))
-    # define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr")
+    define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr", vm_ovs_interface_count=4)
     # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
     # start_vm(DEFAULT_UCPE, "test")
     # print(start_vms(DEFAULT_UCPE, ["test", "cloud"]))
@@ -705,4 +755,3 @@ if __name__ == '__main__':
     # test_thread = Thread(target=test)
     # test_thread.start()
     # print("done")
-
