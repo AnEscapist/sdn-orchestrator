@@ -13,7 +13,7 @@
 
 
           <tr v-for='(network,i) in networks' :key="network" id='networkInfoCard'>
-            <router-link :to="{path: 'dockernetwork', query: {net_name: network[i]}}">
+            <router-link :to="{path: 'dockernetwork', query: {net_name: network}}">
               <td width='10%'>{{network}}</td>
             </router-link>
             <td width='33%'>===----===</td>
