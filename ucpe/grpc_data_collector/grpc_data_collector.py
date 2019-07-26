@@ -83,7 +83,7 @@ class gRPCDataCollector(object):
     @staticmethod
     def grpc_modify_ovs_add_port(**kwargs):
         return modify_execute(func_name(), f"ovs add_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']} "
-                              f"{kwargs['body']['str_param3']}")
+                              f"{kwargs['body']['str_param3']}", **kwargs)
 
     @staticmethod
     def grpc_modify_ovs_docker_add_port(**kwargs):
@@ -91,12 +91,12 @@ class gRPCDataCollector(object):
             kwargs['body']['str_param5'] = ''
         return modify_execute(func_name(), f"ovs_docker add_port {kwargs['body']['str_param1']} "
                                            f"{kwargs['body']['str_param2']} {kwargs['body']['str_param3']} "
-                                           f"{kwargs['body']['str_param4']} {kwargs['body']['str_param5']}")
+                                           f"{kwargs['body']['str_param4']} {kwargs['body']['str_param5']}", **kwargs)
 
     @staticmethod
     def grpc_modify_ovs_docker_del_port(**kwargs):
         return modify_execute(func_name(), f"ovs_docker del_port {kwargs['body']['str_param1']} "
-                                           f"{kwargs['body']['str_param2']}")
+                                           f"{kwargs['body']['str_param2']}", **kwargs)
 
 
 # ==================== private functions ===============================
@@ -150,11 +150,11 @@ def modify_execute(name, input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'str_param1': '0000:66:00.1', 'str_param2': 'igb', 'str_param3': 'dpdkvhostuser', 'str_param4': '6',
+    kwargs = {'body': {'str_param1': 'br0', 'str_param2': 'abc_eee', 'str_param3': 'dpdkvhostuser', 'str_param4': '6',
                        'str_param5': '10.10.81.155/24'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
-    print(tmp.grpc_get_linux_bridges_all(**kwargs))
+    print(tmp.grpc_modify_ovs_add_port(**kwargs))
 
 
 if __name__ == '__main__':
