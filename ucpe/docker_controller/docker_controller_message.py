@@ -309,7 +309,7 @@ def network_list_message(list, func):
     message = {
         'function': f'<{func.__name__}>',
         'success message': 'All networks are listed!',
-        'return': f'LIST: {list}'
+        'return': f'{list}'
     }
     return json_str(message)
 

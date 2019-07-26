@@ -55,6 +55,8 @@ export default {
   mounted() {
       this.axios.get('/api/docker/list_networks').then(response => {
           console.log(response)
+          var res = JSON.parse(response.data.result)['return']
+          console.log(res)
           // this.networks.push()
       })
 
