@@ -55,6 +55,12 @@
                   <div>
                     Selected ports : {{ checkedPortNames }}
                   </div>
+                  <div class="text-danger">
+                    <ul>
+                      <li v-if="formErrors.noPortsSelected">Please select ports.
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 <br>
               </td>
@@ -72,7 +78,8 @@
                     <table width="400">
                       <tr v-for='row in portList'>
                         <td v-for='port in row'>
-                          <input type='checkbox' v-bind:value='port' :disabled="!portIsSelected(port)" v-model='ports2' @change='updateCheckall2()'>
+                          <input type='checkbox' v-bind:value='port' :disabled="!portIsSelected(port)" v-model='ports2'
+                                 @change='updateCheckall2()'>
                           <label :for="port"> {{port}}</label>
                         </td>
                       </tr>
@@ -133,7 +140,7 @@
         </td>
         <td>
           <table width="20">
-<!--            Just an empty table for the sake of spacing-->
+            <!--            Just an empty table for the sake of spacing-->
           </table>
         </td>
         <td>
@@ -172,7 +179,7 @@
       <label for="output">
         Output
       </label>
-      <li id="output"  v-for="line in bottomText.split(/[\n]/)">
+      <li id="output" v-for="line in bottomText.split(/[\n]/)">
         {{line}}
       </li>
     </div>
@@ -215,7 +222,8 @@
                 },
                 formErrors: {
                     badCharacters: false,
-                    fieldIsEmpty: true
+                    fieldIsEmpty: true,
+                    noPortsSelected: false
                 },
                 actionsAvailable: ["Show VLANs", "Create VLAN", "Destroy VLAN", "Add ports to VLAN",
                     "Remove ports from VLAN", "Show port-based VLANs", "Set port-based VLANs"]
@@ -238,33 +246,33 @@
             isFormValid() {
                 return Object.values(this.formErrors).every(error => !error)
             },
-            canSelectUBM(){
+            canSelectUBM() {
                 return this.form.action == "Add ports to VLAN" ||
-                  this.form.action == "Create VLAN";
+                    this.form.action == "Create VLAN";
             },
-            canSelectPBM(){
+            canSelectPBM() {
                 const action = this.form.action;
                 return action == "Add ports to VLAN" ||
-                  action == "Remove ports from VLAN" ||
-                  action == "Create VLAN" ||
-                  action == "Set port-based VLANs";
+                    action == "Remove ports from VLAN" ||
+                    action == "Create VLAN" ||
+                    action == "Set port-based VLANs";
             },
-            canSelectVLANID(){
+            canSelectVLANID() {
                 const action = this.form.action;
                 return action == "Add ports to VLAN" ||
                     action == "Remove ports from VLAN" ||
                     action == "Create VLAN" ||
                     action == "Set port-based VLANs" ||
-                  action == "Destroy VLAN";
+                    action == "Destroy VLAN";
             },
 
             portStatusList() {
                 const raw = this.portStatus.split(/[\n]/);
-                const firsthalf = raw.slice(0,22);
+                const firsthalf = raw.slice(0, 22);
                 console.log("This is the first half" + firsthalf);
-                const secondhalf = raw.slice(22,45);
+                const secondhalf = raw.slice(22, 45);
                 console.log("This is the second half" + secondhalf);
-                return [firsthalf,secondhalf];
+                return [firsthalf, secondhalf];
             }
         },
         methods: {
@@ -343,7 +351,13 @@
                     && this.form.action != "Show port-based VLANs");
                 console.log(this.isFormValid);
             },
-            portIsSelected(port){
+            validatePorts(){
+                this.formErrors.noPortsSelected = this.ports.length == 0 &&
+                    (this.form.action == "Add ports to VLAN" ||
+                  this.form.action == "Remove ports from VLAN" ||
+                    this.form.action == "Set port-based VLANs");
+            },
+            portIsSelected(port) {
                 return this.ports.includes(port);
             },
             generateURL() {
@@ -354,9 +368,9 @@
                         break;
                     case "Create VLAN":
                         url = '/api/bcm/create_vlan/' + this.form.vlanid + '/';
-                        if(this.form.selectedPorts.length > 0){
-                            url +=this.form.selectedPorts;
-                            if(this.form.selectedPorts2.length > 0){
+                        if (this.form.selectedPorts.length > 0) {
+                            url += this.form.selectedPorts;
+                            if (this.form.selectedPorts2.length > 0) {
                                 url += '/' + this.form.selectedPorts2;
                             }
                         }
@@ -366,20 +380,20 @@
                         break;
                     case "Add ports to VLAN":
                         url = '/api/bcm/add_ports/' + this.form.vlanid + '/' + this.form.selectedPorts + '/';
-                        if(this.form.selectedPorts2.length > 0){
-                            url +=this.form.selectedPorts2;
+                        if (this.form.selectedPorts2.length > 0) {
+                            url += this.form.selectedPorts2;
                         }
                         break;
                     case "Remove ports from VLAN":
                         url = '/api/bcm/remove_ports/' + this.form.vlanid + '/' +
-                          this.form.selectedPorts;
+                            this.form.selectedPorts;
                         break;
                     case "Show port-based VLANs":
                         url = '/api/bcm/show_pvlans/';
                         break;
                     case "Set port-based VLANs":
                         url = '/api/bcm/set_pvlans/' + this.form.vlanid + '/' +
-                          this.form.selectedPorts;
+                            this.form.selectedPorts;
                         break;
                     default:
                         console.log("Failed to translate get request");
@@ -396,33 +410,30 @@
                 //     console.log(this.bottomText)
                 // })
             },
-            showPorts(){
+            showPorts() {
                 const url = '/api/bcm/show_active_ports/';
-                axios.get(url).then((response)=>{
+                axios.get(url).then((response) => {
                     this.portStatus = response.data.result.result;
                 })
             },
-            renderButtons(){
+            renderButtons() {
                 var x = document.getElementById("PBMButton");
-                if(!this.canSelectPBM){
-                    x.style.display="none";
-                }
-                else{
-                    x.style.display="block";
+                if (!this.canSelectPBM) {
+                    x.style.display = "none";
+                } else {
+                    x.style.display = "block";
                 }
                 x = document.getElementById("UBMButton");
-                if(!this.canSelectUBM){
-                    x.style.display="none";
-                }
-                else{
-                    x.style.display="block";
+                if (!this.canSelectUBM) {
+                    x.style.display = "none";
+                } else {
+                    x.style.display = "block";
                 }
                 x = document.getElementById("VLANTextField");
-                if(!this.canSelectVLANID){
-                    x.style.display="none";
-                }
-                else{
-                    x.style.display="block";
+                if (!this.canSelectVLANID) {
+                    x.style.display = "none";
+                } else {
+                    x.style.display = "block";
                 }
             }
         },
@@ -432,25 +443,29 @@
             },
             selection: function () {
                 this.validateName();
+                this.validatePorts();
                 this.renderButtons()
             },
             ports: function () {
-                this.printValues()
+                this.printValues();
+                this.validatePorts()
             },
-            ports2: function() {
+            ports2: function () {
                 this.printValues2()
             }
         }
     }
 </script>
 <style>
-  #UBMButton{
-    width:400px;
+  #UBMButton {
+    width: 400px;
   }
-  #PBMButton{
-    width:400px;
+
+  #PBMButton {
+    width: 400px;
   }
-  #VLANTextField{
-    width:500px;
+
+  #VLANTextField {
+    width: 500px;
   }
 </style>

@@ -270,10 +270,10 @@ def create_image_message(image_id, remote_path, func):
     }
     return json_str(message)
 
-def pull_image_message(repo, tag, func):
+def pull_image_message(repo, tag, registry, func):
     message = {
         'function': f'<{func.__name__}>',
-        'success message': f'Image: {repo}:{tag} pulled successfully!',
+        'success message': f'Image: {repo}:{tag} pulled successfully from {registry}!',
         'return': f'IMAGE: {repo}:{tag}'
     }
     return json_str(message)

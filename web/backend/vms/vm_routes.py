@@ -92,6 +92,7 @@ def create_vm(controller_id, ucpe_sn):
     data = request.get_json()
     # TODO: database for image paths
     form = data["form"]
+    print(form)
     create_vm_ovs_interfaces(form['vmName'], int(form['vmOVSInterfaceCount']))
 
     image_file = IMAGE_FILES[form['vmImage']]
@@ -105,7 +106,7 @@ def create_vm(controller_id, ucpe_sn):
         "vm_vcpu_count": form['vmCPUs'],
         "vm_use_hugepages": form['hugepagesEnabled'],
         "vm_hugepage_memory": parseMemoryGB(form['vmHugepageMemory']),
-        "vm_ovs_interface_count": form['vmOVSInterfaceCount'],
+        "vm_ovs_interface_count": int(form['vmOVSInterfaceCount']),
     }
     if form['vmBridge'] != 'No Bridge':
         body['vm_bridge_name'] = form['vmBridge']
@@ -115,11 +116,10 @@ def create_vm(controller_id, ucpe_sn):
 
 def create_vm_ovs_interfaces(vm_name, number_of_interfaces):
     interface_names = ovs_interface_names_from_vm_name(vm_name, number_of_interfaces)
-    print(interface_names)
     # create them by calling jesse's thing
-    # interface_type = 'dpdkvhostuser'
-    # for interface in interface_names:
-    #     ovs_add_port(interface, interface_type)
+    interface_type = 'dpdkvhostuser'
+    for interface in interface_names:
+        ovs_add_port(interface, interface_type)
     return
 
 @vm_routes.route('/images/<controller_id>/<ucpe_sn>')
@@ -180,5 +180,7 @@ def parseMemoryGB(memoryStr):
 
 
 #test
-print(create_vm_ovs_interfaces('test_run', 1))
-# print(ovs_add_port('test_port_roger', 'dpdkvhostuser' ))
+if __name__ == '__main__':
+    # print(create_vm_ovs_interfaces('test_run', 1))
+    # print(ovs_add_port('test_port_roger', 'dpdkvhostuser' ))
+    print()
