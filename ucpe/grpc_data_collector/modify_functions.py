@@ -43,8 +43,6 @@ def ovs_add_port(bridge, if_port, type):
                     f'type={type}'])
     ovs_socket = f'/usr/local/var/run/openvswitch/{if_port}'
     subprocess.run(['sudo', 'chmod', '777', ovs_socket])
-    print("ran chmod on", ovs_socket)
-    print(os.path.exists(ovs_socket))
     return True
 
 
