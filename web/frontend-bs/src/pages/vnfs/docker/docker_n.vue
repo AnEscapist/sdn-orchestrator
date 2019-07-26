@@ -13,8 +13,8 @@
 
 
           <tr v-for='(network,i) in networks' :key="network" id='networkInfoCard'>
-            <router-link :to="{path: 'dockernetwork', query: {short_id: containers_id[i]}}">
-              <td width='10%'>network</td>
+            <router-link :to="{path: 'dockernetwork', query: {net_name: network[i]}}">
+              <td width='10%'>{{network}}</td>
             </router-link>
             <td width='33%'>===----===</td>
             <td>======</td>
@@ -54,10 +54,12 @@ export default {
   },
   mounted() {
       this.axios.get('/api/docker/list_networks').then(response => {
-          console.log(response)
-          var res = JSON.parse(response.data.result)['return']
-          console.log(res)
-          // this.networks.push()
+          // console.log(response)
+          var res = JSON.parse(response.data.result)['return'].slice(1, -1).split(',')
+          var i;
+          for(i=0; i<res.length; i++){
+              this.networks.push(res[i].trim().slice(1, -1))
+          }
       })
 
   },
