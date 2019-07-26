@@ -53,7 +53,11 @@
               <td>
                 <form class="form-inline">
                   <strong style="font-size:15px">&nbsp Repository: &nbsp</strong>
-                  <input type="text" placeholder="docker hub">
+                  <select v-model='pull_registry' class="custom-select" id="inputGroupSelect01">
+                    <!-- <option selected>Choose...</option> -->
+                    <option>docker hub</option>
+                    <option>localhost:5000</option>
+                  </select>
                 </form>
               </td>
             </tr>
@@ -77,9 +81,9 @@
               </button>
             </td>
             <td>
-                <button type="button" class="btn btn-primary btn-sm" @click="pullImg(name_tag)">
-                  <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=sm /> <strong style="font-size:13px"> PULL</strong>
-                </button>
+              <button type="button" class="btn btn-primary btn-sm" @click="pullImg(name_tag)">
+                <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=sm /> <strong style="font-size:13px"> PULL</strong>
+              </button>
             </td>
           </tr>
         </table>
@@ -118,6 +122,7 @@ export default {
       sizes: [],
       createTimes: [],
 
+      pull_registry: '',
       showPull: false,
     }
   },
@@ -212,9 +217,11 @@ export default {
         params: {
           name: name,
           tag: tag,
+          pull_registry: pull_registry
           // timeout: 1000
         }
       }).then(response => {
+        console.log(response)
         // console.log(JSON.parse(response.data.result))
         this.reload()
       })

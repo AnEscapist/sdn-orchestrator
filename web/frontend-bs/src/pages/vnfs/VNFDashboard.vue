@@ -3,7 +3,7 @@
     <div class="container-fluid">
 <!--      <VNFSummaryPanel></VNFSummaryPanel>-->
       <RogerTest></RogerTest>
-<!--      <ZhengqiTest></ZhengqiTest>-->
+     <ZhengqiTest></ZhengqiTest>
 <!--      <SampleCard></SampleCard>-->
 <!--      todo: notifications fo VNF status changes-->
     </div>
