@@ -212,7 +212,7 @@ export default {
         var tag = name_tag.split(':')[1]
       } else {
         var name = name_tag
-        var tag = 'latest'
+        var tag = ''
       }
       this.axios.get('/api/docker/pull_image', {
         params: {

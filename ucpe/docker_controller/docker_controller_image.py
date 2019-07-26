@@ -86,7 +86,7 @@ def create_image(remote_path):
         return fnf_error(remote_path, func)
 
 
-def pull_image(repo, registry, tag=None):
+def pull_image(repo, registry, tag):
     print('=====================', registry)
     func = pull_image
     if registry == 'docker hub':
@@ -98,7 +98,7 @@ def pull_image(repo, registry, tag=None):
         except requests.exceptions.HTTPError as re:
             return pull_error(re, func)
     else:
-        if tag == None:
+        if tag == '':
             print('docker pull ' + registry + '/' + repo)
             try:
                 os.system('docker pull ' + registry + '/' + repo)
