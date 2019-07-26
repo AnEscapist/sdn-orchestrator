@@ -141,6 +141,11 @@ class DockerController(object):
         return _call_function(func, **kwargs)
 
     @staticmethod
+    def docker_controller_list_networks(**kwargs):
+        func = list_networks
+        return _call_function(func, **kwargs)
+
+    @staticmethod
     def docker_controller_create_network(**kwargs):
         func = create_network
         return _call_function(func, **kwargs)
