@@ -206,7 +206,6 @@ export default {
       })
     },
     pullImg(name_tag, pull_registry) {
-      console.log(pull_registry)
       if (name_tag.includes(':')) {
         var name = name_tag.split(':')[0]
         var tag = name_tag.split(':')[1]
@@ -222,7 +221,7 @@ export default {
           // timeout: 1000
         }
       }).then(response => {
-        console.log(response)
+        // console.log(response)
         // console.log(JSON.parse(response.data.result))
         this.reload()
       })

@@ -87,7 +87,6 @@ def create_image(remote_path):
 
 
 def pull_image(repo, registry, tag):
-    print('=====================', registry)
     func = pull_image
     if registry == 'docker hub':
         try:
@@ -98,30 +97,17 @@ def pull_image(repo, registry, tag):
         except requests.exceptions.HTTPError as re:
             return pull_error(re, func)
     else:
-        registry = '10.10.81.100'
         if tag == '':
-            print('docker pull ' + registry + '/' + repo)
-            try:
-                os.system('docker pull ' + registry + '/' + repo)
-                return pull_image_message(repo, tag, registry, func)
-            except TypeError as te:
-                return type_error(te, func)
-            except requests.exceptions.HTTPError as re:
-                return pull_error(re, func)
+            cmd = 'docker pull' + registry + '/' + repo
         else:
-            print('docker pull ' + registry + '/' + repo + ':' + tag)
-            try:
-                os.system('docker pull ' + registry + '/' + repo + ':' + tag)
-                return pull_image_message(repo, tag, registry, func)
-            except TypeError as te:
-                return type_error(te, func)
-            except requests.exceptions.HTTPError as re:
-                return pull_error(re, func)
-
-        # else:
-        #     try:
-        #         os.system('docker pull ' + registry + '/' + name + ':' + tag)
-        #         return pull_image_message(repo, tag, registry, func)
+            cmd = 'docker pull' + registry + '/' + repo + ':' + tag
+        try:
+            os.system(cmd)
+            return pull_image_message(repo, tag, registry, func)
+        except TypeError as te:
+            return type_error(te, func)
+        except requests.exceptions.HTTPError as re:
+            return pull_error(re, func)
 
 
 def remove_image(name):
