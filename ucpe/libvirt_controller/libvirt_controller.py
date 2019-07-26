@@ -346,17 +346,18 @@ def _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vc
 
     # interface things
     devices = root.find(basepath + 'devices', namespaces)
-    insertion_point = 1
+    bridge_insertion_point = 1
 
     # bridges
     if vm_bridge_name is not None:
         interfaces = _get_bridge_interface_element(vm_bridge_name)
-        devices.insert(insertion_point, interfaces)
+        devices.insert(bridge_insertion_point, interfaces)
 
         # ovs interfaces
     ovs_interface_elements = _get_ovs_interface_elements(vm_name, vm_ovs_interface_count)
+    ovs_insertion_point = 2
     for interface_element in ovs_interface_elements[::-1]:
-        devices.insert(insertion_point, interface_element)
+        devices.insert(ovs_insertion_point, interface_element)
 
     xsl = ET.tostring(root).decode("utf-8")
     return xsl
