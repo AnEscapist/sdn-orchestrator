@@ -13,12 +13,13 @@ def list_networks():
         network_list = dcli.networks.list()
     except docker.errors.APIError as ae:
         return api_error(ae, func)
-
-        for network in network_list:
-            name_list.append(network.name)
-        return network_list_message(list=name_list, func=func)
     except OSError as ose:
         return ose_error(ose,func)
+
+    for network in network_list:
+        name_list.append(network.name)
+    return network_list_message(list=name_list, func=func)
+
 
 def create_network(network_name, driver='bridge', subnet=None, gateway=None, enable_ipv6=False):
     func = create_network
