@@ -305,6 +305,14 @@ def container_stats_message(id_name, stats, func):
 
 #=========================docker network============================
 
+def network_list_message(list, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': 'All networks are listed!',
+        'return': f'LIST: {list}'
+    }
+    return json_str(message)
+
 def create_network_message(net_id, func):
     message = {
         'function': f'<{func.__name__}>',

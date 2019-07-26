@@ -247,3 +247,12 @@ def check_port():
         return 'yes'
     else:
         return 'no'
+
+
+#====================docker networks===================
+
+@docker_routes.route('/docker/list_networks')
+def list_networks():
+    messagedata = {"method": "docker_controller_list_networks", "params": {
+        "body": {}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))

@@ -6,6 +6,20 @@ from ucpe.docker_controller.docker_controller_message import *
 
 #=======================docker network===============================
 
+def list_networks():
+    func = list_networks
+    name_list = []
+    try:
+        network_list = dcli.networks.list()
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
+
+        for network in network_list:
+            name_list.append(network.name)
+        return network_list_message(list=name_list, all=all, func=func)
+    except OSError as ose:
+        return ose_error(ose,func)
+
 def create_network(network_name, driver='bridge', subnet=None, gateway=None, enable_ipv6=False):
     func = create_network
     try:
