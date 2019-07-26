@@ -16,7 +16,7 @@ def list_networks():
 
         for network in network_list:
             name_list.append(network.name)
-        return network_list_message(list=name_list, all=all, func=func)
+        return network_list_message(list=name_list, func=func)
     except OSError as ose:
         return ose_error(ose,func)
 
