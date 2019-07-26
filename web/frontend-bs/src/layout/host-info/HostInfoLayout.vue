@@ -13,7 +13,7 @@
 
 <script>
   import Layout from '../Layout.vue'
-  import vnfSidebar from './vnfSidebar'
+  import hostInfoSidebar from './hostInfoSidebar'
 
   export default {
     components: {
@@ -21,10 +21,10 @@
     },
     data() {
       return {
-        title: 'Virtual Network',
-        home: '/vnfs/dashboard',
+        title: 'host info',
+        home: '/host-data/overview',
         logo: 'img/icons/host-data.jpg', //public/img/sample-pages-logo.png
-        sidebar: vnfSidebar
+        sidebar: hostInfoSidebar
       }
     }
   }

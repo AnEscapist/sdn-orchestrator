@@ -40,7 +40,20 @@ def all_vm_info(controller_id, ucpe_sn):
     body = {"username": HOST_USERNAME, "hostname": HOST_IP}
     message_data = get_message_data(method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
+    rename_images(response)
     return jsonify(response)
+
+def reverse_dict(dictionary):
+    # todo: this is pretty bad
+    return {dictionary[key]:key for key in dictionary}
+
+def rename_images(response):
+    reverse_image_dict = reverse_dict(IMAGE_FILES)
+    info_dict = response['result']['return']
+    for vm_name in info_dict:
+        image = info_dict[vm_name]['image'] + ".qcow2"
+        if image in reverse_image_dict:
+            info_dict[vm_name]['image'] = reverse_image_dict[image]
 
 @vm_routes.route('/start_or_resume_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
 def start_or_resume_selected_vms(controller_id, ucpe_sn):

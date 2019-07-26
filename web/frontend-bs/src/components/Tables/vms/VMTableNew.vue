@@ -12,7 +12,7 @@
           <button type="button"
                   v-b-modal="'vm-create-modal'"
                   class="btn btn-secondary btn-sm"
-                  >
+          >
             <font-awesome-icon :icon="['fas', 'plus-circle']"
                                size=sm
                                color='rgb(255, 255, 255)'/>
@@ -37,6 +37,7 @@
                  :gridOptions="gridOptions"
                  quickFilterText=""
                  @selection-changed="onSelectionChanged"
+                 @grid-ready="onGridReady"
       >
       </AgGridVue>
     </div>
@@ -65,10 +66,11 @@
             checkboxSelection: params => params.data.name !== AGENT_NAME
           }, //todo: find better way to do this
           { headerName: 'State', field: 'state', sortable: true },
-          {headerName: 'Console', cellRendererFramework: VMConsoleRenderer},
+          { headerName: 'Image', field: 'image', sortable: true },
           { headerName: 'Memory Usage', field: 'memory usage', sortable: true },
           { headerName: 'Memory Allocated', field: 'memory allocated', sortable: true },
           { headerName: 'CPUs', field: 'cpus', sortable: true },
+          { headerName: 'Console', cellRendererFramework: VMConsoleRenderer },
         ],
         gridOptions: {
           rowSelection: "multiple",
@@ -89,7 +91,7 @@
     mounted() {
       this.gridApi = this.gridOptions.api;
       this.gridColumnApi = this.gridOptions.columnApi;
-      this.updateVMWebServerIPV4()
+      this.updateVMWebServerIPV4();
     },
     methods: {
       ...mapActions([
@@ -99,10 +101,10 @@
         let selection = this.gridApi.getSelectedRows();
         this.updateVMSelection(selection.map(row => row.name)); //todo: figure out why this warning happens
       },
-      onGridReady(params){
+      onGridReady(params) {
         params.api.sizeColumnsToFit()
       },
-      debug(){
+      debug() {
         console.log("debug")
       }
     },

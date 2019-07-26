@@ -679,7 +679,7 @@ if __name__ == '__main__':
     # set_vm_autostart(DEFAULT_UCPE, "test", True)
     # print(get_vm_autostart(DEFAULT_UCPE, "test"))
     # print(get_vm_state(DEFAULT_UCPE, "test"))
-    # print(get_vm_info(DEFAULT_UCPE, "test"))
+    # print(get_vm_info(DEFAULT_UCPE, "monitor"))
     # print(get_all_vm_states(DEFAULT_UCPE))
     # print(get_vm_vnc_port(DEFAULT_UCPE, "test"))
     # print(get_vm_interfaces(DEFAULT_UCPE, "test"))
@@ -699,10 +699,10 @@ if __name__ == '__main__':
     # print(LibvirtController.libvirt_controller_get_all_vm_info(**DEFAULT_KWARGS))
     # print(LibvirtController.libvirt_controller_destroy_vm(**DEFAULT_KWARGS))
     # LibvirtController.libvirt_controller_undefine_vm(**DEFAULT_KWARGS)
-    from threading import Thread
-    def test():
-        print(LibvirtController.libvirt_controller_prepare_vm_console(**{'body':{'hostname': '10.10.81.100', 'username': 'potato', 'vm_name': 'test2'}}))
-    test_thread = Thread(target=test)
-    test_thread.start()
-    print("done")
+    # from threading import Thread
+    # def test():
+    #     print(LibvirtController.libvirt_controller_prepare_vm_console(**{'body':{'hostname': '10.10.81.100', 'username': 'potato', 'vm_name': 'test2'}}))
+    # test_thread = Thread(target=test)
+    # test_thread.start()
+    # print("done")
 

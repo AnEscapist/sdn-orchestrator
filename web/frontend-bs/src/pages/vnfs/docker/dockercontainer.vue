@@ -282,6 +282,14 @@ export default {
             id_name: this.id,
           }
         }).then(response => {
+            // console.log('container name', this.name)
+            this.axios.get('/api/grpc/ovs_docker_del_port', {
+                params: {
+                    container: this.name,
+                }
+            }).then(response => {
+                // console.log(response)
+            })
           // console.log(this.id)
           // console.log(response.data.result)
         })
