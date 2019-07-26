@@ -105,6 +105,10 @@ def pull_image(repo, registry, tag=None):
             try:
                 os.system('docker pull ' + registry + '/' + name + ':' + tag)
                 return pull_image_message(repo, tag, registry, func)
+        # else:
+        #     try:
+        #         os.system('docker pull ' + registry + '/' + name + ':' + tag)
+        #         return pull_image_message(repo, tag, registry, func)
 
 
 def remove_image(name):
