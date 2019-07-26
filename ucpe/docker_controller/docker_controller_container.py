@@ -171,7 +171,7 @@ def create_container(image_name, name=None, ports=None, volumes=None, detach=Tru
     try:
         image = dcli.images.get(image_name)
         container = dcli.containers.run(image=image.id, name=name, ports=bind, volumes=mnt,
-                                        detach=detach, stdin_open=True, tty=True)
+                                        detach=detach, stdin_open=True, tty=True, privileged=True)
     except docker.errors.APIError as ae:
         return api_error(ae, func)
     except docker.errors.NullResource as nre:
