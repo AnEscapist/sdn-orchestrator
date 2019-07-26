@@ -601,7 +601,7 @@ def _libvirt_multiple_domain_mutator(libvirt_domain_func, ucpe, vm_names, succes
                 try:
                     domain = conn.lookupByName(vm_name)
                     status = libvirt_domain_func(domain)
-                    if status < 0:
+                    if status is not None and status < 0:
                         raise OperationFailedError(name=operation_name)
                 except Exception:
                     success = False

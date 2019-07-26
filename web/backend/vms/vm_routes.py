@@ -7,7 +7,7 @@ import subprocess
 from multiprocessing import Process
 from threading import Thread
 import pexpect
-from web.backend.grpc.grpc_routes import ovs_add_port
+from web.backend.grpc.grpc_routes import ovs_add_port_helper, ovs_del_port_helper
 from ucpe.libvirt_controller.utils import ovs_interface_names_from_vm_name
 
 
@@ -76,7 +76,16 @@ def kill_selected_vms(controller_id, ucpe_sn):
 @vm_routes.route('/delete_selected_vms/<controller_id>/<ucpe_sn>', methods=['POST'])
 def delete_selected_vms(controller_id, ucpe_sn):
     method = 'delete_vms'
-    return _handle_state_change(method, controller_id, ucpe_sn)
+    ovs_interface_deletion_threads = []
+    vms = request.get_json()['vm_names']
+    for vm_name in vms:
+        ovs_interface_deletion_threads.append(Thread(target=ovs_del_port_helper, args=(vm_name,)))
+    for thread in ovs_interface_deletion_threads:
+        thread.start()
+    out = _handle_state_change(method, controller_id, ucpe_sn)
+    for thread in ovs_interface_deletion_threads:
+        thread.join()
+    return out
 
 def _handle_state_change(method, controller_id, ucpe_sn):
     data = request.get_json()
@@ -118,8 +127,14 @@ def create_vm_ovs_interfaces(vm_name, number_of_interfaces):
     interface_names = ovs_interface_names_from_vm_name(vm_name, number_of_interfaces)
     # create them by calling jesse's thing
     interface_type = 'dpdkvhostuser'
+    threads = []
     for interface in interface_names:
-        ovs_add_port(interface, interface_type)
+        # threads.append(Thread(ovs_add_port(interface, interface_type)))
+        threads.append(Thread(target=ovs_add_port_helper, args=(interface, interface_type)))
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
     return
 
 @vm_routes.route('/images/<controller_id>/<ucpe_sn>')
