@@ -81,7 +81,7 @@
               </button>
             </td>
             <td>
-              <button type="button" class="btn btn-primary btn-sm" @click="pullImg(name_tag)">
+              <button type="button" class="btn btn-primary btn-sm" @click="pullImg(name_tag, pull_registry)">
                 <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=sm /> <strong style="font-size:13px"> PULL</strong>
               </button>
             </td>
@@ -205,7 +205,8 @@ export default {
         type: this.type[color]
       })
     },
-    pullImg(name_tag) {
+    pullImg(name_tag, pull_registry) {
+      console.log(pull_registry)
       if (name_tag.includes(':')) {
         var name = name_tag.split(':')[0]
         var tag = name_tag.split(':')[1]

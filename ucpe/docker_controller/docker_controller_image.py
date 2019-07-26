@@ -87,6 +87,7 @@ def create_image(remote_path):
 
 
 def pull_image(repo, registry, tag=None):
+    print('=====================', registry)
     func = pull_image
     if registry == 'docker hub':
         try:
