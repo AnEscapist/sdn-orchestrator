@@ -82,6 +82,7 @@ class gRPCDataCollector(object):
     # bridge port type dev-address
     @staticmethod
     def grpc_modify_ovs_add_port(**kwargs):
+        print('hello2')
         return modify_execute(func_name(), f"ovs add_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']} "
                               f"{kwargs['body']['str_param3']}", **kwargs)
 
@@ -150,7 +151,7 @@ def modify_execute(name, input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'str_param1': 'br0', 'str_param2': 'abc_eee', 'str_param3': 'dpdkvhostuser', 'str_param4': '6',
+    kwargs = {'body': {'str_param1': 'br0', 'str_param2': 'abcd', 'str_param3': 'dpdkvhostuser', 'str_param4': '6',
                        'str_param5': '10.10.81.155/24'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))

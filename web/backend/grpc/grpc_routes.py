@@ -101,8 +101,8 @@ def linux_bridge_list():
 def ovs_add_port(if_port, type):
     bridge = 'br0'
     messagedata = {"method": "grpc_modify_ovs_add_port", "params": {
-        "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": f'{bridge}', "str_param2": f'{if_port}',
-                 "str_param3": f'{type}'}},
+        "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": bridge, "str_param2": if_port,
+                 "str_param3": type}},
         "jsonrpc": "2.0", "id": 0
     }
     return jsonify(call_ucpe_function(messagedata))
@@ -135,4 +135,15 @@ def ovs_docker_del_port():
         "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": f'{bridge}', "str_param2": f'{container}'}},
         "jsonrpc": "2.0", "id": 0
     }
-    return jsonify(call_ucpe_function(messagedata))
+    # return jsonify(call_ucpe_function(messagedata))
+    p = call_ucpe_function(messagedata)
+    # return jsonify(p)
+
+
+def main():
+    proc = ovs_add_port("abcd", "dpdkvhostuser")
+    return str(proc)
+
+
+if __name__ == "__main__":
+    main()
