@@ -131,10 +131,17 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                     response.status = f"Port {request.str_param2} added"
                 response.str_response = str(get_functions.ovs_list_ports(request.str_param1))
 
-            elif request.str_request == 'add_port':
-                response.status = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
+            elif request.str_request == 'del_port':
+                response.status = f"Deleting all ports connected to {request.str_param1} from {request.str_param2}, " \
+                                  f"please wait"
                 print(response.status)
-                response.str_response = None
+                proc = modify_functions.ovs_del_port(request.str_param1, request.str_param2)
+                if proc:
+                    # print(response.str_response)
+                    response.status = "Deletion successful"
+                else:
+                    response.status = "Deletion unsuccessful"
+                response.str_response = str(get_functions.ovs_list_ports(request.str_param1))
 
         elif request.command == 'ovs_docker':
             if request.str_request == 'add_port':

@@ -87,6 +87,11 @@ class gRPCDataCollector(object):
                               f"{kwargs['body']['str_param3']}", **kwargs)
 
     @staticmethod
+    def grpc_modify_ovs_del_port(**kwargs):
+        return modify_execute(func_name(), f"ovs del_port {kwargs['body']['str_param1']} "
+                                           f"{kwargs['body']['str_param2']}", **kwargs)
+
+    @staticmethod
     def grpc_modify_ovs_docker_add_port(**kwargs):
         if 'str_param5' not in kwargs['body']:
             kwargs['body']['str_param5'] = ''
