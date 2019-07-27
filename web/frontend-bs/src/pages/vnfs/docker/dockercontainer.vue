@@ -102,12 +102,12 @@
       <hr>
       <table>
         <tr id='containerLinks'>
-          <button type="button" class="btn btn-link">
+          <!-- <button type="button" class="btn btn-link">
             <td>
               <font-awesome-icon :icon="['fas', 'file-alt']" size=sm coler="#1b7fbd" />
               <font size='2px'> Logs</font>
             </td>
-          </button>
+          </button> -->
           <button type="button" class="btn btn-link" @click='showInspect()'>
             <td>
               <font-awesome-icon :icon="['fas', 'info-circle']" size=sm coler="#1b7fbd" />
