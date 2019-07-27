@@ -232,7 +232,12 @@ def lshw_get_businfo():
     # time.sleep(2)
     list1 = list()
     for line in proc.stdout:
-        val = line.decode('utf-8').split(None, 4)
+        tmp_dict = dict()
+        val = line.decode('utf-8').split(None, 3)
+        tmp_dict['bus_info'] = val[0].strip()
+        tmp_dict['device'] = val[1].strip()
+        tmp_dict['class'] = val[2].strip()
+        tmp_dict['description'] = val[3].strip()
         list1.append(val)
     return str(list1)
 
