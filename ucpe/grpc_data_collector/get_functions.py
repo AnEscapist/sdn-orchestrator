@@ -2,6 +2,7 @@ from concurrent import futures
 
 import os
 import sys
+import time
 import json
 import subprocess
 
@@ -228,6 +229,7 @@ def sriov_numvfs(device):
 def lshw_get_businfo():
     proc = subprocess.Popen(['sudo', 'lshw', '-c', 'network', '-businfo'], stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
+    time.sleep(100)
     return str(proc)
 
 
