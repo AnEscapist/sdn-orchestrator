@@ -242,7 +242,7 @@ def lshw_get_businfo():
             tmp_dict['device'] = val[1].strip()
             tmp_dict['class'] = val[2].strip()
             tmp_dict['description'] = val[3].strip()
-            list1.append(val)
+            list1.append(tmp_dict)
     return str(list1)
 
 
