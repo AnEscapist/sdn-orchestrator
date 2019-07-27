@@ -238,10 +238,10 @@ def lshw_get_businfo():
         else:
             tmp_dict = dict()
             val = line.decode('utf-8').split(None, 3)
-            ident = val[0].strip().strip('@')
+            ident = val[0].strip().rstrip('@', 1)[1]
             check1 = val[1].strip()
             check2 = val[2].strip()
-            if ident[1] not in dpdk_get_devices():
+            if ident not in dpdk_get_devices():
                 val = line.decode('utf-8').split(None, 2)
                 tmp_dict['bus_info'] = ''
                 tmp_dict['device'] = val[0].strip()
