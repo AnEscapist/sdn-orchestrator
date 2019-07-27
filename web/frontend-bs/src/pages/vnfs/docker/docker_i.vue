@@ -122,7 +122,7 @@ export default {
       sizes: [],
       createTimes: [],
 
-      pull_registry: '',
+      pull_registry: 'docker hub',
       showPull: false,
     }
   },
