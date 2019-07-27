@@ -238,10 +238,26 @@ def lshw_get_businfo():
         else:
             tmp_dict = dict()
             val = line.decode('utf-8').split(None, 3)
-            tmp_dict['bus_info'] = val[0].strip()
-            tmp_dict['device'] = val[1].strip()
-            tmp_dict['class'] = val[2].strip()
-            tmp_dict['description'] = val[3].strip()
+            ident = val[0].strip().strip('@')
+            check1 = val[1].strip()
+            check2 = val[2].strip()
+            if ident[1] in dpdk_get_devices():
+                tmp_dict['bus_info'] = val[0].strip()
+            else:
+                val = line.decode('utf-8').split(None, 2)
+                tmp_dict['bus_info'] = ''
+                tmp_dict['device'] = val[0].strip()
+                tmp_dict['class'] = val[1].strip()
+                tmp_dict['description'] = val[2].strip()
+            if check1 == 'network' and (check2 == 'Ethernet' or check2 == 'I350'):
+                val = line.decode('utf-8').split(None, 2)
+                tmp_dict['device'] = ''
+                tmp_dict['class'] = val[0].strip()
+                tmp_dict['description'] = val[1].strip()
+            else:
+                tmp_dict['device'] = val[1].strip()
+                tmp_dict['class'] = val[2].strip()
+                tmp_dict['description'] = val[3].strip()
             list1.append(tmp_dict)
     return str(list1)
 
