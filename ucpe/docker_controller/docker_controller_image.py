@@ -86,28 +86,27 @@ def create_image(remote_path):
         return fnf_error(remote_path, func)
 
 
-def pull_image(repo, registry, tag):
+def pull_image(repo, tag):
     func = pull_image
-    if registry == 'docker hub':
-        try:
-            dcli.images.pull(repository=repo, tag=tag)
-            return pull_image_message(repo, tag, registry, func)
-        except TypeError as te:
-            return type_error(te, func)
-        except requests.exceptions.HTTPError as re:
-            return pull_error(re, func)
-    else:
-        if tag == '':
-            cmd = 'docker pull' + registry + '/' + repo
-        else:
-            cmd = 'docker pull' + registry + '/' + repo + ':' + tag
-        try:
-            os.system(cmd)
-            return pull_image_message(repo, tag, registry, func)
-        except TypeError as te:
-            return type_error(te, func)
-        except requests.exceptions.HTTPError as re:
-            return pull_error(re, func)
+    try:
+        dcli.images.pull(repository=repo, tag=tag)
+        return pull_image_message(repo, tag, func)
+    except TypeError as te:
+        return type_error(te, func)
+    except requests.exceptions.HTTPError as re:
+        return pull_error(re, func)
+    # else:
+    #     if tag == '':
+    #         cmd = 'docker pull' + registry + '/' + repo
+    #     else:
+    #         cmd = 'docker pull' + registry + '/' + repo + ':' + tag
+    #     try:
+    #         os.system(cmd)
+    #         return pull_image_message(repo, tag, registry, func)
+    #     except TypeError as te:
+    #         return type_error(te, func)
+    #     except requests.exceptions.HTTPError as re:
+    #         return pull_error(re, func)
 
 
 def remove_image(name):

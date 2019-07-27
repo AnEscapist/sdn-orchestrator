@@ -99,26 +99,31 @@ def linux_bridge_list():
 # method for Roger, not same syntax as Zhengqi
 @grpc_routes.route('/grpc/ovs_add_port/<if_port>/<type>')
 def ovs_add_port(if_port, type):
+    return jsonify(ovs_add_port_helper(if_port, type))
+
+def ovs_add_port_helper(if_port, type):
     bridge = 'br0'
     messagedata = {"method": "grpc_modify_ovs_add_port", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": bridge, "str_param2": if_port,
                  "str_param3": type}},
-        "jsonrpc": "2.0", "id": 0
-    }
-    return jsonify(call_ucpe_function(messagedata))
+                   "jsonrpc": "2.0", "id": 0
+                   }
+    return call_ucpe_function(messagedata)
 
 #method for Roger too
 @grpc_routes.route('/grpc/ovs_del_port/<vm_name>')
 def ovs_del_port(vm_name):
+    return jsonify(ovs_del_port_helper(vm_name))
+
+def ovs_del_port_helper(vm_name):
     bridge = 'br0'
-    container = request.args.get('container')
     messagedata = {"method": "grpc_modify_ovs_del_port", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": f'{bridge}', "str_param2": f'{vm_name}'}},
-        "jsonrpc": "2.0", "id": 0
-    }
+                   "jsonrpc": "2.0", "id": 0
+                   }
     # return jsonify(call_ucpe_function(messagedata))
-    p = call_ucpe_function(messagedata)
-    return jsonify(p)
+    return call_ucpe_function(messagedata)
+
 
 
 @grpc_routes.route('/grpc/ovs_docker_add_port')
