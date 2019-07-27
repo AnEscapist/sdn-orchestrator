@@ -230,7 +230,7 @@ def lshw_get_businfo():
     proc = subprocess.Popen(['sudo', 'lshw', '-c', 'network', '-businfo'], stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
     # time.sleep(2)
-    return str(proc.stdout.read())
+    return str(proc.stdout.read().decode('utf-8').split()[4:])
 
 
 def main():
