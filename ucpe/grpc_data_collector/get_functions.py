@@ -231,14 +231,18 @@ def lshw_get_businfo():
                             stderr=subprocess.PIPE)
     # time.sleep(2)
     list1 = list()
+    i = 0
     for line in proc.stdout:
-        tmp_dict = dict()
-        val = line.decode('utf-8').split(None, 3)
-        tmp_dict['bus_info'] = val[0].strip()
-        tmp_dict['device'] = val[1].strip()
-        tmp_dict['class'] = val[2].strip()
-        tmp_dict['description'] = val[3].strip()
-        list1.append(val)
+        if i < 2:
+            i = i + 1
+        else:
+            tmp_dict = dict()
+            val = line.decode('utf-8').split(None, 3)
+            tmp_dict['bus_info'] = val[0].strip()
+            tmp_dict['device'] = val[1].strip()
+            tmp_dict['class'] = val[2].strip()
+            tmp_dict['description'] = val[3].strip()
+            list1.append(val)
     return str(list1)
 
 
