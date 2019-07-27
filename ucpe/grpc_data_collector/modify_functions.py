@@ -78,3 +78,17 @@ def ovs_docker_del_port(bridge, container):
             subprocess.run(['sudo', 'ovs-docker', 'del-ports', bridge, i])
             subprocess.run(['sudo', 'ovs-vsctl', 'del-port', bridge, i])
     return True
+
+
+def sriov_createvfs(device, number_str):
+    number = int(number_str)
+    total = int(get_functions.sriov_totalvfs(device))
+    current = int(get_functions.sriov_numvfs(device))
+    value = str(number+current)
+    if number + current >= total:
+        value = get_functions.sriov_totalvfs(device)
+    subprocess.run(['echo', f'\"{value}\"', '>', f'/sys/bus/pci/devices/{device}/sriov_numvfs'])
+
+
+def sriov_vf_vlan():
+    return None

@@ -122,6 +122,10 @@
                       </li>
                       <li v-if="formErrors.fieldIsEmpty">You must specify a VLAN ID.
                       </li>
+                      <li v-if="formErrors.startsWithZero">VLAN ID can't begin with zero.
+                      </li>
+                      <li v-if="formErrors.reservedVLAN">VLAN 1 is reserved as default VLAN.
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -223,7 +227,9 @@
                 formErrors: {
                     badCharacters: false,
                     fieldIsEmpty: true,
-                    noPortsSelected: false
+                    noPortsSelected: false,
+                    startsWithZero: false,
+                    reservedVLAN: false,
                 },
                 actionsAvailable: ["Show VLANs", "Create VLAN", "Destroy VLAN", "Add ports to VLAN",
                     "Remove ports from VLAN", "Show port-based VLANs", "Set port-based VLANs"]
@@ -269,9 +275,7 @@
             portStatusList() {
                 const raw = this.portStatus.split(/[\n]/);
                 const firsthalf = raw.slice(0, 22);
-                console.log("This is the first half" + firsthalf);
                 const secondhalf = raw.slice(22, 45);
-                console.log("This is the second half" + secondhalf);
                 return [firsthalf, secondhalf];
             }
         },
@@ -345,11 +349,13 @@
                 }
             },
             validateName() {
-                console.log("called Validate")
                 this.formErrors.badCharacters = this.form.vlanid.length > 0 && !this.form.vlanid.match(/^[0-9]*$/);
                 this.formErrors.fieldIsEmpty = this.form.vlanid.length === 0 && (this.form.action != "Show VLANs"
                     && this.form.action != "Show port-based VLANs");
-                console.log(this.isFormValid);
+                this.formErrors.startsWithZero = this.form.vlanid.length > 0 && this.form.vlanid.match(/^[0]/);
+                this.formErrors.reservedVLAN = this.form.vlanid == 1 &&
+                    (this.form.action == "Create VLAN" ||
+                    this.form.action == "Destroy VLAN");
             },
             validatePorts(){
                 this.formErrors.noPortsSelected = this.ports.length == 0 &&

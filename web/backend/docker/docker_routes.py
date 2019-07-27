@@ -140,10 +140,10 @@ def inspect_container():
 def pull_image():
     name = request.args.get('name')
     tag = request.args.get('tag')
-    registry = request.args.get('pull_registry')
+    # registry = request.args.get('pull_registry')
     # timeout = request.args.get('timeout')
     messagedata = {"method": "docker_controller_pull_image", "params": {
-        "body": {"repo": name, "tag": tag, "registry": registry, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+        "body": {"repo": name, "tag": tag, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
 

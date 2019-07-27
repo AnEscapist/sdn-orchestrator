@@ -2,6 +2,7 @@ from concurrent import futures
 
 import os
 import sys
+import time
 import json
 import subprocess
 
@@ -223,3 +224,48 @@ def sriov_numvfs(device):
     value = subprocess.Popen(['cat', f'/sys/bus/pci/devices/{dev_id}/sriov_numvfs'], stdout=subprocess.PIPE)
     # print(value)
     return value.stdout.read().decode('utf-8').strip()
+
+
+def lshw_get_businfo():
+    proc = subprocess.Popen(['sudo', 'lshw', '-c', 'network', '-businfo'], stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    # time.sleep(2)
+    list1 = list()
+    i = 0
+    for line in proc.stdout:
+        if i < 2:
+            i = i + 1
+        else:
+            tmp_dict = dict()
+            val = line.decode('utf-8').split(None, 3)
+            ident = val[0].strip().rsplit('@')[1]
+            check1 = val[1].strip()
+            check2 = val[2].strip()
+            if ident not in dpdk_get_devices():
+                val = line.decode('utf-8').split(None, 2)
+                tmp_dict['bus_info'] = ''
+                tmp_dict['device'] = val[0].strip()
+                tmp_dict['class'] = val[1].strip()
+                tmp_dict['description'] = val[2].strip()
+
+            else:
+                tmp_dict['bus_info'] = val[0].strip()
+                if check1 == 'network' and (check2 == 'Ethernet' or check2 == 'I350'):
+                    val = line.decode('utf-8').split(None, 2)
+                    tmp_dict['device'] = ''
+                    tmp_dict['class'] = val[1].strip()
+                    tmp_dict['description'] = val[2].strip()
+                else:
+                    tmp_dict['device'] = val[1].strip()
+                    tmp_dict['class'] = val[2].strip()
+                    tmp_dict['description'] = val[3].strip()
+            list1.append(tmp_dict)
+    return str(list1)
+
+
+def main():
+    print(lshw_get_businfo())
+
+
+if __name__ == "__main__":
+    main()

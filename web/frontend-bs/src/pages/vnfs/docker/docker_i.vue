@@ -122,7 +122,7 @@ export default {
       sizes: [],
       createTimes: [],
 
-      pull_registry: '',
+      pull_registry: 'docker hub',
       showPull: false,
     }
   },
@@ -206,18 +206,27 @@ export default {
       })
     },
     pullImg(name_tag, pull_registry) {
-      if (name_tag.includes(':')) {
-        var name = name_tag.split(':')[0]
-        var tag = name_tag.split(':')[1]
+      if (pull_registry == 'docker hub') {
+        if (name_tag.includes(':')) {
+          var name = name_tag.split(':')[0]
+          var tag = name_tag.split(':')[1]
+        } else {
+          var name = name_tag
+          var tag = 'latest'
+        }
       } else {
-        var name = name_tag
-        var tag = ''
+        if (name_tag.includes(':')) {
+          var name = pull_registry + '/' + name_tag.split(':')[0]
+          var tag = name_tag.split(':')[1]
+        } else {
+          var name = pull_registry + '/' + name_tag
+          var tag = 'latest'
+        }
       }
       this.axios.get('/api/docker/pull_image', {
         params: {
           name: name,
           tag: tag,
-          pull_registry: pull_registry
           // timeout: 1000
         }
       }).then(response => {
