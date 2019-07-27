@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div>
+  <div width="100%">
+    <div width="100%">
       <div class="btn-toolbar justify-content-between"
            role="toolbar"
            aria-label="Actions Toolbar"
@@ -29,6 +29,7 @@
                class="form-control mt-2"
         />
       </div>
+      <div>
       <AgGridVue style="width: 1200px;"
                  class="ag-theme-balham mt-2"
                  id="vmTable"
@@ -40,6 +41,7 @@
                  @grid-ready="onGridReady"
       >
       </AgGridVue>
+      </div>
     </div>
   </div>
 </template>
