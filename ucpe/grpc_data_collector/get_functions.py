@@ -223,3 +223,16 @@ def sriov_numvfs(device):
     value = subprocess.Popen(['cat', f'/sys/bus/pci/devices/{dev_id}/sriov_numvfs'], stdout=subprocess.PIPE)
     # print(value)
     return value.stdout.read().decode('utf-8').strip()
+
+
+def lshw_get_businfo():
+    proc = subprocess.Popen(['sudo', 'lshw', '-c', 'network', '-businfo'])
+    return str(proc)
+
+
+def main():
+    print(lshw_get_businfo())
+
+
+if __name__ == "__main__":
+    main()
