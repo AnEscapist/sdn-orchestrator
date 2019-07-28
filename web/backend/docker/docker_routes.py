@@ -263,8 +263,9 @@ def list_networks():
 @docker_routes.route('/docker/inspect_network')
 def inspect_network():
     network_id = request.args.get('network_id')
+
     messagedata = {"method": "docker_controller_inspect_network", "params": {
         "body": {"network_id": network_id, "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
-
+    # return network_id
     return jsonify(call_ucpe_function(messagedata))
