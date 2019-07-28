@@ -9,6 +9,7 @@ from ucpe.docker_controller.docker_controller_message import *
 def list_networks():
     func = list_networks
     name_list = []
+    id_list = []
     try:
         network_list = dcli.networks.list()
     except docker.errors.APIError as ae:
@@ -17,8 +18,9 @@ def list_networks():
         return ose_error(ose,func)
 
     for network in network_list:
+        id_list.append(network.id)
         name_list.append(network.name)
-    return network_list_message(list=name_list, func=func)
+    return network_list_message(list=name_list, id_list=id_list, func=func)
 
 
 def create_network(network_name, driver='bridge', subnet=None, gateway=None, enable_ipv6=False):
