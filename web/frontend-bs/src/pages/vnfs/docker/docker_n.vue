@@ -7,8 +7,9 @@
       <table width="100%">
         <tr>
           <th>Name</th>
-          <th>Images</th>
-          <th>Status</th>
+          <th>Scope</th>
+          <th>Driver</th>
+          <th>Created</th>
         </tr>
 
 
@@ -16,8 +17,9 @@
           <router-link :to="{path: 'dockernetwork', query: {net_name: network}}">
             <td width='10%'>{{network}}</td>
           </router-link>
-          <td width='33%'>{{networks_id[i]}}</td>
-          <td>======</td>
+          <td width='25%'>{{scopes[i]}}</td>
+          <td width='25%'>{{drivers[i]}}</td>
+          <td width='25%'>{{createdTimes[i]}}</td>
         </tr>
       </table>
       <hr>
@@ -51,6 +53,10 @@ export default {
       networks: [],
       networks_id: [],
 
+      scopes: [],
+      drivers: [],
+      createdTimes: [],
+
     }
   },
   mounted() {
@@ -61,16 +67,28 @@ export default {
       var i;
       for (i = 0; i < res_name.length; i++) {
         this.networks.push(res_name[i].trim().slice(1, -1))
-        this.networks_id.push(res_id[i].trim().slice(1, -1))
+        var net_id = res_id[i].trim().slice(1, 13)
+        this.networks_id.push(net_id)
 
-        console.log(res_id[i].trim().slice(1, -1))
+        // console.log(res_id[i].trim().slice(1, 13))
 
         this.axios.get('/api/docker/inspect_network', {
             params: {
-                network_id: res_id[i].trim().slice(1. -1)
+                network_id: net_id
             }
         }).then(response => {
-            console.log(response)
+            // console.log(JSON.parse(response.data.result)['return'])
+            var res = JSON.parse(response.data.result)['return']
+            this.scopes.push(res['Scope'])
+            if (res['Driver'] == null){
+                this.drivers.push('-')
+            }else{
+                this.drivers.push(res['Driver'])
+            }
+            var time_1 = res['Created'].split('Z')[0].split('T')[0]
+            var time_2 = res['Created'].split('Z')[0].split('T')[1].split('.')[1]
+            this.createdTimes.push(time_1 + ' / ' + time_2)
+
         })
 
       }
