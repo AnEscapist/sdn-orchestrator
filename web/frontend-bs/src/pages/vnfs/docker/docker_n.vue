@@ -49,13 +49,15 @@ export default {
   data() {
     return {
         networks: [],
+        networks_id: [],
 
     }
   },
   mounted() {
       this.axios.get('/api/docker/list_networks').then(response => {
-          // console.log(response)
-          var res = JSON.parse(response.data.result)['return'].slice(1, -1).split(',')
+          console.log(response)
+          var res = JSON.parse(response.data.result)['return_name'].slice(1, -1).split(',')
+
           var i;
           for(i=0; i<res.length; i++){
               this.networks.push(res[i].trim().slice(1, -1))
