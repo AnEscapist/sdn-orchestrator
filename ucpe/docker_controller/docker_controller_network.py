@@ -25,7 +25,7 @@ def list_networks():
 def inspect_network(network_id):
     func = inspect_network
     try:
-        print(type(network_id))
+        print('================', network_id)
         inspection = api_cli.inspect_network(network_id)
 
         return inspect_network_message(network_id, inspection, func)
