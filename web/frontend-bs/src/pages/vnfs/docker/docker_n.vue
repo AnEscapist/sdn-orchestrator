@@ -63,9 +63,11 @@ export default {
         this.networks.push(res_name[i].trim().slice(1, -1))
         this.networks_id.push(res_id[i].trim().slice(1, -1))
 
+        console.log(res_id[i].trim().slice(1, -1))
+
         this.axios.get('/api/docker/inspect_network', {
             params: {
-                network_id: res_id[i]
+                network_id: res_id[i].trim().slice(1. -1)
             }
         }).then(response => {
             console.log(response)

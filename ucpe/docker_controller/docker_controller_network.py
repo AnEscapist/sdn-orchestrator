@@ -18,15 +18,13 @@ def list_networks():
         return ose_error(ose,func)
 
     for network in network_list:
-        id_list.append(network.short_id)
+        id_list.append(network.id)
         name_list.append(network.name)
     return network_list_message(list=name_list, id_list=id_list, func=func)
 
 def inspect_network(network_id):
     func = inspect_network
     try:
-        print(network_id, '============')
-        print(type(network_id))
         inspection = api_cli.inspect_network(network_id)
 
         return inspect_network_message(network_id, inspection, func)
