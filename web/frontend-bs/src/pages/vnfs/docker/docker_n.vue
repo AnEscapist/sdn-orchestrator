@@ -2,29 +2,29 @@
 <div class="content">
   <div class="container-fluid">
     <card>
-        <font-awesome-icon :icon="['fas', 'network-wired']" size=lg color='rgb(0, 0, 0)' /> <strong> Networks</strong>
-        <hr>
-        <table width="100%">
-          <tr>
-            <th>Name</th>
-            <th>Images</th>
-            <th>Status</th>
-          </tr>
+      <font-awesome-icon :icon="['fas', 'network-wired']" size=lg color='rgb(0, 0, 0)' /> <strong> Networks</strong>
+      <hr>
+      <table width="100%">
+        <tr>
+          <th>Name</th>
+          <th>Images</th>
+          <th>Status</th>
+        </tr>
 
 
-          <tr v-for='(network,i) in networks' :key="network" id='networkInfoCard'>
-            <router-link :to="{path: 'dockernetwork', query: {net_name: network}}">
-              <td width='10%'>{{network}}</td>
-            </router-link>
-            <td width='33%'>===----===</td>
-            <td>======</td>
-          </tr>
-        </table>
-        <hr>
-        <button type="button" class="btn btn-primary btn-sm" @click='showCreate = !showCreate'>
-          <font-awesome-icon :icon="['fas', 'plus']" size=sm color='rgb(255, 255, 255)' />
-          Create
-        </button>
+        <tr v-for='(network,i) in networks' :key="network" id='networkInfoCard'>
+          <router-link :to="{path: 'dockernetwork', query: {net_name: network}}">
+            <td width='10%'>{{network}}</td>
+          </router-link>
+          <td width='33%'>{{networks_id[i]}}</td>
+          <td>======</td>
+        </tr>
+      </table>
+      <hr>
+      <button type="button" class="btn btn-primary btn-sm" @click='showCreate = !showCreate'>
+        <font-awesome-icon :icon="['fas', 'plus']" size=sm color='rgb(255, 255, 255)' />
+        Create
+      </button>
 
     </card>
 
@@ -48,21 +48,32 @@ export default {
   },
   data() {
     return {
-        networks: [],
-        networks_id: [],
+      networks: [],
+      networks_id: [],
 
     }
   },
   mounted() {
-      this.axios.get('/api/docker/list_networks').then(response => {
-          console.log(response)
-          var res = JSON.parse(response.data.result)['return_name'].slice(1, -1).split(',')
+    this.axios.get('/api/docker/list_networks').then(response => {
+      // console.log(response)
+      var res_name = JSON.parse(response.data.result)['return_name'].slice(1, -1).split(',')
+      var res_id = JSON.parse(response.data.result)['return_id'].slice(1, -1).split(',')
+      var i;
+      for (i = 0; i < res_name.length; i++) {
+        this.networks.push(res_name[i].trim().slice(1, -1))
+        this.networks_id.push(res_id[i].trim().slice(1, -1))
 
-          var i;
-          for(i=0; i<res.length; i++){
-              this.networks.push(res[i].trim().slice(1, -1))
-          }
-      })
+        this.axios.get('/api/docker/inspect_network', {
+            params: {
+                network_id: res_id[i]
+            }
+        }).then(response => {
+            console.log(response)
+        })
+
+      }
+    })
+
 
   },
   methods: {

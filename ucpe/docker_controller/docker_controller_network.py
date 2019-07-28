@@ -22,6 +22,15 @@ def list_networks():
         name_list.append(network.name)
     return network_list_message(list=name_list, id_list=id_list, func=func)
 
+def inspect_network(network_id):
+    func = inspect_network
+    try:
+        inspection = api_cli.inspect_network(network_id)
+        return inspect_network_message(network_id, inspection, func)
+    except requests.exceptions.HTTPError:
+        return cnf_error(network_id, func)
+
+
 
 def create_network(network_name, driver='bridge', subnet=None, gateway=None, enable_ipv6=False):
     func = create_network

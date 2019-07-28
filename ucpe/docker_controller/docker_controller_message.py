@@ -314,6 +314,14 @@ def network_list_message(list, id_list, func):
     }
     return json_str(message)
 
+def inspect_network_message(network_id, inspection, func):
+    message = {
+        'function': f'<{func.__name__}>',
+        'success message': f'Volume {network_id} inspected.',
+        'return': inspection
+    }
+    return json_str(message)
+
 def create_network_message(net_id, func):
     message = {
         'function': f'<{func.__name__}>',
