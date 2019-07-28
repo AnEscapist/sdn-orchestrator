@@ -2,11 +2,13 @@ from flask import Blueprint, request, render_template, abort, jsonify
 from jinja2 import TemplateNotFound
 from web.backend.zmq_web import call_ucpe_function
 import os
+import math
 import time
 import subprocess
 from multiprocessing import Process
 from threading import Thread
 import pexpect
+from pexpect import popen_spawn
 from web.backend.grpc.grpc_routes import ovs_add_port_helper, ovs_del_port_helper
 from ucpe.libvirt_controller.utils import ovs_interface_names_from_vm_name
 
@@ -151,7 +153,7 @@ def prepare_vm_console(controller_id, ucpe_sn, vm_name):
     message_data = get_message_data(get_vnc_port_method, body)
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
     print(response)
-    vnc_port = response['result']['return']
+    ucpe_vnc_port = response['result']['return']
 
     # if vnc_process is not None:
     #     vnc_process.terminate()
@@ -165,19 +167,24 @@ def prepare_vm_console(controller_id, ucpe_sn, vm_name):
     time.sleep(5)
     print("ending sleep")
     # result = prepare_vm_console_helper(HOST_IP, vnc_port)
-    prepare_vm_console_helper(HOST_IP, vnc_port)
+    prepare_vm_console_helper(HOST_IP, ucpe_vnc_port, local_vnc_port)
     return jsonify(result="attempted to start vnc console", warning="no error handling") # todo: error handling
 
-def prepare_vm_console_helper(hostname, port):
+def prepare_vm_console_helper(hostname, ucpe_vnc_port, local_vnc_port):
     # global vnc_subprocess
     # if vnc_subprocess is not None:
     #     print("terminating")
     try:
+        print("in the try block")
         def launch_console():
+            print("in launch console")
             launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
-            vnc_subprocess = subprocess.Popen(f'exec {launch_script_path} --vnc {hostname}:{port}', shell=True)
-            # vnc_subprocess = pexpect.spawn(f'exec {launch_script_path} --vnc {hostname}:{port}')
-            # vnc_subprocess.expect('Navigate')
+            vnc_subprocess = pexpect.spawn(f'{launch_script_path} --vnc {hostname}:{ucpe_vnc_port}', timeout=None) # timeout=None means wait indefinitely
+            # vnc_subprocess.expect('vnc.html')
+            vnc_subprocess.expect(f'{local_vnc_port}/vnc.html')
+            print('before', vnc_subprocess.before, '\n\n\n')
+            print('after', vnc_subprocess.after, '\n\n\n')
+            print('read', vnc_subprocess.read(), '\n\n\n', timeout=None)
             # Thread(target=vnc_subprocess.communicate).start()
             # line = vnc_subprocess.stdout.readline()
             # print("pipedline", line)

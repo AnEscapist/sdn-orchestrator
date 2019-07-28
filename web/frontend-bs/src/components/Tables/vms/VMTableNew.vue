@@ -6,20 +6,7 @@
            aria-label="Actions Toolbar"
       >
         <VMActionsButtonGroup/>
-        <div class="block btn-group mt-2"
-             role="group"
-             aria-label="Create VNF">
-          <button type="button"
-                  v-b-modal="'vm-create-modal'"
-                  class="btn btn-secondary btn-sm"
-          >
-            <font-awesome-icon :icon="['fas', 'plus-circle']"
-                               size=sm
-                               color='rgb(255, 255, 255)'/>
-            New VNF
-          </button>
-          <CreateVMModal></CreateVMModal>
-        </div>
+        <VMCreateButtonGroup/>
       </div>
       <div>
         <input type="text"
@@ -30,17 +17,17 @@
         />
       </div>
       <div>
-      <AgGridVue style="width: 1200px;"
-                 class="ag-theme-balham mt-2"
-                 id="vmTable"
-                 :columnDefs="vmTableColumns"
-                 :rowData="Object.values(vmInfo)"
-                 :gridOptions="gridOptions"
-                 quickFilterText=""
-                 @selection-changed="onSelectionChanged"
-                 @grid-ready="onGridReady"
-      >
-      </AgGridVue>
+        <AgGridVue style="width: 1200px;"
+                   class="ag-theme-balham mt-2"
+                   id="vmTable"
+                   :columnDefs="vmTableColumns"
+                   :rowData="Object.values(vmInfo)"
+                   :gridOptions="gridOptions"
+                   quickFilterText=""
+                   @selection-changed="onSelectionChanged"
+                   @grid-ready="onGridReady"
+        >
+        </AgGridVue>
       </div>
     </div>
   </div>
@@ -50,6 +37,7 @@
   import { mapGetters, mapActions } from 'vuex'
   import { AgGridVue } from "ag-grid-vue"
   import VMActionsButtonGroup from '../../Buttons/vnfs/vms/VMActionsButtonGroup'
+  import VMCreateButtonGroup from '../../Buttons/vnfs/vms/VMCreateButtonGroup'
   import CreateVMModal from '../../Modals/vnfs/vms/CreateVMModal'
   import VMConsoleRenderer from './VMConsoleRenderer'
 
@@ -57,7 +45,7 @@
 
   export default {
     name: "VMTableNew",
-    components: { AgGridVue, VMActionsButtonGroup, CreateVMModal, VMConsoleRenderer },
+    components: { AgGridVue, VMActionsButtonGroup, CreateVMModal, VMConsoleRenderer, VMCreateButtonGroup },
     data() {
       return {
         vmTableColumns: [
@@ -128,7 +116,13 @@
 
   .btn-secondary {
     background-color: #4a148c;
+    outline: none;
+    border: 0;
   }
+
+  /*.btn.btn-secondary:disabled{;*/
+  /*  background-color: #000000;*/
+  /*}*/
 
   .btn:focus, .btn:active {
     outline: none !important;
