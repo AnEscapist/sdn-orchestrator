@@ -210,7 +210,14 @@
         'createVM', 'updateVMVCPUsAvailable', 'updateVMMemoryAvailable', 'updateVMHugepageMemoryAvailable', 'updateVMImagesAvailable', 'updateVMBridgesAvailable'
       ]),
       onCreateVNF() {
-        this.createVM({ ...this.form }).then(this.clearForm());
+        new Promise((resolve, reject) => {
+          this.$emit('vm-create-load');
+          this.$nextTick(resolve);
+        }).then(() => {
+          this.createVM({ ...this.form }).then(() => this.$emit('vm-create-finished'));
+        }).then(() => {
+          this.clearForm()
+        });
       },
       clearForm() {
         this.form.vmName = "";

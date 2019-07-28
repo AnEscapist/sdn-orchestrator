@@ -9,7 +9,7 @@
 <!--      <VMTableOld/>-->
 <!--      <AgTableExample class="centered-table"/>-->
       <font-awesome-icon :icon="['fas', 'cubes']" size=lg color='rgb(111, 111, 111)' />
-      <strong> VNF List </strong>
+      <strong> VNF Control Panel </strong>
 <!--      <span class="badge badge-success">Running</span>-->
       <hr>
       <VMTableNew class="centered-table"/>
