@@ -126,7 +126,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                 response.status = f"Adding {request.str_param2} to bridge {request.str_param1}, please wait"
                 print(response.str_response)
                 proc = modify_functions.ovs_add_port(request.str_param1, request.str_param2,
-                                                     request.str_param3)
+                                                     request.str_param3, request.str_param4)
                 if proc:
                     response.status = f"Port {request.str_param2} added"
                 response.str_response = str(get_functions.ovs_list_ports(request.str_param1))

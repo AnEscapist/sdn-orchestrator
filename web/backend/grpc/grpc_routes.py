@@ -97,15 +97,16 @@ def linux_bridge_list():
     return jsonify(call_ucpe_function(messagedata))
 
 # method for Roger, not same syntax as Zhengqi
-@grpc_routes.route('/grpc/ovs_add_port/<if_port>/<type>')
-def ovs_add_port(if_port, type):
-    return jsonify(ovs_add_port_helper(if_port, type))
+@grpc_routes.route('/grpc/ovs_add_port/<if_port>/<type>/<vlan>')
+def ovs_add_port(if_port, type, vlan):
+    return jsonify(ovs_add_port_helper(if_port, type, vlan))
 
-def ovs_add_port_helper(if_port, type):
+
+def ovs_add_port_helper(if_port, type, vlan):
     bridge = 'br0'
     messagedata = {"method": "grpc_modify_ovs_add_port", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": bridge, "str_param2": if_port,
-                 "str_param3": type}},
+                 "str_param3": type, "str_param4": vlan}},
                    "jsonrpc": "2.0", "id": 0
                    }
     return call_ucpe_function(messagedata)

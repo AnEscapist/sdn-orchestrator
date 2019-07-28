@@ -82,9 +82,9 @@ class gRPCDataCollector(object):
     # bridge port type dev-address
     @staticmethod
     def grpc_modify_ovs_add_port(**kwargs):
-        print('hello2')
+        # print('hello2')
         return modify_execute(func_name(), f"ovs add_port {kwargs['body']['str_param1']} {kwargs['body']['str_param2']} "
-                              f"{kwargs['body']['str_param3']}", **kwargs)
+                              f"{kwargs['body']['str_param3']} {kwargs['body']['str_param4']}", **kwargs)
 
     @staticmethod
     def grpc_modify_ovs_del_port(**kwargs):

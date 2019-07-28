@@ -38,8 +38,8 @@ def dpdk_enable(driver):
     return True
 
 
-def ovs_add_port(bridge, if_port, type):
-    subprocess.run(['sudo', 'ovs-vsctl', 'add-port', bridge, if_port, '--', 'set', 'Interface', if_port,
+def ovs_add_port(bridge, if_port, type, vlan):
+    subprocess.run(['sudo', 'ovs-vsctl', 'add-port', bridge, if_port, f'tag={vlan}' '--', 'set', 'Interface', if_port,
                     f'type={type}'])
     ovs_socket = f'/usr/local/var/run/openvswitch/{if_port}'
     subprocess.run(['sudo', 'chmod', '777', ovs_socket])
