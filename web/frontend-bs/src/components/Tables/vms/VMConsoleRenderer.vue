@@ -2,9 +2,10 @@
   <div>
     <button type="button"
             :disabled="params.data.state !== 'Running'"
-            class="btn btn-outline-success btn-sm"
+            class="btn btn-primary btn-sm"
             @click.stop="redirectToConsole(params.data.name)"
     >
+      <!--            todo: figure out color conflict with pause-->
       <!--      <h2>{{!!vmSelection}}</h2>-->
       <!--      <font-awesome-icon :icon="['fas', 'terminal']"-->
       <!--                         size=sm-->

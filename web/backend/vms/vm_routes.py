@@ -162,10 +162,14 @@ def prepare_vm_console(controller_id, ucpe_sn, vm_name):
     # vnc_process = Process(target = prepare_vm_console_helper, args=(HOST_IP, vnc_port))
     # vnc_process.start()
     local_vnc_port = 6080
-    subprocess.Popen(f'exec fuser -k {local_vnc_port}/tcp', shell=True)
-    print("starting sleep")
-    time.sleep(5)
-    print("ending sleep")
+    kill_subprocess = pexpect.spawn(f'fuser -k {local_vnc_port}/tcp', timeout=None) # timeout=None means wait indefinitely
+    # kill_subprocess.expect(f'{local_vnc_port}/tcp')
+    # kill_subprocess.expect(f'{local_vnc_port}')
+    # print('before', kill_subprocess.before)
+    # print('after', kill_subprocess.after)
+    # print("starting sleep")
+    time.sleep(1) #todo: remove the need for this
+    # print("ending sleep")
     # result = prepare_vm_console_helper(HOST_IP, vnc_port)
     prepare_vm_console_helper(HOST_IP, ucpe_vnc_port, local_vnc_port)
     return jsonify(result="attempted to start vnc console", warning="no error handling") # todo: error handling
@@ -184,7 +188,7 @@ def prepare_vm_console_helper(hostname, ucpe_vnc_port, local_vnc_port):
             vnc_subprocess.expect(f'{local_vnc_port}/vnc.html')
             print('before', vnc_subprocess.before, '\n\n\n')
             print('after', vnc_subprocess.after, '\n\n\n')
-            print('read', vnc_subprocess.read(), '\n\n\n', timeout=None)
+            print('read', vnc_subprocess.read(), '\n\n\n')
             # Thread(target=vnc_subprocess.communicate).start()
             # line = vnc_subprocess.stdout.readline()
             # print("pipedline", line)
