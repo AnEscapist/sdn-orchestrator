@@ -27,8 +27,8 @@ def inspect_network(network_id):
     try:
         inspection = api_cli.inspect_network(network_id)
         return inspect_network_message(network_id, inspection, func)
-    except requests.exceptions.HTTPError:
-        return cnf_error(network_id, func)
+    except docker.errors.APIError as ae:
+        return api_error(ae, func)
 
 
 
