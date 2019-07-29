@@ -383,19 +383,19 @@ body > .navbar-collapse{
 }
 
 .modal{
-    &.show{
-        .modal-dialog{
-            -webkit-transform: translate(0, 30%);
-            -o-transform: translate(0, 30%);
-            transform: translate(0, 30%);
-        }
-    }
-    &.modal-mini{
-        .modal-dialog{
-            max-width: 255px;
-            margin: 0 auto;
-        }
-    }
+    //&.show{
+    //    .modal-dialog{
+    //        -webkit-transform: translate(0, 30%);
+    //        -o-transform: translate(0, 30%);
+    //        transform: translate(0, 30%);
+    //    }
+    //}
+    //&.modal-mini{
+    //    .modal-dialog{
+    //        max-width: 255px;
+    //        margin: 0 auto;
+    //    }
+    //}
     .modal-content{
         .modal-header{
             border-bottom: none;
@@ -404,19 +404,19 @@ body > .navbar-collapse{
             padding-bottom: 0;
             padding-left: 24px;
 
-            .modal-profile{
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                text-align: center;
-                line-height: 5.7;
-                box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.3);
-
-                i{
-                    font-size: 32px;
-                    padding-top: 24px;
-                }
-            }
+            //.modal-profile{
+            //    width: 80px;
+            //    height: 80px;
+            //    border-radius: 50%;
+            //    text-align: center;
+            //    line-height: 5.7;
+            //    box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.3);
+            //
+            //    i{
+            //        font-size: 32px;
+            //        padding-top: 24px;
+            //    }
+            //}
         }
 
         .modal-body{
@@ -439,17 +439,17 @@ body > .navbar-collapse{
             //-webkit-justify-content: space-between;
             //justify-content: space-between;
 
-            .btn{
-                margin: 4px;
-                padding-left: 16px;
-                padding-right: 16px;
-                width: auto;
-
-                &:hover,
-                &focus{
-                    text-decoration: none;
-                }
-            }
+            //.btn{
+            //    margin: 4px;
+            //    padding-left: 16px;
+            //    padding-right: 16px;
+            //    width: auto;
+            //
+            //    &:hover,
+            //    &focus{
+            //        text-decoration: none;
+            //    }
+            //}
         }
     }
 }

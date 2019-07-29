@@ -103,7 +103,8 @@ def create_vm(controller_id, ucpe_sn):
     data = request.get_json()
     # TODO: database for image paths
     form = data["form"]
-    create_vm_ovs_interfaces(form['vmName'], int(form['vmOVSInterfaceCount']), {})
+    vlans = [int(interface['vlan']) for interface in form['vmOVSInterfaceVLANs']]
+    create_vm_ovs_interfaces(form['vmName'], int(form['vmOVSInterfaceCount']), vlans)
 
     image_file = IMAGE_FILES[form['vmImage']]
     image_path = os.path.join(IMAGE_ACTIVE_PATH, form['vmName'], image_file)
@@ -124,14 +125,15 @@ def create_vm(controller_id, ucpe_sn):
     response = call_ucpe_function(message_data, controller_id, ucpe_sn)
     return jsonify(response)
 
-def create_vm_ovs_interfaces(vm_name, number_of_interfaces, vlan_dict):
+def create_vm_ovs_interfaces(vm_name, number_of_interfaces, vlans):
     interface_names = ovs_interface_names_from_vm_name(vm_name, number_of_interfaces)
     # create them by calling jesse's thing
     interface_type = 'dpdkvhostuser'
     threads = []
-    for interface in interface_names:
+    for index, interface in enumerate(interface_names):
+        #todo: this is really bad - interface_names must be in order eth0, eth1, ... (interface_names, vlans are 2 parallel arrays- bad pattern)
         # threads.append(Thread(ovs_add_port(interface, interface_type)))
-        threads.append(Thread(target=ovs_add_port_helper, args=(interface, interface_type, '100'))) #todo: change
+        threads.append(Thread(target=ovs_add_port_helper, args=(interface, interface_type, vlans[index]))) #todo: change
     for thread in threads:
         thread.start()
     for thread in threads:
