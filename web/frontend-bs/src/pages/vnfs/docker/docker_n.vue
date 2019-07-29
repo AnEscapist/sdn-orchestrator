@@ -85,7 +85,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="inputGroup-sizing-default">Subnet</span>
                 </div>
-                <input v-model='create_subnet' ype="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                <input placeholder="e.g. 10.10.123.0/24" v-model='create_subnet' ype="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
               </div>
             </td>
             <td></td>
@@ -94,7 +94,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="inputGroup-sizing-default">Gateway</span>
                 </div>
-                <input v-model='create_gateway' type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                <input placeholder="e.g. 10.10.123.1" v-model='create_gateway' type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
               </div>
             </td>
           </tr>
@@ -232,7 +232,8 @@ export default {
                 create_ipv6: create_ipv6,
             }
         }).then(response => {
-            console.log(response)
+            // console.log(response)
+            this.reload()
         })
     }
 
