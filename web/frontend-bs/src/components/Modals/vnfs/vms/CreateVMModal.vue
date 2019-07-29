@@ -319,9 +319,6 @@
       onOVSInterfaceSelectChange() {
         // this.vmOVSInterfaceVLANs = this.ovsInterfaces.map(x => {return {vlan: ''}})
       },
-      onOVSVLANClick() {
-        console.log("invalid tag " + this.vmOVSInterfaceVLANInvalidTag)
-      },
       checkForMemoryError() {
         this.formErrors.memoryError = (!this.hugepagesEnabled && this.isOutOfMemory) || (this.hugepagesEnabled && this.isOutOfHugepageMemory)
       },
@@ -334,7 +331,7 @@
         this.formErrors.nameIsEmpty = this.form.vmName.length === 0;
       },
       validateVLANs(){
-        this.form.vlanError = this.vmOVSInterfaceVLANInvalidTag.some(x => x)
+        this.formErrors.vlanError = this.vmOVSInterfaceVLANInvalidTag.some(x => x)
       }
     },
     watch: {
@@ -345,8 +342,14 @@
         handler(newValue) {
           newValue.map((x,index) => {
             let valid = x !== '' && (isNaN(x) || parseInt(x) != x || !(this.MIN_VLAN_TAG <= parseInt(x) && parseInt(x) <= this.MAX_VLAN_TAG ));
-            Vue.set(this.vmOVSInterfaceVLANInvalidTag, index, valid)
+            Vue.set(this.vmOVSInterfaceVLANInvalidTag, index, valid);
           })
+        },
+        deep: true
+      },
+      vmOVSInterfaceVLANInvalidTag: {
+        handler(newValue){
+          this.validateVLANs();
         },
         deep: true
       }
