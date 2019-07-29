@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {parseMemoryIntGBFromBytes, getZeroToNArray, getOneToNArray} from '@/utils/vmUtils'
 
 const AGENT_NAME = 'agent';
 
@@ -174,20 +175,6 @@ function getURL(endpoint) {
   return `${URL_PREFIX}/${endpoint}/${URL_SUFFIX}`;
 }
 
-function parseMemoryIntGBFromBytes(memoryStr) {
-  //memoryStr: memory in bytes, ex. '12355'
-  //return: memory in gigabytes, as an int
-  let bytes_in_gigabyte = Math.pow(1024, 3);
-  return parseInt((parseInt(memoryStr)/bytes_in_gigabyte));
-}
-
-function getZeroToNArray(n) {
-  return Array.from(Array(n+1).keys())
-}
-
-function getOneToNArray(n) {
-  return getZeroToNArray(n-1).map(x => x+1)
-}
 
 const methods = {};
 

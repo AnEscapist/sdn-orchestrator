@@ -132,6 +132,7 @@
                 id="vmOVSInterfaces"
                 v-model="form.vmOVSInterfaceCount"
                 :disabled="!form.hugepagesEnabled"
+                @change="onOVSInterfaceSelectChange"
                 class="custom-select mr-sm-2">
                 <option v-for="i in vmOVSInterfaceOptions">{{i}}</option>
               </select>
@@ -141,21 +142,75 @@
             </div>
           </div>
         </div>
+        <div v-if="form.vmOVSInterfaceCount > 0">
+          <div class="form-row">
+            <!--          <label for="VLANConfiguration">VLAN Configuration</label>-->
+            <b-card-header header-tag="header"
+                           class="p-1 col-md-12"
+                           role="tab">
+              <b-button block
+                        href="#"
+                        v-b-toggle.accordion-1
+                        @click="onOVSVLANClick"
+                        variant="primary">OVS VLAN Configuration
+              </b-button>
+            </b-card-header>
+          </div>
+          <b-collapse id="accordion-1"
+                      accordion="my-accordion"
+                      role="tabpanel"
+                      class="col-md-16">
+            <!--                <b-card-text>I start opened because <code>visible</code> is <code>true</code></b-card-text>-->
+            <!--                <b-card-text>more text</b-card-text>-->
+            <!--              <div class="form-group row">-->
+            <!--                <div class="col-md-6">-->
+            <!--                <label class="col-sm-2 col-form-label">Interface 1</label>-->
+            <!--&lt;!&ndash;                  <input type="text" class="form-control-plaintext"/>&ndash;&gt;-->
+            <!--                  <input-->
+            <!--                    class="form-control"-->
+            <!--                    placeholder="name"/>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <div v-for="(ovsInterface, index) in form.vmOVSInterfaceVLANs"
+                 :key="index">
+              <b-form inline>
+                <label class='mr-sm-2'
+                >VLAN Tag: eth{{index}}</label>
+                <b-input
+                  id="inline-form-input-name"
+                  class="col-md-3"
+                  placeholder="1-4094"
+                  v-model="ovsInterface.vlan"
+                ></b-input>
+                <div class="text-danger">
+                  <ul>
+                    <li v-if="vmOVSInterfaceVLANInvalidTag[index]">Tag must be an integer in the range
+                      {{MIN_VLAN_TAG}}-{{MAX_VLAN_TAG}}
+                    </li>
+                  </ul>
+                </div>
+              </b-form>
+            </div>
+          </b-collapse>
+        </div>
       </form>
     </b-modal>
   </div>
 </template>
 
 <script>
+  import Vue from 'vue'
   import Switches from 'vue-switches';
   import { ToggleButton } from 'vue-js-toggle-button';
-  import axios from 'axios';
   import { mapGetters, mapActions } from 'vuex';
+  import { getZeroToNArray, getOneToNArray } from "@/utils/vmUtils";
+  import vmOVSVLANInput from "@/components/Forms/vnfs/vms/vmOVSVLANInput"
+
 
   export default {
     name: "CreateVMModal",
     components: {
-      Switches, ToggleButton
+      Switches, ToggleButton, vmOVSVLANInput
     },
     data() {
       return {
@@ -167,7 +222,8 @@
           vmHugepageMemory: '4 GB',
           hugepagesEnabled: false,
           vmBridge: 'No Bridge',
-          vmOVSInterfaceCount: 0
+          vmOVSInterfaceCount: 0,
+          vmOVSInterfaceVLANs: [] //#todo: it's a bit flimsy to depend on the indices of an array
         },
         show: true,
         formErrors: {
@@ -177,9 +233,13 @@
           agent: false,
           nameExceedsCharLimit: false,
           nameIsEmpty: true,
-          memoryError: false
+          memoryError: false,
+          vlanError: false,
         },
+        vmOVSInterfaceVLANInvalidTag: [], //todo: extract vlan config into its own component and do events instead of v-model
         charLimit: 15, //todo: make this a constant
+        MIN_VLAN_TAG: 1,
+        MAX_VLAN_TAG: 4094
       }
     },
     computed: {
@@ -210,6 +270,18 @@
       },
       isOutOfHugepageMemory() {
         return this.form.vmHugepageMemory === '0 GB'
+      },
+      ovsInterfaces() {
+        return getZeroToNArray(this.form.vmOVSInterfaceCount - 1)
+      },
+      test() {
+        return getOneToNArray(1)
+      },
+      vmOVSInterfaceCount() {
+        return this.form.vmOVSInterfaceCount
+      },
+      vmOVSInterfaceVLANsExtracted() {
+        return this.form.vmOVSInterfaceVLANs.map(x => x.vlan)
       }
     },
     methods: {
@@ -244,6 +316,9 @@
       onHugepageToggle() {
         this.checkForMemoryError();
       },
+      onOVSInterfaceSelectChange() {
+        // this.vmOVSInterfaceVLANs = this.ovsInterfaces.map(x => {return {vlan: ''}})
+      },
       checkForMemoryError() {
         this.formErrors.memoryError = (!this.hugepagesEnabled && this.isOutOfMemory) || (this.hugepagesEnabled && this.isOutOfHugepageMemory)
       },
@@ -254,11 +329,44 @@
         this.formErrors.badCharacters = this.form.vmName.length > 0 && !this.form.vmName.match(/^[-_a-zA-Z0-9]*$/);
         this.formErrors.nameExceedsCharLimit = this.form.vmName.length > this.charLimit;
         this.formErrors.nameIsEmpty = this.form.vmName.length === 0;
+      },
+      validateVLANs(){
+        this.formErrors.vlanError = this.vmOVSInterfaceVLANInvalidTag.some(x => x)
       }
     },
     watch: {
       vmName: function () {
         this.validateName()
+      },
+      vmOVSInterfaceVLANsExtracted: {
+        handler(newValue) {
+          newValue.map((x,index) => {
+            let valid = x !== '' && (isNaN(x) || parseInt(x) != x || !(this.MIN_VLAN_TAG <= parseInt(x) && parseInt(x) <= this.MAX_VLAN_TAG ));
+            Vue.set(this.vmOVSInterfaceVLANInvalidTag, index, valid);
+          })
+        },
+        deep: true
+      },
+      vmOVSInterfaceVLANInvalidTag: {
+        handler(newValue){
+          this.validateVLANs();
+        },
+        deep: true
+      }
+      ,
+      vmOVSInterfaceCount(newVal, oldVal) {
+        if (newVal > oldVal) {
+          for (let i = 0; i < newVal - oldVal; i++) {
+            this.form.vmOVSInterfaceVLANs.push({ vlan: '' });
+            this.vmOVSInterfaceVLANInvalidTag.push(false)
+          }
+        }
+        if (oldVal > newVal) {
+          for (let i = 0; i < oldVal - newVal; i++) {
+            this.form.vmOVSInterfaceVLANs.pop();
+            this.vmOVSInterfaceVLANInvalidTag.pop()
+          }
+        }
       }
     }
   }
@@ -273,4 +381,18 @@
   .raised {
     vertical-align: 10px
   }
+
+  .btn:focus, .btn:active, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+    color: #ffffff;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .btn-primary:hover,
+  .open {
+    color: #ffffff;
+    border: 0;
+    outline: none;
+  }
+
 </style>

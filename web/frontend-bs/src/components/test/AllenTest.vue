@@ -118,7 +118,7 @@
                     placeholder="VLAN ID">
                   <div class="text-danger">
                     <ul>
-                      <li v-if="formErrors.badCharacters">VLAN ID must be a number.
+                      <li v-if="formErrors.badCharacters">VLAN ID must be an integer between 1 and 4094.
                       </li>
                       <li v-if="formErrors.fieldIsEmpty">You must specify a VLAN ID.
                       </li>
@@ -349,7 +349,8 @@
                 }
             },
             validateName() {
-                this.formErrors.badCharacters = this.form.vlanid.length > 0 && !this.form.vlanid.match(/^[0-9]*$/);
+                this.formErrors.badCharacters = (this.form.vlanid.length > 0 && !this.form.vlanid.match(/^[0-9]*$/))
+                || parseInt(this.form.vlanid)>4094;
                 this.formErrors.fieldIsEmpty = this.form.vlanid.length === 0 && (this.form.action != "Show VLANs"
                     && this.form.action != "Show port-based VLANs");
                 this.formErrors.startsWithZero = this.form.vlanid.length > 0 && this.form.vlanid.match(/^[0]/);
