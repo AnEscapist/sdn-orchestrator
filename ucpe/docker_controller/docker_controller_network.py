@@ -33,7 +33,7 @@ def inspect_network(network_id):
 
 
 
-def create_network(network_name, driver='bridge', subnet=None, gateway=None, enable_ipv6=False):
+def create_network(network_name, driver, scope, subnet, gateway):
     func = create_network
     try:
         if subnet and gateway:
@@ -44,10 +44,10 @@ def create_network(network_name, driver='bridge', subnet=None, gateway=None, ena
             ipam_config = docker.types.IPAMConfig(
                 pool_configs=[ipam_pool]
             )
-            network = dcli.networks.create(name=network_name, driver=driver,
-                                           ipam=ipam_config, enable_ipv6=enable_ipv6)
+            network = dcli.networks.create(name=network_name, driver=driver, scope=scope,
+                                           ipam=ipam_config)
         else:
-            network = dcli.networks.create(name=network_name, driver=driver)
+            network = dcli.networks.create(name=network_name, driver=driver, scope=scope)
     except docker.errors.APIError as ae:
         return api_error(ae, func)
     return create_network_message(network.id, func)
