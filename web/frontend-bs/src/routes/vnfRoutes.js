@@ -3,6 +3,7 @@
 import TestComponent from '../components/test/TestComponent'
 import VNFLayout from '../layout/vnfs/VNFLayout'
 import VNFDashboard from '../pages/vnfs/VNFDashboard'
+import VNFImages from '../pages/vnfs/VNFImages'
 import dockerRoutes from './dockerRoutes'
 
 const vnfRoutes = [
@@ -17,6 +18,11 @@ const vnfRoutes = [
         path: 'home',
         name: 'VNF Dashboard',
         component: VNFDashboard
+      },
+      {
+        path: 'images',
+        name: 'VNF Images',
+        component: VNFImages
       },
       ...dockerRoutes,
     ]

@@ -74,6 +74,7 @@
               <option v-for="option in vmMemoryOptions">{{option}} GB</option>
               <option v-if="isOutOfMemory">0 GB</option>
             </select>
+            <b-tooltip target="vmMemory"></b-tooltip>
           </div>
           <div v-if="form.hugepagesEnabled"
                class="form-group col-md-4">
@@ -120,18 +121,24 @@
               class="custom-select mr-sm-2">
               <option>No Bridge</option>
               <option v-for="bridge in vmBridgesAvailable">{{bridge}}</option>
-          </select>
+            </select>
           </div>
           <div
             class="form-group col-md-4">
             <label for="vmOVSInterfaces">OVS Interfaces</label>
             <!--          todo: error handling on no bridge-->
-            <select
-              id="vmOVSInterfaces"
-              v-model="form.vmOVSInterfaceCount"
-              class="custom-select mr-sm-2">
-              <option v-for="i in vmOVSInterfaceOptions">{{i}}</option>
-            </select>
+            <div id="vmOVSInterfacesWrapper">
+              <select
+                id="vmOVSInterfaces"
+                v-model="form.vmOVSInterfaceCount"
+                :disabled="!form.hugepagesEnabled"
+                class="custom-select mr-sm-2">
+                <option v-for="i in vmOVSInterfaceOptions">{{i}}</option>
+              </select>
+              <b-tooltip target="vmOVSInterfacesWrapper"
+                         title="You must enable hugepage memory to add OVS Interfaces."
+                         :disabled="form.hugepagesEnabled"></b-tooltip>
+            </div>
           </div>
         </div>
       </form>
@@ -235,7 +242,7 @@
         this.checkForMemoryError();
       },
       onHugepageToggle() {
-        this.checkForMemoryError()
+        this.checkForMemoryError();
       },
       checkForMemoryError() {
         this.formErrors.memoryError = (!this.hugepagesEnabled && this.isOutOfMemory) || (this.hugepagesEnabled && this.isOutOfHugepageMemory)
