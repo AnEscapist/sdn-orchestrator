@@ -278,7 +278,6 @@ def create_network():
     subnet = request.args.get('create_subnet')
     gateway = request.args.get('create_gateway')
     enable_ipv6 = request.args.get('create_ipv6')
-    print('======================', enable_ipv6)
     messagedata = {"method": "docker_controller_create_network", "params": {
         "body": {"network_name": network_name, 'driver': driver, 'scope': scope,
                 'subnet': subnet, 'gateway': gateway, 'enable_ipv6': enable_ipv6,
