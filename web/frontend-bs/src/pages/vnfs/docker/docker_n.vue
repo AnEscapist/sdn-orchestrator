@@ -60,6 +60,7 @@
                   <option selected>Choose...</option>
                   <option>bridge</option>
                   <option>host</option>
+                  <option>overlay</option>
                 </select>
               </div>
             </td>
