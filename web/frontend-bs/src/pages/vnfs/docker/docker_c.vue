@@ -103,7 +103,7 @@
 
         <card>
           <font-awesome-icon :icon="['fas', 'cog']" size=lg color='rgb(0, 0, 0)' />
-          <strong> Advanced configuration</strong>
+          <strong> OVS configuration</strong>
           <hr>
 
           <table width='100%'>
@@ -116,12 +116,12 @@
                   <input v-model='ovs_int' type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                 </div>
               </td> -->
-              <td width='33%'>
+              <td width='20%'>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">Interfaces</span>
                   </div>
-                  <input v-model='int_port' placeholder="e.g.: 7, 8"type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                  <input v-model='int_port' placeholder="e.g.: 7, 8" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                 </div>
               </td>
               <td width='33%'>

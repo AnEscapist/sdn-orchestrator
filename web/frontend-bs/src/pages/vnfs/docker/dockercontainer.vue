@@ -26,10 +26,10 @@
     </button>
 
     <router-link to="docker_c">
-    <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeContainer()'>
-      <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
-      Remove
-    </button>
+      <button type="button" id='remove' class="btn btn-danger btn-sm" @click='removeContainer()'>
+        <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
+        Remove
+      </button>
     </router-link>
 
 
@@ -102,10 +102,10 @@
       <hr>
       <table>
         <tr id='containerLinks'>
-          <!-- <button type="button" class="btn btn-link">
+          <!-- <button type="button" class="btn btn-link" @click='showOVSConfig()'>
             <td>
-              <font-awesome-icon :icon="['fas', 'file-alt']" size=sm coler="#1b7fbd" />
-              <font size='2px'> Logs</font>
+              <font-awesome-icon :icon="['fas', 'cog']" size=sm coler="#1b7fbd" />
+              <font size='2px'> OVS config</font>
             </td>
           </button> -->
           <button type="button" class="btn btn-link" @click='showInspect()'>
@@ -148,9 +148,12 @@
     <div>
     </div>
   </div>
+  <br>
 
-  <div id="console">
-  </div>
+  <!-- <div id="console">
+  </div> -->
+
+
 
   <div class="container-fluid" v-show="showIns">
     <font-awesome-icon :icon="['fas', 'info-circle']" size=lg color='rgb(0, 0, 0)' /> <strong> Inspect</strong>
@@ -181,11 +184,16 @@ export default {
       createTime: '',
       inspect: '',
       stats: '',
+      showOVSCon: false,
       showIns: false,
       showEdit: true,
       showStats: false,
       newName: '',
       port_listening: 'no',
+
+      int_port: '',
+      int_ip: ''
+
     }
 
 
@@ -248,12 +256,19 @@ export default {
 
 
     },
+    showOVSConfig() {
+      this.showIns = false;
+      this.showStats = false;
+      this.showOVSCon = !this.showOVSCon;
+    },
     showInspect() {
       this.showStats = false;
+      this.showOVSCon = false;
       this.showIns = !this.showIns;
     },
     showStatistic() {
       this.showIns = false;
+      this.showOVSCon = false;
       this.showStats = !this.showStats
     },
     renameContainer(newName) {
@@ -282,14 +297,14 @@ export default {
             id_name: this.id,
           }
         }).then(response => {
-            // console.log('container name', this.name)
-            this.axios.get('/api/grpc/ovs_docker_del_port', {
-                params: {
-                    container: this.name,
-                }
-            }).then(response => {
-                // console.log(response)
-            })
+          // console.log('container name', this.name)
+          this.axios.get('/api/grpc/ovs_docker_del_port', {
+            params: {
+              container: this.name,
+            }
+          }).then(response => {
+            // console.log(response)
+          })
           // console.log(this.id)
           // console.log(response.data.result)
         })
