@@ -33,7 +33,7 @@ def inspect_network(network_id):
 
 
 
-def create_network(network_name, driver='bridge', scope=None, subnet=None, gateway=None, enable_ipv6=False):
+def create_network(network_name, driver, scope, subnet, gateway, enable_ipv6):
     func = create_network
     try:
         if subnet and gateway:

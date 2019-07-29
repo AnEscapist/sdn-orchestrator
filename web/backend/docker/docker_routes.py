@@ -270,7 +270,7 @@ def inspect_network():
     # return network_id
     return jsonify(call_ucpe_function(messagedata))
 
-@docker_routes.route('docker/create_network')
+@docker_routes.route('/docker/create_network')
 def create_network():
     network_name = request.args.get('create_name')
     driver = request.args.get('create_driver')
@@ -278,8 +278,8 @@ def create_network():
     subnet = request.args.get('create_subnet')
     gateway = request.args.get('create_gateway')
     enable_ipv6 = request.args.get('create_ipv6')
-
-    messagedata = {"method": "docker_controller_inspect_network", "params": {
+    print('======================', enable_ipv6)
+    messagedata = {"method": "docker_controller_create_network", "params": {
         "body": {"network_name": network_name, 'driver': driver, 'scope': scope,
                 'subnet': subnet, 'gateway': gateway, 'enable_ipv6': enable_ipv6,
                 "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
