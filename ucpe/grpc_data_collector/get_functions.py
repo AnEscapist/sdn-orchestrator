@@ -263,8 +263,17 @@ def lshw_get_businfo():
     return str(list1)
 
 
+def cpu_percent():
+    return psutil.cpu_percent()
+
+
+def mem_percent():
+    return dict(psutil.virtual_memory()._asdict())
+
+
 def main():
-    print(lshw_get_businfo())
+    print(cpu_percent())
+    print(mem_percent())
 
 
 if __name__ == "__main__":
