@@ -14,7 +14,7 @@
 
 
         <tr v-for='(network,i) in networks' :key="network" id='networkInfoCard'>
-          <router-link :to="{path: 'dockernetwork', query: {net_name: network}}">
+          <router-link :to="{path: 'dockernetwork', query: {net_id: networks_id[i]}}">
             <td width='10%'>{{network}}</td>
           </router-link>
           <td width='25%'>{{scopes[i]}}</td>
@@ -30,12 +30,114 @@
 
     </card>
 
+    <card v-show='showCreate'>
+      <div class="container-fluid">
+        <table width='100%'>
+          <tr width='10%'>
+            <td>
+              <font-awesome-icon :icon="['far', 'plus-square']" size=lg color='rgb(0, 0, 0)' /> <strong> New network</strong>
+            </td>
+          </tr>
+        </table>
+        <hr>
+
+        <table width='100%'>
+          <tr>
+            <td width='33%'>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Name</span>
+                </div>
+                <input v-model='create_name' type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </td>
+            <td width='33%'>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Driver</span>
+                </div>
+                <select v-model='create_driver' class="custom-select" id="inputGroupSelect01">
+                  <option selected>Choose...</option>
+                  <option>bridge</option>
+                  <option>host</option>
+                </select>
+              </div>
+            </td>
+            <td width='33%'>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Scope</span>
+                </div>
+                <select v-model='create_scope' class="custom-select" id="inputGroupSelect01">
+                  <option selected>Choose...</option>
+                  <option>local</option>
+                  <option>global</option>
+                  <option>swarm</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <table width='100%'>
+          <tr>
+            <td width='48%'>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Subnet</span>
+                </div>
+                <input v-model='create_subnet' ype="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </td>
+            <td></td>
+            <td width='48%'>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Gateway</span>
+                </div>
+                <input v-model='create_gateway' type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </td>
+          </tr>
+
+
+        </table>
+
+        <table>
+          <tr>
+            <td width='15%'>
+              <strong>IPv6 Enable: </strong>
+              <toggle-button v-model="create_ipv6" :value='true' :labels="{checked: 'on', unchecked: 'off'}" />
+            </td>
+
+            <td width='82%'></td>
+            <td>
+              <button type="button" class="btn btn-secondary btn-sm" @click='showCreate = false'>
+                Cancel
+              </button>
+            </td>
+
+            <td>
+
+              <button type="button" class="btn btn-primary btn-sm" @click='createNetwork(create_name, create_driver, create_scope, create_subnet, create_gateway, create_ipv6)'>
+                Create
+              </button>
+            </td>
+          </tr>
+        </table>
+
+
   </div>
+  </card>
+
+</div>
 </div>
 </template>
 
 <script>
 import Card from '../../../components/Cards/Card.vue'
+import {
+  ToggleButton
+} from 'vue-js-toggle-button'
 // import { mapGetters, mapActions } from 'vuex'
 // import LTable from '@/components/Table.vue'
 
@@ -46,7 +148,7 @@ export default {
 
   components: {
     Card,
-
+    ToggleButton,
   },
   data() {
     return {
@@ -56,6 +158,16 @@ export default {
       scopes: [],
       drivers: [],
       createdTimes: [],
+
+      create_name: '',
+      create_driver: '',
+      create_subnet: '',
+      create_gateway: '',
+      create_ipv6: false,
+      create_scope: '',
+      create_check_duplicate: '',
+
+      showCreate: false,
 
     }
   },
@@ -73,21 +185,21 @@ export default {
         // console.log(res_id[i].trim().slice(1, 13))
 
         this.axios.get('/api/docker/inspect_network', {
-            params: {
-                network_id: net_id
-            }
+          params: {
+            network_id: net_id
+          }
         }).then(response => {
-            // console.log(JSON.parse(response.data.result)['return'])
-            var res = JSON.parse(response.data.result)['return']
-            this.scopes.push(res['Scope'])
-            if (res['Driver'] == null){
-                this.drivers.push('-')
-            }else{
-                this.drivers.push(res['Driver'])
-            }
-            var time_1 = res['Created'].split('Z')[0].split('T')[0]
-            var time_2 = res['Created'].split('Z')[0].split('T')[1].split('.')[1]
-            this.createdTimes.push(time_1 + ' / ' + time_2)
+          // console.log(JSON.parse(response.data.result)['return'])
+          var res = JSON.parse(response.data.result)['return']
+          this.scopes.push(res['Scope'])
+          if (res['Driver'] == null) {
+            this.drivers.push('-')
+          } else {
+            this.drivers.push(res['Driver'])
+          }
+          var time_1 = res['Created'].split('Z')[0].split('T')[0]
+          var time_2 = res['Created'].split('Z')[0].split('T')[1].split('.')[0]
+          this.createdTimes.push(time_1 + ' / ' + time_2)
 
         })
 
@@ -108,6 +220,21 @@ export default {
       })
     },
 
+    createNetwork(create_name, create_driver, create_scope, create_subnet, create_gateway, create_ipv6){
+
+        this.axios.get('/api/docker/create_network', {
+            params: {
+                create_name: create_name,
+                create_driver: create_driver,
+                create_scope: create_scope,
+                create_subnet: create_subnet,
+                create_gateway: create_gateway,
+                create_ipv6: create_ipv6,
+            }
+        }).then(response => {
+            console.log(response)
+        })
+    }
 
   }
 }
