@@ -1,6 +1,6 @@
 <template>
   <card>
-    <font-awesome-icon :icon="['fab', 'docker']" size=lg color='rgb(111, 111, 111)' />
+    <font-awesome-icon :icon="['fas', 'cubes']" size=lg color='rgb(111, 111, 111)' />
     <strong> Virtual Machines on uCPE (potato3) </strong>
 <!--    todo: use zhengqi's thing to get potato3-->
     <span class="badge badge-success">Running</span>
