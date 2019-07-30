@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/',
     component: TemplateLayout,
-    redirect: '/ucpe/test-sn/host-info/overview', //todo: change
+    redirect: '/ucpe/test-sn/vnfs/home', //todo: change
   },
   // ...dockerRoutes,
   // ...vmRoutes,

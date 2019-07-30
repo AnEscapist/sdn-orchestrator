@@ -25,8 +25,8 @@ IMAGE_ACTIVE_PATH = '/var/third-party/active'
 IMAGE_FILES = {
     'Vyatta Router': 'vyatta.qcow2',
     'Ubuntu 16.04': 'ubuntu_16.qcow2',
-    'AT&T Storage': 'storage.qcow2',
-    'AT&T Monitor': 'monitor.qcow2'
+    'Cloud Storage': 'storage.qcow2',
+    'Online Behavior Management': 'monitor.qcow2'
 }
 
 IMAGE_FILE_INFO = {
@@ -38,10 +38,10 @@ IMAGE_FILE_INFO = {
                      'description': 'A free and open-source Linux distribution based on Debian.',
                      'os': 'Ubuntu 16.04'
                      },
-    'AT&T Storage': {'name': 'AT&T Storage', 'filename': 'storage.qcow2', 'filesize': '8.9 GB', 'class': 'Storage',
+    'Cloud Storage': {'name': 'Cloud Storage', 'filename': 'storage.qcow2', 'filesize': '8.9 GB', 'class': 'Storage',
                      'description': 'An AT&T open-source VNF for deduplicated cloud storage.',
                      'os': 'Ubuntu 18.04'},
-    'AT&T Monitor': {'name': 'AT&T Monitor', 'filename': 'monitor.qcow2', 'filesize': '1.4 GB', 'class': 'Monitor',
+    'Online Behavior Management': {'name': 'Online Behavior Management', 'filename': 'monitor.qcow2', 'filesize': '1.4 GB', 'class': 'Monitor',
                      'description': 'An AT&T open-source VNF for traffic monitoring and deep packet inspection (DPI)-based traffic control.',
                      'os': 'Ubuntu 18.04'
                      }
