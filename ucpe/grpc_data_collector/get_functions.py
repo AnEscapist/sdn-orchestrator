@@ -206,7 +206,7 @@ def ovs_list_ports_number(br):
         proc = subprocess.Popen(['ovs-vsctl', 'get', 'Interface', i, 'ofport'], stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
         tmp.append(proc.stdout.read().decode('utf-8').strip())
-    print(tmp)
+    # print(tmp)
     return tmp
 
 

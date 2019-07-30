@@ -20,6 +20,7 @@ message DataRequest {
     string str_param3 = 5;
     string str_param4 = 6;
     string str_param5 = 7;
+    string str_param6 = 8;
 }
 
 message DataResponse {

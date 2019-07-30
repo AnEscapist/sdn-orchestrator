@@ -149,7 +149,7 @@ class UCPEDataServicer(data_pb2_grpc.UCPEDataServicer):
                     f"connecting to bridge {request.str_param1} via {request.str_param4}"
                 print(response.status)
                 proc = modify_functions.ovs_docker_add_port(request.str_param1, request.str_param2, request.str_param3,
-                                                            request.str_param4, request.str_param5)
+                                                            request.str_param4, request.str_param5, request.str_param6)
                 if proc[0]:
                     response.status = f'Interface {request.str_param2} added'
                 else:

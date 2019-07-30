@@ -58,7 +58,7 @@ def ovs_del_port(bridge, vm):
     return True
 
 
-def ovs_docker_add_port(bridge, interface, container, port, ipaddress):
+def ovs_docker_add_port(bridge, interface, container, port, ipaddress, vlan):
     # bridge1 = 'br0'
     bridge1 = bridge
 
@@ -73,6 +73,7 @@ def ovs_docker_add_port(bridge, interface, container, port, ipaddress):
     if ipaddress != '':
         ovsdocker_list.append(f"--ipaddress={ipaddress}")
     subprocess.run(ovsdocker_list)
+    subprocess.run(['ovs-vsctl', 'set', 'port', interface, f'tag={vlan}'])
     return [True, tmp_int]
 
 

@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='data',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\ndata.proto\x12\x04\x64\x61ta\"\x97\x01\n\x0b\x44\x61taRequest\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\x12\x13\n\x0bstr_request\x18\x02 \x01(\t\x12\x12\n\nstr_param1\x18\x03 \x01(\t\x12\x12\n\nstr_param2\x18\x04 \x01(\t\x12\x12\n\nstr_param3\x18\x05 \x01(\t\x12\x12\n\nstr_param4\x18\x06 \x01(\t\x12\x12\n\nstr_param5\x18\x07 \x01(\t\"b\n\x0c\x44\x61taResponse\x12\x0e\n\x06header\x18\x01 \x01(\t\x12\x14\n\x0cstr_response\x18\x02 \x01(\t\x12\x14\n\x0cint_response\x18\x03 \x01(\x05\x12\x16\n\x0e\x66loat_response\x18\x04 \x01(\x02\":\n\x12\x44\x61taChangeResponse\x12\x14\n\x0cstr_response\x18\x01 \x01(\t\x12\x0e\n\x06status\x18\x02 \x01(\t2{\n\x08UCPEData\x12\x32\n\x07GetData\x12\x11.data.DataRequest\x1a\x12.data.DataResponse\"\x00\x12;\n\nModifyData\x12\x11.data.DataRequest\x1a\x18.data.DataChangeResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\ndata.proto\x12\x04\x64\x61ta\"\xab\x01\n\x0b\x44\x61taRequest\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\x12\x13\n\x0bstr_request\x18\x02 \x01(\t\x12\x12\n\nstr_param1\x18\x03 \x01(\t\x12\x12\n\nstr_param2\x18\x04 \x01(\t\x12\x12\n\nstr_param3\x18\x05 \x01(\t\x12\x12\n\nstr_param4\x18\x06 \x01(\t\x12\x12\n\nstr_param5\x18\x07 \x01(\t\x12\x12\n\nstr_param6\x18\x08 \x01(\t\"b\n\x0c\x44\x61taResponse\x12\x0e\n\x06header\x18\x01 \x01(\t\x12\x14\n\x0cstr_response\x18\x02 \x01(\t\x12\x14\n\x0cint_response\x18\x03 \x01(\x05\x12\x16\n\x0e\x66loat_response\x18\x04 \x01(\x02\":\n\x12\x44\x61taChangeResponse\x12\x14\n\x0cstr_response\x18\x01 \x01(\t\x12\x0e\n\x06status\x18\x02 \x01(\t2{\n\x08UCPEData\x12\x32\n\x07GetData\x12\x11.data.DataRequest\x1a\x12.data.DataResponse\"\x00\x12;\n\nModifyData\x12\x11.data.DataRequest\x1a\x18.data.DataChangeResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -81,6 +81,13 @@ _DATAREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='str_param6', full_name='data.DataRequest.str_param6', index=7,
+      number=8, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -94,7 +101,7 @@ _DATAREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=21,
-  serialized_end=172,
+  serialized_end=192,
 )
 
 
@@ -145,8 +152,8 @@ _DATARESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=174,
-  serialized_end=272,
+  serialized_start=194,
+  serialized_end=292,
 )
 
 
@@ -183,8 +190,8 @@ _DATACHANGERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=274,
-  serialized_end=332,
+  serialized_start=294,
+  serialized_end=352,
 )
 
 DESCRIPTOR.message_types_by_name['DataRequest'] = _DATAREQUEST
@@ -221,8 +228,8 @@ _UCPEDATA = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=334,
-  serialized_end=457,
+  serialized_start=354,
+  serialized_end=477,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetData',

@@ -69,7 +69,8 @@ class gRPCDataCollector(object):
     # device driver
     @staticmethod
     def grpc_modify_dpdk_bind(**kwargs):
-        return modify_execute(func_name(), f"dpdk bind {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}", **kwargs)
+        return modify_execute(func_name(), f"dpdk bind {kwargs['body']['str_param1']} {kwargs['body']['str_param2']}",
+                              **kwargs)
 
     @staticmethod
     def grpc_modify_dpdk_unbind(**kwargs):
@@ -97,7 +98,8 @@ class gRPCDataCollector(object):
             kwargs['body']['str_param5'] = ''
         return modify_execute(func_name(), f"ovs_docker add_port {kwargs['body']['str_param1']} "
                                            f"{kwargs['body']['str_param2']} {kwargs['body']['str_param3']} "
-                                           f"{kwargs['body']['str_param4']} {kwargs['body']['str_param5']}", **kwargs)
+                                           f"{kwargs['body']['str_param4']} {kwargs['body']['str_param5']} "
+                                           f"{kwargs['body']['str_param6']}", **kwargs)
 
     @staticmethod
     def grpc_modify_ovs_docker_del_port(**kwargs):
@@ -129,6 +131,8 @@ def interpret_params(input_string, **kwargs):
                     kwargs['body']['str_param4'] = tmp[5]
                     if count > 6:
                         kwargs['body']['str_param5'] = tmp[6]
+                        if count > 7:
+                            kwargs['body']['str_param6'] = tmp[7]
     # print(str(kwargs))
     return kwargs
 
