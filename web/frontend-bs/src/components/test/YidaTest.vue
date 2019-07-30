@@ -74,7 +74,7 @@ export default {
     return {
       block_list_str: '',
       block_list: ['facebook', 'youtube', 'github'],
-      status_list: [false, false, true]
+      status_list: [true, false, true]
     }
 
 
