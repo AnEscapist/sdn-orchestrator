@@ -13,30 +13,30 @@ const vnfSidebar = {
       text: 'Images'
     },
     {
-      to: 'networking',
+      to: 'docker_n',
       icon: 'fas fa-network-wired',
       text: 'Networking'
     },
     {
-      to: 'volume',
+      to: 'docker_v',
       icon: 'fas fa-boxes',
-      text: 'Volume'
+      text: 'Volumes'
     },
-    {
-      to: 'swarm',
-      icon: 'fas fa-users',
-      text: 'Swarm'
-    },
-    {
-      to: 'events',
-      icon: 'fas fa-history',
-      text: 'Event'
-    },
-    {
-      to: 'notifications',
-      icon: 'fas fa-bell',
-      text: 'Notifications'
-    },
+    // {
+    //   to: 'swarm',
+    //   icon: 'fas fa-users',
+    //   text: 'Swarm'
+    // },
+    // {
+    //   to: 'events',
+    //   icon: 'fas fa-history',
+    //   text: 'Event'
+    // },
+    // {
+    //   to: 'notifications',
+    //   icon: 'fas fa-bell',
+    //   text: 'Notifications'
+    // },
   ]
 }
 

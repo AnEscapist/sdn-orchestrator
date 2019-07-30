@@ -10,6 +10,7 @@ const state = {
   vmFilterText: '',
   atLeastOneVMSelected: false,
   vmImagesAvailable: [],
+  vmImageInfo: {},
   vmCreateForm: {
     vCPUsAvailable: 0,
     memoryAvailable: 0,
@@ -46,6 +47,9 @@ const mutations = {
   },
   SET_VM_IMAGES_AVAILABLE(state, payload) {
     state.vmImagesAvailable = payload
+  },
+  SET_VM_IMAGE_INFO(state, payload) {
+    state.vmImageInfo = payload
   },
   SET_VM_BRIDGES_AVAILABLE(state, payload) {
     state.vmBridgesAvailable = payload
@@ -135,6 +139,13 @@ const actions = {
       commit('SET_VM_IMAGES_AVAILABLE', response.data.images)
   })
   },
+  updateVMImageInfo({ commit }) {
+    return axios.get(getURL('/image_info')).then((response) => {
+      console.log("committed")
+      commit('SET_VM_IMAGE_INFO', response.data);
+      console.log(response.data)
+    })
+  },
   updateVMBridgesAvailable({ commit }) {
     return axios.get('/api/grpc/linux_bridge_list').then((response) => {
       commit('SET_VM_BRIDGES_AVAILABLE', eval(response.data.result.return)) //solved all of our problems just now
@@ -166,6 +177,8 @@ const getters = {
   vmMemoryOptions: state => getOneToNArray(state.vmCreateForm.memoryAvailable),
   vmHugepageMemoryOptions: state => getOneToNArray(state.vmCreateForm.hugepageMemoryAvailable),
   vmImagesAvailable: state => state.vmImagesAvailable,
+  vmImageInfo: state => state.vmImageInfo,
+  vmNumberImagesAvailable: state => Object.keys(state.vmImageInfo).length,
   vmBridgesAvailable: state => state.vmBridgesAvailable,
   vmWebServerIPV4: state => state.vmWebServerIPV4, //todo: move this to somewhere reasonable
   vmOVSInterfaceOptions: state => getZeroToNArray(MAX_OVS_INTERFACES)

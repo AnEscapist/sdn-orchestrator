@@ -15,23 +15,23 @@
           </td>
           <td width='250px'>
             <font-awesome-icon :icon="['fas', 'database']" size=sm color='rgb(111, 111, 111)' />
-            10 VNFs -
-            <font-awesome-icon :icon="['fas', 'heartbeat']" size=sm color='rgb(81, 164, 81)' />
-            6
-            <font-awesome-icon :icon="['fas', 'heartbeat']" size=sm color='rgb(237, 187, 66)' />
-            3
-            <font-awesome-icon :icon="['fas', 'heartbeat']" size=sm color='rgb(204, 68, 74)' />
-            1
+            {{vnfCount}} VNFs
+<!--            <font-awesome-icon :icon="['fas', 'heartbeat']" size=sm color='rgb(81, 164, 81)' />-->
+<!--            6-->
+<!--            <font-awesome-icon :icon="['fas', 'heartbeat']" size=sm color='rgb(237, 187, 66)' />-->
+<!--            3-->
+<!--            <font-awesome-icon :icon="['fas', 'heartbeat']" size=sm color='rgb(204, 68, 74)' />-->
+<!--            1-->
 <!--            todo: add tooltips on hover-->
           </td>
-          <td width='120px'>
-            <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' />
-            23 Images
-          </td>
-          <td>
-            <font-awesome-icon :icon="['fas', 'microchip']" size=sm color='rgb(111, 111, 111)' />
-            16 CPUs
-          </td>
+<!--          <td width='120px'>-->
+<!--            <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' />-->
+<!--            23 Images-->
+<!--          </td>-->
+<!--          <td>-->
+<!--            <font-awesome-icon :icon="['fas', 'microchip']" size=sm color='rgb(111, 111, 111)' />-->
+<!--            16 CPUs-->
+<!--          </td>-->
         </tr>
         <tr>
           <td width='30px'></td>
@@ -50,10 +50,13 @@
 </template>
 
 <script>
+  import {mapGetters, mapActions} from 'vuex'
     export default {
         name: "VNFSummaryPanel",
         components:{
-
+        },
+        computed: {
+          ...mapGetters(['vnfList', 'vnfCount'])
         }
     }
 </script>

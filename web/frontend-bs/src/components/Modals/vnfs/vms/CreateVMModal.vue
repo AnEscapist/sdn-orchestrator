@@ -151,7 +151,6 @@
               <b-button block
                         href="#"
                         v-b-toggle.accordion-1
-                        @click="onOVSVLANClick"
                         variant="primary">OVS VLAN Configuration
               </b-button>
             </b-card-header>
@@ -179,7 +178,8 @@
                 <b-input
                   id="inline-form-input-name"
                   class="col-md-3"
-                  placeholder="1-4094"
+                  :placeholder="MIN_VLAN_TAG + '-' + MAX_VLAN_TAG"
+                  maxlength="4"
                   v-model="ovsInterface.vlan"
                 ></b-input>
                 <div class="text-danger">
@@ -300,6 +300,9 @@
       },
       clearForm() {
         this.form.vmName = "";
+        this.form.vmOVSInterfaceVLANs.map((x, index) => {
+          x.vlan = '';
+        })
       },
       onShow() {
         this.updateVMVCPUsAvailable();

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div :id="params.data.name + 'ConsoleButtonWrapper'">
     <button type="button"
             :disabled="params.data.state !== 'Running'"
             class="btn btn-primary btn-sm"
@@ -19,6 +20,10 @@
       </span>
       {{params.data.name}}
     </button>
+  </div>
+<!--    <b-tooltip :target="params.data.name + 'ConsoleButtonWrapper'"-->
+<!--               title="You must enable hugepage memory to add OVS Interfaces."-->
+<!--               :disabled="params.data.state === 'Running'"></b-tooltip>-->
   </div>
 </template>
 
