@@ -4,6 +4,7 @@
       <VNFSummaryPanel></VNFSummaryPanel>
       <RogerTest></RogerTest>
       <ZhengqiTest></ZhengqiTest>
+      <!-- <YidaTest></YidaTest> -->
       <!--      <SampleCard></SampleCard>-->
       <!--      todo: notifications fo VNF status changes-->
     </div>
@@ -17,11 +18,12 @@
   import VNFInfoPanel from './VNFInfoPanel'
   import ZhengqiTest from '../../components/test/ZhengqiTest'
   import RogerTest from '../../components/test/RogerTest'
+  import YidaTest from '../../components/test/YidaTest'
 
   export default {
     name: 'VNFDashboard',
     components: {
-      Card, SampleCard, VNFSummaryPanel, VNFInfoPanel, ZhengqiTest, RogerTest
+      Card, SampleCard, VNFSummaryPanel, VNFInfoPanel, ZhengqiTest, RogerTest, YidaTest
     },
     data() {
       return {

@@ -132,6 +132,14 @@
                   <input v-model='int_ip' placeholder="e.g.: 10.10.81.123/24, 10.10.81.155/24" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                 </div>
               </td>
+              <td width='33%'>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">VLAN tag</span>
+                  </div>
+                  <input v-model='vlan_tag' placeholder="e.g.: 100, 101" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                </div>
+              </td>
 
             </tr>
           </table>
@@ -149,7 +157,7 @@
             </td>
             <td>
 
-              <button type="button" class="btn btn-primary btn-sm" @click='create_container(create_name, create_image, create_port, int_port, int_ip)'>
+              <button type="button" class="btn btn-primary btn-sm" @click='create_container(create_name, create_image, create_port, int_port, int_ip, vlan_tag)'>
                 Create
               </button>
             </td>
@@ -196,6 +204,7 @@ export default {
       // ovs_int: '',
       int_port: '',
       int_ip: '',
+      vlan_tag: '',
 
 
     }
@@ -285,7 +294,7 @@ export default {
     },
 
 
-    create_container(create_name, create_image, create_port, int_port, int_ip) {
+    create_container(create_name, create_image, create_port, int_port, int_ip, vlan_tag) {
       // console.log(create_port)
       this.axios.get('/api/docker/create_container', {
         params: {
@@ -300,6 +309,7 @@ export default {
         // add ovs interfaces and set the ports and ip addresses
         var int_port_list = int_port.split(',')
         var int_ip_list = int_ip.split(',')
+        var vlan_tag_list = vlan_tag.split(',')
         var i;
         for (i = 0; i < int_port_list.length; i++) {
 
@@ -309,6 +319,7 @@ export default {
               ovs_int: create_name + '_eth' + i,
               int_port: int_port_list[i].trim(),
               int_ip: int_ip_list[i].trim(),
+              vlan_tag: vlan_tag_list[i].trim(),
               create_name: create_name,
             }
           }).then(response => {
