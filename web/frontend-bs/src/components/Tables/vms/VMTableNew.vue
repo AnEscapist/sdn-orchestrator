@@ -59,7 +59,7 @@
           { headerName: 'Image', field: 'image', sortable: true },
           { headerName: 'Memory Usage', field: 'memory usage', sortable: true },
           { headerName: 'Memory Allocated', field: 'memory allocated', sortable: true },
-          { headerName: 'CPUs', field: 'cpus', sortable: true },
+          { headerName: 'vCPUs', field: 'cpus', sortable: true },
           { headerName: 'Console', cellRendererFramework: VMConsoleRenderer },
         ],
         gridOptions: {

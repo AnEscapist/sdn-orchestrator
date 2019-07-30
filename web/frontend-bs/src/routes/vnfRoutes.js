@@ -5,6 +5,7 @@ import VNFLayout from '../layout/vnfs/VNFLayout'
 import VNFDashboard from '../pages/vnfs/VNFDashboard'
 import VNFImages from '../pages/vnfs/VNFImages'
 import dockerRoutes from './dockerRoutes'
+import vmRoutes from './vmRoutes'
 
 const vnfRoutes = [
   {
@@ -25,6 +26,7 @@ const vnfRoutes = [
         component: VNFImages
       },
       ...dockerRoutes,
+      ...vmRoutes
     ]
   },
 ];

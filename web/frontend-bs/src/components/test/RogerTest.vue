@@ -9,7 +9,7 @@
 <!--      <VMTableOld/>-->
 <!--      <AgTableExample class="centered-table"/>-->
       <font-awesome-icon :icon="['fas', 'cubes']" size=lg color='rgb(111, 111, 111)' />
-      <strong> VNF Control Panel </strong>
+      <strong> VM Control Panel </strong>
 <!--      <span class="badge badge-success">Running</span>-->
       <hr>
       <VMTableNew class="centered-table"/>
@@ -32,6 +32,7 @@
     created() {
       this.$store.dispatch('updateContainerList');
       this.$store.dispatch('updateVMInfo');
+      this.$store.dispatch('updateVMImageInfo');
     },
     computed: {
       ...mapGetters([

@@ -39,10 +39,10 @@ IMAGE_FILE_INFO = {
                      'os': 'Ubuntu 16.04'
                      },
     'AT&T Storage': {'name': 'AT&T Storage', 'filename': 'storage.qcow2', 'filesize': '8.9 GB', 'class': 'Storage',
-                     'description': 'An AT&T proprietary VNF for storing data and uploading it to the cloud using open-source deduplication.',
+                     'description': 'An AT&T open-source VNF for deduplicated cloud storage.',
                      'os': 'Ubuntu 18.04'},
     'AT&T Monitor': {'name': 'AT&T Monitor', 'filename': 'monitor.qcow2', 'filesize': '1.4 GB', 'class': 'Monitor',
-                     'description': 'An AT&T proprietary VNF for traffic monitoring and deep packet inspection (DPI)-based traffic control.',
+                     'description': 'An AT&T open-source VNF for traffic monitoring and deep packet inspection (DPI)-based traffic control.',
                      'os': 'Ubuntu 18.04'
                      }
 }

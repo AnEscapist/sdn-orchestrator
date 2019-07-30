@@ -1,7 +1,7 @@
 <template>
   <div class="block btn-group mt-2"
        role="group"
-       aria-label="Create VNF"
+       aria-label="Create VM"
   >
     <button
       v-if="loading"
@@ -21,7 +21,7 @@
       <font-awesome-icon :icon="['fas', 'plus-circle']"
                          size=sm
                          color='rgb(255, 255, 255)'/>
-      New VNF
+      New VM
     </button>
     <CreateVMModal
       @vm-create-load="onCreateLoad"
