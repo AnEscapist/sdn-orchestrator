@@ -209,7 +209,7 @@ def prepare_vm_console(controller_id, ucpe_sn, vm_name):
     # print('before', kill_subprocess.before)
     # print('after', kill_subprocess.after)
     # print("starting sleep")
-    time.sleep(1)  # todo: remove the need for this
+    time.sleep(3)  # todo: remove the need for this
     # print("ending sleep")
     # result = prepare_vm_console_helper(HOST_IP, vnc_port)
     prepare_vm_console_helper(HOST_IP, ucpe_vnc_port, local_vnc_port)
