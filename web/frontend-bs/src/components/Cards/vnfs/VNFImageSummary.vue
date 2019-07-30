@@ -9,12 +9,16 @@
         <tr>
           <td width='30px'></td>
           <td width='100px'>
-            <font-awesome-icon :icon="['fas', 'info-circle']" size=lg color='rgb(111, 111, 111)' />
+            <font-awesome-icon :icon="['fas', 'info-circle']"
+                               size=lg
+                               color='rgb(111, 111, 111)'/>
             <strong> Info: </strong>
           </td>
           <td width='120px'>
-            <font-awesome-icon :icon="['fas', 'clone']" size=sm color='rgb(111, 111, 111)' />
-            23 Images
+            <font-awesome-icon :icon="['fas', 'clone']"
+                               size=sm
+                               color='rgb(111, 111, 111)'/>
+            {{vmNumberImagesAvailable}} Images
           </td>
         </tr>
         <tr>
@@ -26,9 +30,16 @@
 </template>
 
 <script>
-    export default {
-        name: "VNFImageSummary",
-    }
+  import { mapGetters, mapActions } from 'vuex'
+
+  export default {
+    name: "VNFImageSummary",
+    computed: {
+      ...mapGetters([
+        'vmNumberImagesAvailable'
+      ])
+    },
+  }
 </script>
 
 <style scoped>
