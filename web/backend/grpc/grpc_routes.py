@@ -137,10 +137,12 @@ def ovs_docker_add_port():
     port = request.args.get('int_port')
     # print(port)
     ipaddress = request.args.get('int_ip')
+    vlan = request.args.get('vlan_tag')
     # print(ipaddress)
     messagedata = {"method": "grpc_modify_ovs_docker_add_port", "params": {
         "body": {"hostname": "10.10.81.100", "port": "50051", "str_param1": f'{bridge}', "str_param2": f'{interface}',
-                 "str_param3": f'{container}', "str_param4": f'{port}', "str_param5": f'{ipaddress}'}},
+                 "str_param3": f'{container}', "str_param4": f'{port}', "str_param5": f'{ipaddress}',
+                 "str_param6": f'{vlan}'}},
         "jsonrpc": "2.0", "id": 0
     }
     return jsonify(call_ucpe_function(messagedata))
