@@ -225,7 +225,7 @@ def prepare_vm_console_helper(hostname, ucpe_vnc_port, local_vnc_port):
 
         def launch_console():
             print("in launch console")
-            launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
+            launch_script_path = '../../utilities/novnc/utils/launch.sh'
             vnc_subprocess = pexpect.spawn(f'{launch_script_path} --vnc {hostname}:{ucpe_vnc_port}',
                                            timeout=None)  # timeout=None means wait indefinitely
             # vnc_subprocess.expect('vnc.html')
