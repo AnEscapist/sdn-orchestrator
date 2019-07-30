@@ -105,7 +105,7 @@ def get_file_basename_no_extension(filepath):
     return basename_no_ext
 
 def ovs_interface_names_from_vm_name(vm_name, ovs_interface_count):
-    return ['_'.join(['vm',vm_name,'eth'+str(k)]) for k in range(ovs_interface_count)]
+    return ['_'.join([vm_name,'vmeth'+str(k)]) for k in range(ovs_interface_count)]
 
 def state(libvirt_domain):
     return VMState(libvirt_domain.state()[0])
