@@ -51,9 +51,8 @@ def ovs_add_port(bridge, if_port, type, vlan):
 
 
 def ovs_del_port(bridge, vm):
-    vm1 = f'vm_{vm}'
     for i in get_functions.ovs_list_ports(bridge):
-        if i.rsplit('_', 1)[0] == vm1:
+        if i.rsplit('_', 1)[0] == vm and "vm" in i.rsplit('_', 1)[1]:
             subprocess.run(['sudo', 'ovs-vsctl', 'del-port', bridge, i])
     return True
 
