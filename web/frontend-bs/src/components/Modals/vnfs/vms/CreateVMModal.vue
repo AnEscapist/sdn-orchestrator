@@ -318,6 +318,9 @@
       },
       onHugepageToggle() {
         this.checkForMemoryError();
+        if(!this.hugepagesEnabled){
+          this.form.vmOVSInterfaceCount = 0;
+        }
       },
       onOVSInterfaceSelectChange() {
         // this.vmOVSInterfaceVLANs = this.ovsInterfaces.map(x => {return {vlan: ''}})
