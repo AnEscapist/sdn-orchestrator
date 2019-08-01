@@ -65,16 +65,16 @@ def ovs_docker_add_port(bridge, interface, container, port, ipaddress, vlan):
     tmp_var = get_functions.ovs_list_ports_number(bridge1)
     tmp_int = int(port)
     # print(tmp_int)
-    while port in tmp_var:
+    if port in tmp_var:
         tmp_int = tmp_int + 1
-    tmp_num = str(tmp_int)
-    # print(tmp_num)
-    ovsdocker_list = ['sudo', '/usr/local/bin/ovs-docker', 'add-port', bridge1, interface, container, tmp_num]
-    if ipaddress != '':
-        ovsdocker_list.append(f"--ipaddress={ipaddress}")
-    subprocess.run(ovsdocker_list)
-    subprocess.run(['ovs-vsctl', 'set', 'port', interface, f'tag={vlan}'])
-    return [True, tmp_int]
+        return ovs_docker_add_port(bridge, interface, container, str(tmp_int), ipaddress, vlan)
+    else:
+        ovsdocker_list = ['sudo', '/usr/local/bin/ovs-docker', 'add-port', bridge1, interface, container, port]
+        if ipaddress != '':
+            ovsdocker_list.append(f"--ipaddress={ipaddress}")
+        subprocess.run(ovsdocker_list)
+        subprocess.run(['ovs-vsctl', 'set', 'port', interface, f'tag={vlan}'])
+        return [True, port]
 
 
 def ovs_docker_del_port(bridge, container):

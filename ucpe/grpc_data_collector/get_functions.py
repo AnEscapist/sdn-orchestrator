@@ -3,6 +3,7 @@ from concurrent import futures
 import os
 import sys
 import time
+import datetime
 import json
 import subprocess
 
@@ -268,7 +269,26 @@ def cpu_percent():
 
 
 def mem_percent():
-    return dict(psutil.virtual_memory()._asdict())
+    p = dict(psutil.virtual_memory()._asdict())
+    return_val = p['percent']
+    return return_val
+
+
+def collect_data(time_length):
+    script_dir = os.path.dirname(__file__)
+    fp = os.path.join(script_dir, 'json/host_collect.json')
+    with open(fp, 'r') as json_file:
+        data = json.load(json_file)
+        for x in range(0, time_length):
+            data['body'].append({
+                'date': datetime.date.today(),
+                'time': datetime.datetime.utcnow(),
+                'cpu_usage': cpu_percent(),
+                'mem_percent': mem_percent()
+            })
+            time.sleep(1)
+    with open(fp, 'w') as outfile:
+        json.dump(data, outfile)
 
 
 def main():

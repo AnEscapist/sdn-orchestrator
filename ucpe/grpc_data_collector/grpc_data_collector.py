@@ -160,11 +160,11 @@ def modify_execute(name, input_string, **kwargs):
 
 
 def main():
-    kwargs = {'body': {'str_param1': 'br0', 'str_param2': 'abcd', 'str_param3': 'dpdkvhostuser', 'str_param4': '6',
-                       'str_param5': '10.10.81.155/24'}}
+    kwargs = {'body': {'str_param1': 'br0', 'str_param2': 'storage_eth0', 'str_param3': 'storage', 'str_param4': '1',
+                       'str_param5': '10.10.82.155/24', 'str_param6': '100'}}
     tmp = gRPCDataCollector()
     # print(tmp.grpc_get_linux_bridge_details(**kwargs))
-    print(tmp.grpc_modify_ovs_add_port(**kwargs))
+    print(tmp.grpc_modify_ovs_docker_add_port(**kwargs))
 
 
 if __name__ == '__main__':
