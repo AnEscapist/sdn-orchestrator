@@ -333,7 +333,7 @@
         this.formErrors.nameExceedsCharLimit = this.form.vmName.length > this.charLimit;
         this.formErrors.nameIsEmpty = this.form.vmName.length === 0;
       },
-      validateVLANs(){
+      validateVLANs() {
         this.formErrors.vlanError = this.vmOVSInterfaceVLANInvalidTag.some(x => x)
       }
     },
@@ -343,15 +343,15 @@
       },
       vmOVSInterfaceVLANsExtracted: {
         handler(newValue) {
-          newValue.map((x,index) => {
-            let valid = x !== '' && (isNaN(x) || parseInt(x) != x || !(this.MIN_VLAN_TAG <= parseInt(x) && parseInt(x) <= this.MAX_VLAN_TAG ));
+          newValue.map((x, index) => {
+            let valid = x !== '' && (isNaN(x) || parseInt(x) != x || !(this.MIN_VLAN_TAG <= parseInt(x) && parseInt(x) <= this.MAX_VLAN_TAG));
             Vue.set(this.vmOVSInterfaceVLANInvalidTag, index, valid);
           })
         },
         deep: true
       },
       vmOVSInterfaceVLANInvalidTag: {
-        handler(newValue){
+        handler(newValue) {
           this.validateVLANs();
         },
         deep: true
