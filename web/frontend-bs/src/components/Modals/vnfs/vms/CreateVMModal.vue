@@ -6,7 +6,7 @@
 <template>
   <div>
     <b-modal
-      ok-title="Create VNF"
+      ok-title="Create VM"
       @show="onShow"
       @ok="onCreateVNF"
       :ok-disabled="!isFormValid"
@@ -27,7 +27,7 @@
           <!--            <label for="inputPassword4">Password</label>-->
           <!--            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">-->
           <!--          </div>-->
-          <label for="vmName">VNF Name</label>
+          <label for="vmName">VM Name</label>
           <input
             class="form-control"
             v-model="form.vmName"

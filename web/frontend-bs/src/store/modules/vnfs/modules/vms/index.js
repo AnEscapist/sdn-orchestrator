@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {parseMemoryIntGBFromBytes, getZeroToNArray, getOneToNArray} from '@/utils/vmUtils'
+import { parseMemoryIntGBFromBytes, getZeroToNArray, getOneToNArray } from '@/utils/vmUtils'
 
 const AGENT_NAME = 'agent';
 
@@ -17,7 +17,13 @@ const state = {
     hugepageMemoryAvailable: 0,
   },
   vmBridgesAvailable: [],
-  vmWebServerIPV4: ''
+  vmWebServerIPV4: '',
+  vmCounts: {
+    total: 0,
+    running: 0,
+    paused: 0,
+    shutdown: 0
+  }
 };
 
 const mutations = {
@@ -26,6 +32,18 @@ const mutations = {
   },
   SET_VM_INFO(state, payload) {
     state.vmInfo = payload;
+  },
+  SET_VM_TOTAL_COUNT(state, payload) {
+    state.vmCounts.total = payload
+  },
+  SET_VM_RUNNING_COUNT(state, payload) {
+    state.vmCounts.running = payload
+  },
+  SET_VM_PAUSED_COUNT(state, payload) {
+    state.vmCounts.paused = payload
+  },
+  SET_VM_SHUTDOWN_COUNT(state, payload) {
+    state.vmCounts.shutdown = payload
   },
   SET_VM_SELECTION(state, payload) {
     state.vmSelection = payload
@@ -54,7 +72,7 @@ const mutations = {
   SET_VM_BRIDGES_AVAILABLE(state, payload) {
     state.vmBridgesAvailable = payload
   },
-  SET_VM_WEB_SERVER_IPV4(state, payload){
+  SET_VM_WEB_SERVER_IPV4(state, payload) {
     state.vmWebServerIPV4 = payload
   }
 };
@@ -64,20 +82,34 @@ const ucpe_sn = "test-sn";
 const URL_PREFIX = `/api/vms/`;
 const URL_SUFFIX = `/${controller_id}/${ucpe_sn}`;
 
+const vmStates = {
+  RUNNING: 'Running',
+  PAUSED: 'Paused',
+  SHUTDOWN: 'Shutoff',
+};
+
 const actions = {
   updateVMInfo({ commit }, token) {
     axios.get(getURL('all_vm_info')).then((response) => {
         let vmInfo = response.data.result.return;
         let vmNames = Object.keys(vmInfo);
-        commit('SET_VM_INFO', vmNames
+        let vmInfoNoAgent = vmNames
           .filter(vmName => vmName !== AGENT_NAME)
           .reduce((obj, vmName) => {
             return {
               ...obj,
               [vmName]: vmInfo[vmName]
             }
-          }, {})
-        );
+          }, {});
+        commit('SET_VM_INFO', vmInfoNoAgent);
+        let totalCount = Object.values(vmInfoNoAgent).length;
+        let runningCount = Object.values(vmInfoNoAgent).map(x => x.state === vmStates.RUNNING).reduce((x, y) => x + y, 0);
+        let pausedCount = Object.values(vmInfoNoAgent).map(x => x.state === vmStates.PAUSED).reduce((x, y) => x + y, 0);
+        let shutdownCount = Object.values(vmInfoNoAgent).map(x => x.state === vmStates.SHUTDOWN).reduce((x, y) => x + y, 0);
+        commit('SET_VM_TOTAL_COUNT', totalCount);
+        commit('SET_VM_RUNNING_COUNT', runningCount);
+        commit('SET_VM_PAUSED_COUNT', pausedCount);
+        commit('SET_VM_SHUTDOWN_COUNT', shutdownCount);
         commit('SET_VM_LIST', vmNames)
       }
     ).catch(err => console.log(err))
@@ -137,7 +169,7 @@ const actions = {
   updateVMImagesAvailable({ commit }) {
     return axios.get(getURL('/images')).then((response) => {
       commit('SET_VM_IMAGES_AVAILABLE', response.data.images)
-  })
+    })
   },
   updateVMImageInfo({ commit }) {
     return axios.get(getURL('/image_info')).then((response) => {
@@ -151,12 +183,12 @@ const actions = {
       commit('SET_VM_BRIDGES_AVAILABLE', eval(response.data.result.return)) //solved all of our problems just now
     })
   },
-  updateVMWebServerIPV4({commit}){
+  updateVMWebServerIPV4({ commit }) {
     return axios.get('/api/utils/ipv4').then((response) => {
       commit('SET_VM_WEB_SERVER_IPV4', response.data.ipv4)
     })
   },
-  prepareVMConsole({commit}, vm_name){
+  prepareVMConsole({ commit }, vm_name) {
     console.log("prepare vm console called")
     return axios.get(getURL('console') + `/${vm_name}`)
   },
@@ -167,6 +199,7 @@ const MAX_OVS_INTERFACES = 4;
 const getters = {
   vmList: state => state.vmList,
   vmInfo: state => state.vmInfo,
+  vmCounts: state => state.vmCounts,
   vmSelection: state => state.vmSelection,
   // vmState: (state, vmName) => state.vmInfo[vmName]["state"]
   vmFilterText: state => state.vmFilterText,

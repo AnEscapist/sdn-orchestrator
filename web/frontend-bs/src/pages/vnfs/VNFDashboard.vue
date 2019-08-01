@@ -2,7 +2,7 @@
   <div class="content">
     <div class="container-fluid">
       <VNFSummaryPanel></VNFSummaryPanel>
-      <RogerTest></RogerTest>
+<!--      <RogerTest></RogerTest>-->
       <ZhengqiTest></ZhengqiTest>
       <!-- <YidaTest></YidaTest> -->
       <!--      <SampleCard></SampleCard>-->

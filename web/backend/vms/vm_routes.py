@@ -25,8 +25,8 @@ IMAGE_ACTIVE_PATH = '/var/third-party/active'
 IMAGE_FILES = {
     'Vyatta Router': 'vyatta.qcow2',
     'Ubuntu 16.04': 'ubuntu_16.qcow2',
-    'AT&T Storage': 'storage.qcow2',
-    'AT&T Monitor': 'monitor.qcow2'
+    'Cloud Storage': 'storage.qcow2',
+    'Online Behavior Management': 'monitor.qcow2'
 }
 
 IMAGE_FILE_INFO = {
@@ -38,11 +38,11 @@ IMAGE_FILE_INFO = {
                      'description': 'A free and open-source Linux distribution based on Debian.',
                      'os': 'Ubuntu 16.04'
                      },
-    'AT&T Storage': {'name': 'AT&T Storage', 'filename': 'storage.qcow2', 'filesize': '8.9 GB', 'class': 'Storage',
-                     'description': 'An AT&T proprietary VNF for storing data and uploading it to the cloud using open-source deduplication.',
+    'Cloud Storage': {'name': 'Cloud Storage', 'filename': 'storage.qcow2', 'filesize': '8.9 GB', 'class': 'Storage',
+                     'description': 'An AT&T open-source VNF for deduplicated cloud storage.',
                      'os': 'Ubuntu 18.04'},
-    'AT&T Monitor': {'name': 'AT&T Monitor', 'filename': 'monitor.qcow2', 'filesize': '1.4 GB', 'class': 'Monitor',
-                     'description': 'An AT&T proprietary VNF for traffic monitoring and deep packet inspection (DPI)-based traffic control.',
+    'Online Behavior Management': {'name': 'Online Behavior Management', 'filename': 'monitor.qcow2', 'filesize': '1.4 GB', 'class': 'Monitor',
+                     'description': 'An AT&T open-source VNF for traffic monitoring and deep packet inspection (DPI)-based traffic control.',
                      'os': 'Ubuntu 18.04'
                      }
 }
@@ -209,7 +209,7 @@ def prepare_vm_console(controller_id, ucpe_sn, vm_name):
     # print('before', kill_subprocess.before)
     # print('after', kill_subprocess.after)
     # print("starting sleep")
-    time.sleep(1)  # todo: remove the need for this
+    time.sleep(3)  # todo: remove the need for this
     # print("ending sleep")
     # result = prepare_vm_console_helper(HOST_IP, vnc_port)
     prepare_vm_console_helper(HOST_IP, ucpe_vnc_port, local_vnc_port)
@@ -225,7 +225,7 @@ def prepare_vm_console_helper(hostname, ucpe_vnc_port, local_vnc_port):
 
         def launch_console():
             print("in launch console")
-            launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
+            launch_script_path = '../../utilities/novnc/utils/launch.sh'
             vnc_subprocess = pexpect.spawn(f'{launch_script_path} --vnc {hostname}:{ucpe_vnc_port}',
                                            timeout=None)  # timeout=None means wait indefinitely
             # vnc_subprocess.expect('vnc.html')
