@@ -141,6 +141,7 @@ def inspect_container():
 
 @docker_routes.route('/docker/commit')
 def commit():
+    id_name = request.args.get('id_name')
     repo = request.args.get('repo')
     tag = request.args.get('tag')
     messagedata = {"method": "docker_controller_commit", "params": {
@@ -226,13 +227,15 @@ def console_container():
 
     # path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-consol/index.html'
     path = 'http://' + ip + ':8080/console.html' #ip address of the server
-    # webbrowser.open(path, new=1)
+
     # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
     # code = os.system(stop_port)
     # print(code)
+
     webbrowser.open(path, new=1)
     cmd = 'sudo node ../docker-browser-console/server.js ' + container_id
     os.system(cmd)
+    print(cmd)
     return f'{cmd}.'
 
 @docker_routes.route('/docker/kill_port')

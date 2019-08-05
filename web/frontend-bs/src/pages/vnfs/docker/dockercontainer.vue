@@ -181,10 +181,10 @@
       <br>
       <tr>
         <td width='20%'>
-            <form class="form-inline">
-              <strong style="font-size:15px">Image: &nbsp</strong>
-              <input type="text" placeholder="e.g. repo:tag" v-model='commit_img'>
-            </form>
+          <form class="form-inline">
+            <strong style="font-size:15px">Image: &nbsp</strong>
+            <input type="text" placeholder="e.g. repo:tag" v-model='commit_img'>
+          </form>
         </td>
         <td width='50%'></td>
 
@@ -404,20 +404,23 @@ export default {
 
     goConsole(id) {
       this.port_listening = 'yes'
+      // var url = 'http://10.10.81.9:8080/console.html'
+
       //
       this.axios.get('/api/docker/kill_port').then(response => {
-        // console.log(response)
-
+        // window.open(url, '_blank')
         this.axios.get('/api/docker/console_container', {
           params: {
             container_id: id
-          }
+          },
         }).then(response => {
           // console.log('response', response)
           // this.reload()
         })
 
       })
+
+
 
       // var path = '/#/ucpe/123/vnfs/dockercontainer?short_id=' + this.short_id
       // var path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-console/index.html'
@@ -438,27 +441,26 @@ export default {
       })
     },
 
-    commit(commit_img){
-        var repo;
-        var tag;
-        if(commit_img.includes(':')){
-            repo = commit_img.split(':')[0]
-            tag = commit_img.split(':')[1]
-        }else {
-            repo = commit_img
-            tag = 'latest'
+    commit(commit_img) {
+      var repo;
+      var tag;
+      if (commit_img.includes(':')) {
+        repo = commit_img.split(':')[0]
+        tag = commit_img.split(':')[1]
+      } else {
+        repo = commit_img
+        tag = 'latest'
+      }
+      this.axios.get('/api/docker/commit', {
+        params: {
+          id_name: this.name,
+          repo: repo,
+          tag: tag
         }
-        console.log('repo', repo)
-        console.log('tag', tag)
-        this.axios.get('/api/docker/commit', {
-            params: {
-                id_name: this.name,
-                repo: repo,
-                tag: tag
-            }
-        }).then(response => {
-            console.log(response)
-        })
+      }).then(response => {
+        // console.log(response)
+        this.showCom = false
+      })
     },
 
     setBtn(status) {
