@@ -239,7 +239,9 @@
         vmOVSInterfaceVLANInvalidTag: [], //todo: extract vlan config into its own component and do events instead of v-model
         charLimit: 15, //todo: make this a constant
         MIN_VLAN_TAG: 1,
-        MAX_VLAN_TAG: 4094
+        MAX_VLAN_TAG: 4094,
+        vmOVSInterfaceVLANsCache: [],
+        vmOVSInterfaceCountCache: 0
       }
     },
     computed: {
@@ -318,7 +320,21 @@
       },
       onHugepageToggle() {
         this.checkForMemoryError();
-        if(!this.hugepagesEnabled){
+        console.log("toggle called");
+        if(this.form.hugepagesEnabled){
+          console.log("hugepages enabled");
+          console.log(this.vmOVSInterfaceCountCache);
+          console.log(this.vmOVSInterfaceVLANsCache);
+          new Promise((resolve) => {resolve(this.form.vmOVSInterfaceCount = this.vmOVSInterfaceCountCache);
+          }).then(() => {
+            console.log('330', this.form.vmOVSInterfaceVLANs);
+          for (let i = 0; i < this.vmOVSInterfaceCountCache; i++){
+            // Vue.set(this.form.vmOVSInterfaceVLANs, i, {'vlan': this.vmOVSInterfaceVLANsCache[i]});
+            this.form.vmOVSInterfaceVLANs[i].vlan = this.vmOVSInterfaceVLANsCache[i]
+          }}
+        ).then(() => console.log(this.form.vmOVSInterfaceVLANs))
+        }
+        else{
           this.form.vmOVSInterfaceCount = 0;
         }
       },
@@ -349,6 +365,7 @@
           newValue.map((x, index) => {
             let valid = x !== '' && (isNaN(x) || parseInt(x) != x || !(this.MIN_VLAN_TAG <= parseInt(x) && parseInt(x) <= this.MAX_VLAN_TAG));
             Vue.set(this.vmOVSInterfaceVLANInvalidTag, index, valid);
+            Vue.set(this.vmOVSInterfaceVLANsCache, index, x);
           })
         },
         deep: true
@@ -361,9 +378,15 @@
       }
       ,
       vmOVSInterfaceCount(newVal, oldVal) {
+        if (this.form.hugepagesEnabled){
+          this.vmOVSInterfaceCountCache = this.form.vmOVSInterfaceCount
+        }
         if (newVal > oldVal) {
           for (let i = 0; i < newVal - oldVal; i++) {
             this.form.vmOVSInterfaceVLANs.push({ vlan: '' });
+            if (i > this.vmOVSInterfaceVLANsCache.length){
+              this.vmOVSInterfaceVLANsCache.push({vlan: '59'})
+            }
             this.vmOVSInterfaceVLANInvalidTag.push(false)
           }
         }
