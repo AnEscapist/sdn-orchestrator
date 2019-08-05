@@ -8,6 +8,5 @@ util_routes = Blueprint('utils', __name__)
 
 @util_routes.route('/ipv4')
 def utils_get_ipv4():
-    hostname = socket.gethostname()
-    ipv4 = socket.gethostbyname(hostname)
+    ipv4 = socket.gethostbyname(socket.getfqdn())
     return jsonify(ipv4=ipv4)

@@ -22,12 +22,12 @@ JSON_RPC_ID = 0  # todo: ask tyler what id to put
 
 IMAGE_ACTIVE_PATH = '/var/third-party/active'
 # todo: put these in a database
-IMAGE_FILES = {
-    'Vyatta Router': 'vyatta.qcow2',
-    'Ubuntu 16.04': 'ubuntu_16.qcow2',
-    'Cloud Storage': 'storage.qcow2',
-    'Online Behavior Management': 'monitor.qcow2'
-}
+# IMAGE_FILES = {
+#     'Vyatta Router': 'vyatta.qcow2',
+#     'Ubuntu 16.04': 'ubuntu_16.qcow2',
+#     'Cloud Storage': 'storage.qcow2',
+#     'Online Behavior Management': 'monitor.qcow2'
+# }
 
 IMAGE_FILE_INFO = {
     'Vyatta Router': {'name': 'Vyatta Router', 'filename': 'vyatta.qcow2', 'filesize': '0.4 GB', 'class': 'Router',
@@ -67,13 +67,13 @@ def all_vm_info(controller_id, ucpe_sn):
     return jsonify(response)
 
 
-def reverse_dict(dictionary):
-    # todo: this is pretty bad
-    return {dictionary[key]: key for key in dictionary}
+def imagefile_dict(image_info_dictionary):
+    filename_key = 'filename'
+    return {image_info_dictionary[key][filename_key]: key for key in image_info_dictionary}
 
 
 def rename_images(response):
-    reverse_image_dict = reverse_dict(IMAGE_FILES)
+    reverse_image_dict = imagefile_dict(IMAGE_FILE_INFO)
     info_dict = response['result']['return']
     for vm_name in info_dict:
         image = info_dict[vm_name]['image'] + ".qcow2"
@@ -135,7 +135,7 @@ def create_vm(controller_id, ucpe_sn):
         if vlans[i] == '':
             vlans[i] = UNTAGGED_VLAN_INDICATOR  # todo: change this to a map
     create_vm_ovs_interfaces(form['vmName'], int(form['vmOVSInterfaceCount']), vlans)
-    image_file = IMAGE_FILES[form['vmImage']]
+    image_file = IMAGE_FILE_INFO[form['vmImage']]['filename']
     image_path = os.path.join(IMAGE_ACTIVE_PATH, form['vmName'], image_file)
     body = {
         "username": HOST_USERNAME,
@@ -174,7 +174,7 @@ def create_vm_ovs_interfaces(vm_name, number_of_interfaces, vlans):
 
 @vm_routes.route('/images/<controller_id>/<ucpe_sn>')
 def get_vm_images(controller_id, ucpe_sn):
-    return jsonify({"images": sorted(IMAGE_FILES.keys())})
+    return jsonify({"images": sorted(IMAGE_FILE_INFO.keys())})
 
 
 @vm_routes.route('/image_info/<controller_id>/<ucpe_sn>')
@@ -217,30 +217,13 @@ def prepare_vm_console(controller_id, ucpe_sn, vm_name):
 
 
 def prepare_vm_console_helper(hostname, ucpe_vnc_port, local_vnc_port):
-    # global vnc_subprocess
-    # if vnc_subprocess is not None:
-    #     print("terminating")
     try:
-        print("in the try block")
-
         def launch_console():
-            print("in launch console")
             launch_script_path = '../../utilities/novnc/utils/launch.sh'
             vnc_subprocess = pexpect.spawn(f'{launch_script_path} --vnc {hostname}:{ucpe_vnc_port}',
                                            timeout=None)  # timeout=None means wait indefinitely
-            # vnc_subprocess.expect('vnc.html')
-            vnc_subprocess.expect(f'{local_vnc_port}/vnc.html')
-            print('before', vnc_subprocess.before, '\n\n\n')
-            print('after', vnc_subprocess.after, '\n\n\n')
-            print('read', vnc_subprocess.read(), '\n\n\n')
-            # Thread(target=vnc_subprocess.communicate).start()
-            # line = vnc_subprocess.stdout.readline()
-            # print("pipedline", line)
-            # while True:
-            #     line = vnc_subprocess.stdout.readline().decode('utf-8')
-            #     if not line:
-            #         print('line from stdout', line)
-
+            vnc_subprocess.expect(f'{local_vnc_port}/vnc.html') # blocks until 6080/vnc.html appears in terminal todo: find appropriate string to expect
+            vnc_subprocess.read() # blocks forever
         Thread(target=launch_console).start()
         return "success"
     except:

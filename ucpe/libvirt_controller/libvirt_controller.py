@@ -50,7 +50,13 @@ vnc_process = None
 class LibvirtController():
     '''
     maintainers:
-    Roger Jin - 6/4/19 - 8/9/19
+    Roger Jin: 6/4/19 - 8/9/19
+        - rogerjin@mit.edu
+    '''
+
+    '''
+    for each of the static methods below, see definition of func for documentation
+    see bottom of this file for example usage, testing_constants.py for example of kwargs
     '''
 
     @staticmethod
@@ -180,20 +186,41 @@ class LibvirtController():
 
 
 def get_vm_state(ucpe, vm_name):
+    '''
+    get state of one domain
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to get state of
+    :return: 'RUNNING', 'PAUSED', 'SHUTOFF', depending on domain state
+    '''
     func = _state_str_from_domain
     return _libvirt_domain_observer(func, ucpe, vm_name)
 
 
 def get_all_vm_states(ucpe):
+    '''
+    retrieve dictionary mapping domain name to domain state
+    :param ucpe: ucpe object
+    :return: dictionary mapping domain name to domain state
+    '''
     func = _state_str_from_domain
     return _libvirt_all_domains_observer(func, ucpe)
 
 
 def _state_str_from_domain(domain):
+    '''
+    retrieve a string representing domain's state (RUNNING, PAUSED, SHUTOFF) from virDomain object
+    :param domain: virDomain object to retrieve state from
+    :return: 'RUNNING', 'PAUSED', or 'SHUTOFF' depending on domain state
+    '''
     return state(domain).name
 
 
 def _image_name_from_xml(xml):
+    '''
+    retrieve domain image name (name of image file without extension) from xml
+    :param xml: domain xml definition
+    :return: name of domain image
+    '''
     basepath = ""
     root = ET.fromstring(xml)  # todo: consider storing the template in text
     # root = tree.getroot()
@@ -204,21 +231,43 @@ def _image_name_from_xml(xml):
 
 
 def get_vm_xml(ucpe, vm_name):
+    '''
+    get xml definition of domain with name vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to get xml of
+    :return: xml string of domain with name vm_name on uCPE ucpe
+    '''
     func = lambda domain: virDomain.XMLDesc(domain, 0)
     return _libvirt_domain_observer(func, ucpe, vm_name)
 
 
 def get_vm_info(ucpe, vm_name):
+    '''
+    get info dict for domain on uCPE ucpe with name vm_name
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to get info of
+    :return: info dict for domain with name vm_name
+    '''
     func = _construct_info_dict
     return _libvirt_domain_observer(func, ucpe, vm_name)
 
 
 def get_all_vm_info(ucpe):
+    '''
+    get info dict for all domains on uCPE ucpe
+    :param ucpe: ucpe object
+    :return: dictionary mapping domain name to _construct_info_dict(domain)
+    '''
     func = _construct_info_dict
     return _libvirt_all_domains_observer(func, ucpe)
 
 
 def _construct_info_dict(domain):
+    '''
+    construct a dictionary of information about a domain, consisting of name, state, allocated memory, memory currently using, cpu count, cpu time
+    :param domain: domain to construct info dict for
+    :return: info dict
+    '''
     state, maxmem, mem, cpus, cpu_time = domain.info()
 
     def kilobytes_to_bytes(bytes):
@@ -242,6 +291,12 @@ def _construct_info_dict(domain):
 
 
 def prepare_vm_console(ucpe, vm_name):
+    '''
+    open a console session to the domain with name vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: domain name
+    :return: return dict (see top of file for formatting)
+    '''
     global vnc_process
     if vnc_process is not None:
         vnc_process.terminate()
@@ -263,6 +318,11 @@ def prepare_vm_console(ucpe, vm_name):
 
 
 def prepare_vm_console_helper(hostname, port):
+    '''
+    run noVNC's launch.sh script with the hostname and port as arguments
+    :param hostname: ip address of the uCPE
+    :param port: vnc port
+    '''
     launch_script_path = '/home/attadmin/projects/sdn-orchestrator/utilities/novnc/utils/launch.sh'
     p = subprocess.Popen([launch_script_path, '--vnc', f'{hostname}:{port}'], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
@@ -271,11 +331,22 @@ def prepare_vm_console_helper(hostname, port):
 
 
 def get_vm_vnc_port(ucpe, vm_name):
+    '''
+    get vnc port from domain with name vm_name
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to retrieve vnc port of
+    :return: vnc port of domain with name vm_name
+    '''
     func = _vnc_port_from_domain
     return _libvirt_domain_observer(func, ucpe, vm_name)
 
 
 def _vnc_port_from_domain(domain):
+    '''
+    get vnc port from domain
+    :param domain: virDomain object, must be running
+    :return: vnc port
+    '''
     # TODO: 2019-06-04 today, libvirt-python has no function to directly get the port, so it must be parsed from XML.  Check back in a couple of years
     # copied from: https://stackoverflow.com/questions/13173184/how-to-get-vnc-port-number-using-libvirt
     # todo: generic function to parse info from xml given path from root tag to desired subelement?
@@ -288,12 +359,25 @@ def _vnc_port_from_domain(domain):
 
 
 def get_vm_interfaces(ucpe, vm_name):
+    '''
+    get domain interfaces
+    :param ucpe: ucpe object
+    :param vm_name: name of domain
+    :return: list of interfaces on the domain
+    '''
     with get_domain(ucpe, vm_name) as domain:
         interfaces = domain.interfaceAddresses(libvirt.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT)
     return interfaces
 
 
 def define_vm_from_xml(ucpe, xml, verbose=True):
+    '''
+    define domain given xml file
+    :param ucpe: ucpe object
+    :param xml: domain xml definition
+    :param verbose: if true, print success statements
+    :return: return_dict (see top of file for format)
+    '''
     func = lambda conn: virConnect.defineXML(conn, xml)
     success_message = "Defined new virtual machine"
     fail_message = "Failed to define new virtual machine"
@@ -302,6 +386,17 @@ def define_vm_from_xml(ucpe, xml, verbose=True):
 
 def define_vm_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_hugepage_memory=4, vm_use_hugepages=False,
                           vm_vcpu_count=1, vm_bridge_name=None, vm_ovs_interface_count=0, verbose=True):
+    '''
+    define domain given parameters
+    :param vm_name: name of domain
+    :param vm_image_path: path to domain .qcow2 image
+    :param vm_memory: amount of memory in gigabytes
+    :param vm_use_hugepages: boolean
+    :param vm_vcpu_count: int
+    :param vm_bridge_name: name of bridge
+    :param vm_ovs_interface_count: number of ovs interfaces
+    :return: return dict (see top of file for format)
+    '''
     if vm_use_hugepages:
         vm_memory = vm_hugepage_memory
     image_file_name = os.path.basename(vm_image_path)
@@ -319,45 +414,66 @@ def define_vm_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_hugepage
 
 def _get_xml_from_params(ucpe, vm_name, vm_image_path, vm_memory=4, vm_use_hugepages=False, vm_vcpu_count=1,
                          vm_bridge_name=None, vm_ovs_interface_count=0, verbose=True):
+    '''
+    get vm xml definition from given parameters
+    :param vm_name: name of domain
+    :param vm_image_path: path to domain .qcow2 image
+    :param vm_memory: amount of memory in gigabytes
+    :param vm_use_hugepages: boolean
+    :param vm_vcpu_count: int
+    :param vm_bridge_name: name of bridge
+    :param vm_ovs_interface_count: number of ovs interfaces
+    :return: xml string definition of domain
+    '''
     xsl = _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vcpu_count,
                             vm_bridge_name=vm_bridge_name, vm_ovs_interface_count=vm_ovs_interface_count)
     BLANK_XML = "<blank></blank>"  # xsl contains the entire xml text
     dom = LET.fromstring(BLANK_XML)
     xslt = LET.fromstring(xsl)
     transform = LET.XSLT(xslt)
-    newdom = transform(dom)
+    newdom = transform(dom) # perform xsl transformation on blank xml to get domain xml definition
     xml = LET.tostring(newdom, pretty_print=True).decode("utf-8")
-    print(xml, "printed")
     return xml
 
 
 def _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vcpu_count, vm_bridge_name=None,
                       vm_ovs_interface_count=0):
-    dirname = os.path.dirname(__file__)
+    '''
+    fill in variables in the template XSL file
+    :param vm_name: name of domain
+    :param vm_image_path: path to domain .qcow2 image
+    :param vm_memory: amount of memory in gigabytes
+    :param vm_use_hugepages: boolean
+    :param vm_vcpu_count: int
+    :param vm_bridge_name: name of bridge
+    :param vm_ovs_interface_count: number of ovs interfaces
+    :return: xsl string with variables filled in
+    '''
+    dirname = os.path.dirname(__file__) # allows relative path to template.xsl
     xsl_path = os.path.join(dirname, "template.xsl")  # todo: possibly stick this in a constant
 
-    if vm_use_hugepages:  # todo: clean up
+    if vm_use_hugepages:  # todo: clean up, right now there is one template for hugepages, one for nonhugepages
         xsl_path = os.path.join(dirname, "template_hugepages.xsl")
 
-    namespaces = _register_all_namespaces(xsl_path)
+    namespaces = _register_all_namespaces(xsl_path) # must do this because qemu args are namespaced
     basepath = "xsl:template/domain/"
     tree = ET.parse(xsl_path)  # todo: consider storing the template in text
     root = tree.getroot()
 
-    if vm_use_hugepages:
+    if vm_use_hugepages: # set hugepage memory variable
         hugepages = root.find('xsl:variable[@name="hugepages_memory"]', namespaces)
         hugepages.text = str(vm_memory) + "G"  # todo: hardcoding the unit might be bad
 
-    name = root.find(basepath + 'name', namespaces)
+    name = root.find(basepath + 'name', namespaces) # set domain name
     name.text = vm_name
 
-    memory = root.find(basepath + 'memory', namespaces)
+    memory = root.find(basepath + 'memory', namespaces) # set domain memory
     memory.text = str(vm_memory)
 
-    vcpu = root.find(basepath + "vcpu", namespaces)
+    vcpu = root.find(basepath + "vcpu", namespaces) # set domain vcpus
     vcpu.text = str(vm_vcpu_count)
 
-    source = root.find(basepath + 'devices/disk/source', namespaces)
+    source = root.find(basepath + 'devices/disk/source', namespaces) # set domain image path
     source.set('file', vm_image_path)
 
     # interface things
@@ -369,7 +485,7 @@ def _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vc
         interfaces = _get_bridge_interface_element(vm_bridge_name)
         devices.insert(bridge_insertion_point, interfaces)
 
-        # ovs interfaces
+    # ovs interfaces
     ovs_interface_elements = _get_ovs_interface_elements(vm_name, vm_ovs_interface_count)
     ovs_insertion_point = 2
     for interface_element in ovs_interface_elements[::-1]:
@@ -380,7 +496,24 @@ def _get_modified_xsl(vm_name, vm_image_path, vm_memory, vm_use_hugepages, vm_vc
 
 
 def _get_bridge_interface_element(vm_bridge_name, interface_model_type='virtio', interface_link_state='up'):
+    '''
+    get an ElementTree Element representing a linux bridge interface element in a domain XML definition
+    :param vm_bridge_name: name of bridge
+    :param interface_model_type: interface model type
+    :param interface_link_state: interface link state
+    :return: ElementTree Element representing linux bridge interface element in a domain XML definition
+
+    the returned ElementTree Element represents an XML element of the form
+
+        <interface type="bridge"
+            <source bridge="mgmtbr"/>
+            <model type="virtio"/>
+            <link state="up"/>
+        </interface>
+
+    '''
     # devices is an Element in an ElementTree
+
     interface = ET.Element("interface", {"type": "bridge"})
     source = ET.SubElement(interface, "source", {"bridge": vm_bridge_name})
     model = ET.SubElement(interface, "model", {"type": interface_model_type})
@@ -390,13 +523,25 @@ def _get_bridge_interface_element(vm_bridge_name, interface_model_type='virtio',
 
 def _get_ovs_interface_elements(vm_name, vm_ovs_interface_count, interface_model_type='virtio',
                                 interface_link_state='up'):
-    # todo:
-    # < !--
-    #     for dpdk vhostuser interfaces < interface
-    # type = "vhostuser" > < source
-    # mode = "client"
-    # path = "/usr/local/var/run/openvswitch/vyatta_eth0"
-    # type = "unix" / >
+    '''
+    get a list of ElementTree Elements representing interface elements of type vhostuser in a domain XML definition
+    :param vm_name: name of domain to get ovs interface elements for
+    :param vm_ovs_interface_count: desired number of ovs interfaces
+    :param interface_model_type: interface model type
+    :param interface_link_state: interface link state (doesn't seem to actually work)
+    :return: a list of ElementTree elements representing interface elements
+
+    each ElementTree Element represents an XML element of the form:
+
+        <interface type="vhostuser">
+            <source mode="client"
+                    path="/usr/local/var/run/openvswitch/vm_vyatta_eth0"
+                    type="unix"/>
+            <model type="virtio"/>
+            <link state="up"/>
+        </interface>
+
+    '''
     interface_names = ovs_interface_names_from_vm_name(vm_name, vm_ovs_interface_count)
     interface_elements = []
     for interface_name in interface_names:
@@ -417,6 +562,9 @@ def _get_ovs_interface_elements(vm_name, vm_ovs_interface_count, interface_model
 
 
 def _register_all_namespaces(filename):
+    '''
+    :param filename: xml file to register namespaces of in ElementTree
+    '''
     # https://stackoverflow.com/questions/54439309/how-to-preserve-namespaces-when-parsing-xml-via-elementtree-in-python
     # this is so the outputted xml preserves the qemu:blah labels at the bottom of the XML.
     # without registering the namespace qemu, qemu is replaced by ns0 (for namespace 0) in the written xml
@@ -428,6 +576,13 @@ def _register_all_namespaces(filename):
 
 
 def undefine_vm(ucpe, vm_name, verbose=True):
+    '''
+    undefine domain vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to undefine
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.undefine
     success_message = f"Undefined virtual machine \"{vm_name}\""
     fail_message = f"Failed to undefine virtual machine \"{vm_name}\""
@@ -435,6 +590,13 @@ def undefine_vm(ucpe, vm_name, verbose=True):
 
 
 def delete_vms(ucpe, vm_names, verbose=True):
+    '''
+    destroy and undefine domains with name in vm_names on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_names: list of names of domains to shutdown
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = _delete_domain
     success_message = f"Deleted all vms in {vm_names}"
     fail_message = f"Failed to delete all vms in {vm_names}"
@@ -442,6 +604,13 @@ def delete_vms(ucpe, vm_names, verbose=True):
 
 
 def start_vm(ucpe, vm_name, verbose=True):
+    '''
+    start domain vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to start
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.create
     success_message = f"Started virtual machine \"{vm_name}\""
     fail_message = f"Failed to start virtual machine \"{vm_name}\""
@@ -449,6 +618,13 @@ def start_vm(ucpe, vm_name, verbose=True):
 
 
 def start_vms(ucpe, vm_names, verbose=True):
+    '''
+    start domains with name in vm_names on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to start
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.create
     success_message = f"Sent start signal to vms {vm_names}"
     fail_message = f"Failed to send start signal to all vms in {vm_names}"
@@ -456,6 +632,13 @@ def start_vms(ucpe, vm_names, verbose=True):
 
 
 def start_or_resume_vms(ucpe, vm_names, verbose=True):
+    '''
+    start or resume domains with name in vm_names on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to start or resume
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = _start_or_resume_domain
     success_message = f"Sent start/resume signal to vms {vm_names}"
     fail_message = f"Failed to send start signal to all vms in {vm_names}"
@@ -463,11 +646,25 @@ def start_or_resume_vms(ucpe, vm_names, verbose=True):
 
 
 def get_vm_autostart(ucpe, vm_name):
+    '''
+    get autostart state of domain vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to get autostart state of
+    :return: true if vm autostarts, false otherwise
+    '''
     func = virDomain.autostart
     return _libvirt_domain_observer(func, ucpe, vm_name)
 
 
 def set_vm_autostart(ucpe, vm_name, autostart, verbose=True):
+    '''
+    set autostart state of domain vm_nmame on uCPE ucpe to autostart
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to shutdown
+    :param autostart: boolean
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = lambda domain: virDomain.setAutostart(domain, int(autostart))
     success_message = f"Set autostart of {vm_name} to str(autostart)."
     fail_message = f"Failed to set autostart of {vm_name} to {str(autostart)}"
@@ -477,6 +674,13 @@ def set_vm_autostart(ucpe, vm_name, autostart, verbose=True):
 
 
 def shutdown_vm(ucpe, vm_name, verbose=True):
+    '''
+    shutdown domain vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to shutdown
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.shutdown
     success_message = f"Sent shutdown signal to virtual machine \"{vm_name}\". \nWarning: This does not guarantee shutdown."
     fail_message = f"Failed to shutdown virtual machine \"{vm_name}\""
@@ -484,6 +688,13 @@ def shutdown_vm(ucpe, vm_name, verbose=True):
 
 
 def shutdowm_vms(ucpe, vm_names, verbose=True):
+    '''
+    shutdown domains with name in vm_names on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_names: list of names of domains to shutdown
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.shutdown
     success_message = f"Sent shutdown signal to vms {vm_names}"
     fail_message = f"Failed to send shutdown signal to all vms in {vm_names}"
@@ -491,6 +702,13 @@ def shutdowm_vms(ucpe, vm_names, verbose=True):
 
 
 def destroy_vm(ucpe, vm_name, verbose=True):
+    '''
+    destroy domain vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to destroy
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.destroy
     success_message = f"Destroyed virtual machine \"{vm_name}\""
     fail_message = f"Failed to destroy virtual machine \"{vm_name}\""
@@ -498,6 +716,13 @@ def destroy_vm(ucpe, vm_name, verbose=True):
 
 
 def destroy_vms(ucpe, vm_names, verbose=True):
+    '''
+    destroy domains with name in vm_names on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_names: list of names of domains to destroy
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.destroy
     success_message = f"Sent destroy signal to vms {vm_names}"
     fail_message = f"Failed to send destroy signal to all vms in {vm_names}"
@@ -505,6 +730,13 @@ def destroy_vms(ucpe, vm_names, verbose=True):
 
 
 def suspend_vm(ucpe, vm_name, verbose=True):
+    '''
+    suspend domain vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to suspend
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.suspend
     success_message = f"Suspended virtual machine \"{vm_name}\""
     fail_message = f"Failed to suspend virtual machine \"{vm_name}\""
@@ -512,6 +744,13 @@ def suspend_vm(ucpe, vm_name, verbose=True):
 
 
 def suspend_vms(ucpe, vm_names, verbose=True):
+    '''
+    suspend domains with name in vm_names on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_names: list of names of domains to suspend
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.suspend
     success_message = f"Sent suspend signal to vms {vm_names}"
     fail_message = f"Failed to send suspend signal to all vms in {vm_names}"
@@ -519,6 +758,13 @@ def suspend_vms(ucpe, vm_names, verbose=True):
 
 
 def resume_vm(ucpe, vm_name, verbose=True):
+    '''
+    resume domain vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to resume
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.resume
     success_message = f"Resumed virtual machine \"{vm_name}\""
     fail_message = f"Failed to resume virtual machine \"{vm_name}\""
@@ -526,6 +772,13 @@ def resume_vm(ucpe, vm_name, verbose=True):
 
 
 def resume_vms(ucpe, vm_names, verbose=True):
+    '''
+    resume domains with name in vm_names on uCPE ucpe
+    :param ucpe: ucpe object
+    :param vm_names: list of names of domains to resume
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = virDomain.resume
     success_message = f"Sent suspend signal to vms {vm_names}"
     fail_message = f"Failed to send suspend signal to all vms in {vm_names}"
@@ -533,6 +786,13 @@ def resume_vms(ucpe, vm_names, verbose=True):
 
 
 def save_vm(ucpe, vm_name, save_path, verbose=True):
+    '''
+    save domain vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param save_path: path where save image is to be stored
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = lambda domain: virDomain.save(domain, save_path)
     success_message = f"Saved virtual machine \"{vm_name}\" from path \"{save_path}\""
     fail_message = f"Failed to restore virtual machine \"{vm_name}\" from path \"{save_path}\""
@@ -542,6 +802,13 @@ def save_vm(ucpe, vm_name, save_path, verbose=True):
 
 
 def restore_vm(ucpe, save_path, verbose=True):
+    '''
+    restore domain vm_name on uCPE ucpe
+    :param ucpe: ucpe object
+    :param save_path: path where image was stored
+    :param verbose: if true, print success messages
+    :return: see top of file for return_dict format
+    '''
     func = lambda conn: virConnect.restore(conn, save_path)
     success_message = f"Restored virtual machine from path \"{save_path}\""
     fail_message = f"Failed to restore virtual machine from path \"{save_path}\""
@@ -819,8 +1086,8 @@ if __name__ == '__main__':
     # test:
     UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
     # print(prepare_vm_console(DEFAULT_UCPE, 'test2'))
-    define_vm_from_params(DEFAULT_UCPE, "test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr",
-                          vm_ovs_interface_count=4)
+    # define_vm_from_params(DEFAULT_UCPE, "test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr",
+    #                       vm_ovs_interface_count=4)
     # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
     # start_vm(DEFAULT_UCPE, "test")
     # print(start_vms(DEFAULT_UCPE, ["test", "cloud"]))
@@ -841,6 +1108,7 @@ if __name__ == '__main__':
     # print(get_vm_vnc_port(DEFAULT_UCPE, "test"))
     # print(get_vm_interfaces(DEFAULT_UCPE, "test"))
 
+    # calls with kwargs
     # print(LibvirtController.libvirt_controller_define_vm_from_params(**DEFAULT_KWARGS))
     # print(LibvirtController.libvirt_controller_start_vm(**DEFAULT_KWARGS))
     # print(LibvirtController.libvirt_controller_shutdown_vm(**DEFAULT_KWARGS))

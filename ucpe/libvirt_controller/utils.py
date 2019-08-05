@@ -50,6 +50,10 @@ def connect(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, ho
 
 def get_uri(driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOSTNAME, port=PORT, path=PATH,
                 extraparameters=EXTRAPARAMETERS, verbose=True):
+    '''
+     Description of Parameters: https://libvirt.org/docs/libvirt-appdev-guide-python/en-US/html/libvirt_application_development_guide_using_python-Connections-Remote_URIs.html
+     :return: uri based on given parameters
+    '''
     transport = "+" + transport if transport else ""
     username = username + "@" if username else ""
     hostname = hostname if hostname else ""
@@ -60,6 +64,12 @@ def get_uri(driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOST
     return uri
 
 def valid_remote_socket(hostname, port):
+    '''
+    check if connection can be established to hostname:port
+    :param hostname: ip address of remote
+    :param port: port of remote
+    :return: true if connection can be established to hostname:port, else false
+    '''
     if isinstance(port, str):
         port = int(port)
     try:
@@ -74,6 +84,15 @@ def valid_remote_socket(hostname, port):
 def open_connection(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USERNAME, hostname=HOSTNAME, port=PORT,
                     path=PATH,
                     extraparameters=EXTRAPARAMETERS, verbose=True):
+    '''
+    with context for virConnect object - always closes connection
+
+    usage:
+
+    with open_connection(ucpe) as conn:
+        conn.someVirConnectFunction()
+
+    '''
     conn = None
     try:
         conn = connect(ucpe=ucpe, driver=driver, transport=transport, username=username, hostname=hostname, port=port,
@@ -87,6 +106,14 @@ def open_connection(ucpe=None, driver=DRIVER, transport=TRANSPORT, username=USER
 
 @contextmanager
 def get_domain(ucpe, vm_name, verbose=False):
+    '''
+    with context for virDomain object - always closes connection
+
+    usage:
+
+    with get_domain(ucpe, vm_name) as domain:
+        domain.someVirDomainFunction()
+    '''
     conn = None
     try:
         conn = connect(ucpe=ucpe, verbose=verbose)
@@ -100,21 +127,56 @@ def get_domain(ucpe, vm_name, verbose=False):
             conn.close()
 
 def get_file_basename_no_extension(filepath):
+    '''
+    get file basename from filepath
+    :param filepath: path to file
+    :return: file basename
+
+    example: get_file_basename_no_extension('/a/b/c/name.txt') returns 'name'
+    '''
     basename = os.path.basename(filepath)
     basename_no_ext, ext = os.path.splitext(basename)
     return basename_no_ext
 
 def ovs_interface_names_from_vm_name(vm_name, ovs_interface_count):
+    '''
+    get list of ovs interface names from vm_name
+    :param vm_name: name of domain
+    :param ovs_interface_count: number of ovs interfaces to assign to domain
+    :return: vm_<vm_name>_ethX, where X ranges from 0 - ovs_interface_count-1
+
+    example:
+    ovs_interface_names_from_vm_name('test', 3) returns
+    ['vm_test_eth0', 'vm_test_eth1', 'vm_test_eth2']
+    '''
     return ['_'.join(['vm', vm_name,'eth'+str(k)]) for k in range(ovs_interface_count)]
 
 def state(libvirt_domain):
+    '''
+    retrieve state of libvirt_domain
+    :param libvirt_domain: virDomain object
+    :return: VMState object representing state of virDomain object
+    '''
     return VMState(libvirt_domain.state()[0])
 
 def get_caller_function_name():
+    '''
+    :return: name of calling function
+
+    example:
+    def a():
+        print(get_caller_function_name())
+
+    def b():
+        a()
+
+    b() prints b, since the caller of a is b.
+
+    '''
     return sys._getframe().f_back.f_back.f_code.co_name
 
 def read(path):
-    """return contents of file as a string"""
+    """return contents of path as a string"""
     with open(path) as f:
         contents = f.read()
     return contents
