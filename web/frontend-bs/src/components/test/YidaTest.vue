@@ -6,8 +6,11 @@
       <table>
         <tr>
           <td>
-            <font-awesome-icon :icon="['fas', 'fire']" size=lg color='rgb(111, 111, 111)' />
-            <strong> Open DPI Firewall</strong>
+            <font-awesome-icon :icon="['fas', 'gamepad']" size=lg color='rgb(111, 111, 111)' />
+            <strong> Internet Behavior Control VNF</strong>
+          </td>
+          <td align='right' width='50%'>
+            <button type="button" class="btn btn-primary" @click='go_DPI()'>DPI</button>
           </td>
         </tr>
       </table>
@@ -44,12 +47,30 @@
             <td align='right'><button type="button" class="btn btn-primary">Submit</button></td>
           </tr>
         </table>
-
-      </card>
-
-
+    </card>
 
     </card>
+
+<!--
+    <router-link to="http://10.10.81.8:8080/dpi">
+        <card>
+          <table>
+            <tr>
+              <td>
+                <font-awesome-icon :icon="['fas', 'gamepad']" size=lg color='rgb(111, 111, 111)' />
+                <strong> Internet Behavior Control VNF</strong>
+              </td>
+              <td align='right' width='50%'>
+                <button type="button" class="btn btn-primary" @click='go_DPI()'>DPI</button>
+              </td>
+            </tr>
+          </table>
+          <hr>
+        </card>
+
+    </router-link> -->
+
+
 
   </table>
 
@@ -83,24 +104,32 @@ export default {
 
   },
   methods: {
-    add_list(block_list_str) {
-      if (block_list_str != '') {
-        var res = block_list_str.split(',')
-        var i;
-        for (i = 0; i < res.length; i++) {
-          this.block_list.push(res[i].trim())
-          this.status_list.push(true)
-        }
-      }
+    // add_list(block_list_str) {
+    //   if (block_list_str != '') {
+    //     var res = block_list_str.split(',')
+    //     var i;
+    //     for (i = 0; i < res.length; i++) {
+    //       this.block_list.push(res[i].trim())
+    //       this.status_list.push(true)
+    //     }
+    //   }
+    //
+    // },
+    //
+    // remove_list(i) {
+    //   console.log(i)
+    //   this.block_list.splice(i, 1)
+    // },
 
-    },
-
-    remove_list(i) {
-      console.log(i)
-      this.block_list.splice(i, 1)
+    go_DPI() {
+      this.axios.get('/api/docker/go_dpi').then(response => {
+        // console.log(response)
+      })
     }
 
-  }
+  },
+
+
 
 }
 </script>
