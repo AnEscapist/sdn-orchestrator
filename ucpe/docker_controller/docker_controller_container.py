@@ -120,7 +120,7 @@ def inspect_container(id_name):
     except requests.exceptions.HTTPError:
         return cnf_error(id_name, func)
 
-def commit(id_name, repo=None, tag=None, message=None, author=None, changes=None):
+def commit(id_name, repo, tag, message=None, author=None, changes=None):
     func = commit
     try:
         container = dcli.containers.get(id_name)

@@ -138,6 +138,13 @@
             <!-- </router-link> -->
           </button>
 
+          <button type="button" class="btn btn-link" @click='showCommit()'>
+            <td>
+              <font-awesome-icon :icon="['fas', 'save']" size=sm coler="#1b7fbd" />
+              <font size='2px'> Commit</font>
+            </td>
+          </button>
+
 
         </tr>
       </table>
@@ -167,6 +174,40 @@
     <pre><span class="inner-pre">{{stats}}</span></pre>
   </div>
 
+  <div class="container-fluid" v-show="showCom">
+    <font-awesome-icon :icon="['fas', 'save']" size=lg color='rgb(0, 0, 0)' /> <strong> Commit</strong>
+    <hr>
+    <table width='100%'>
+      <br>
+      <tr>
+        <td width='20%'>
+            <form class="form-inline">
+              <strong style="font-size:15px">Image: &nbsp</strong>
+              <input type="text" placeholder="e.g. repo:tag" v-model='commit_img'>
+            </form>
+        </td>
+        <td width='50%'></td>
+
+      </tr>
+    </table width='100%'>
+    <table>
+      <tr>
+        <td width='43%'></td>
+        <td width='42%'></td>
+        <td>
+          <button type="button" class="btn btn-secondary btn-sm" @click='showCom = false'>
+            Cancel
+          </button>
+        </td>
+        <td width='10%'>
+          <button type="button" class="btn btn-primary btn-sm" @click="commit(commit_img)">
+            <font-awesome-icon :icon="['fas', 'cloud-download-alt']" size=sm /> <strong style="font-size:13px"> Commit</strong>
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+
 </div>
 </template>
 
@@ -188,11 +229,14 @@ export default {
       showIns: false,
       showEdit: true,
       showStats: false,
+      showCom: false,
       newName: '',
       port_listening: 'no',
 
       int_port: '',
-      int_ip: ''
+      int_ip: '',
+
+      commit_img: '',
 
     }
 
@@ -259,18 +303,28 @@ export default {
     showOVSConfig() {
       this.showIns = false;
       this.showStats = false;
+      this.showCom = false;
       this.showOVSCon = !this.showOVSCon;
     },
     showInspect() {
       this.showStats = false;
       this.showOVSCon = false;
+      this.showCom = false;
       this.showIns = !this.showIns;
     },
     showStatistic() {
       this.showIns = false;
       this.showOVSCon = false;
+      this.showCom = false;
       this.showStats = !this.showStats
     },
+    showCommit() {
+      this.showIns = false;
+      this.showOVSCon = false;
+      this.showStats = false;
+      this.showCom = !this.showCom
+    },
+
     renameContainer(newName) {
       this.showEdit = !this.showEdit
       var tmp = this.name
@@ -384,6 +438,29 @@ export default {
       })
     },
 
+    commit(commit_img){
+        var repo;
+        var tag;
+        if(commit_img.includes(':')){
+            repo = commit_img.split(':')[0]
+            tag = commit_img.split(':')[1]
+        }else {
+            repo = commit_img
+            tag = 'latest'
+        }
+        console.log('repo', repo)
+        console.log('tag', tag)
+        this.axios.get('/api/docker/commit', {
+            params: {
+                id_name: this.name,
+                repo: repo,
+                tag: tag
+            }
+        }).then(response => {
+            console.log(response)
+        })
+    },
+
     setBtn(status) {
       if (status == 'exited') {
         document.getElementById("start").removeAttribute("disabled");
@@ -443,14 +520,20 @@ font {
 }
 
 input {
+
+  border: 2px solid rgb(200, 200, 200);
+  border-radius: 4px;
+  padding-left: 8px;
+}
+
+/* input {
   height: 18px;
-  /* background-color: red; */
   background-color: rgb(247, 247, 247);
   border: none;
   border-bottom: 1px solid rgb(89, 89, 89);
   padding-left: 3px;
   margin-bottom: 0px;
-}
+} */
 
 .renameBtn {
   background-color: white;

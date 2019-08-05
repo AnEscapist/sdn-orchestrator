@@ -5,6 +5,9 @@ import os
 import webbrowser
 import socket
 
+import netifaces as ni
+
+
 docker_routes = Blueprint('docker_page', __name__, template_folder='templates')
 
 #example route
@@ -136,6 +139,16 @@ def inspect_container():
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
 
+@docker_routes.route('/docker/commit')
+def commit():
+    repo = request.args.get('repo')
+    tag = request.args.get('tag')
+    messagedata = {"method": "docker_controller_commit", "params": {
+        "body": {"id_name": id_name, "repo": repo, "tag": tag,
+                "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))
+
 @docker_routes.route('/docker/pull_image')
 def pull_image():
     name = request.args.get('name')
@@ -208,8 +221,11 @@ def create_volume():
 def console_container():
     container_id = request.args.get('container_id')
 
+    # ni.ifaddresses('wlo1')
+    ip = ni.ifaddresses('wlo1')[ni.AF_INET][0]['addr']
+
     # path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-consol/index.html'
-    path = 'http://10.10.81.4:8080/console.html' #ip address of the server
+    path = 'http://' + ip + ':8080/console.html' #ip address of the server
     # webbrowser.open(path, new=1)
     # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
     # code = os.system(stop_port)
@@ -284,3 +300,16 @@ def create_network():
                 "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
+
+
+
+#===============Online behavior control VNF==============
+@docker_routes.route('/docker/go_dpi')
+def go_dpi():
+    path = 'http://10.10.81.8:8080/dpi' #ip address of the server
+    # webbrowser.open(path, new=1)
+    # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
+    # code = os.system(stop_port)
+    # print(code)
+    webbrowser.open(path, new=1)
+    return 'go dpi'
