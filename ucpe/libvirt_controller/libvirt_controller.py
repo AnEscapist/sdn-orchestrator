@@ -1,6 +1,7 @@
 import os
 import xml.etree.cElementTree as ET
-from inspect import signature, Parameter
+# from inspect import signature, Parameter
+import inspect
 
 import libvirt
 import lxml.etree as LET
@@ -31,11 +32,26 @@ sys.path.append('/home/attadmin/projects/sdn-orchestrator/')
 
 from multiprocessing import Process, Queue
 
+'''
+Formatting: 
+return_dict: {
+    success_message: appears in return dict iff operation succeeds
+    fail_message: appears in return dict iff operation fails
+    return: return value of operation (optional)
+    traceback: error trace (if traceback is present, fail message must also be present)
+    warning: warning message
+}
+'''
+
 global vnc_process
 vnc_process = None
 
 
 class LibvirtController():
+    '''
+    maintainers:
+    Roger Jin - 6/4/19 - 8/9/19
+    '''
 
     @staticmethod
     def libvirt_controller_define_vm_from_xml(**kwargs):
@@ -372,7 +388,8 @@ def _get_bridge_interface_element(vm_bridge_name, interface_model_type='virtio',
     return interface
 
 
-def _get_ovs_interface_elements(vm_name, vm_ovs_interface_count, interface_model_type='virtio', interface_link_state='up'):
+def _get_ovs_interface_elements(vm_name, vm_ovs_interface_count, interface_model_type='virtio',
+                                interface_link_state='up'):
     # todo:
     # < !--
     #     for dpdk vhostuser interfaces < interface
@@ -538,6 +555,10 @@ def snap_vm_from_xml(ucpe, vm_name, xml):
 
 
 def _start_or_resume_domain(domain):
+    '''
+    start domain if shutoff, resume domain if paused, do nothing if already running
+    :param domain: virDomain object
+    '''
     function_map = {
         VMState.RUNNING: lambda domain: 0,  # empty function returning statuscode 0 (working)
         VMState.PAUSED: virDomain.resume,
@@ -547,6 +568,10 @@ def _start_or_resume_domain(domain):
 
 
 def _delete_domain(domain):
+    '''
+    destroy and undefine domain
+    :param domain: virDomain object
+    '''
     # todo: this will fail as soon as we add any snapshots. snapshots must be deleted first.
     if state(domain) != VMState.SHUTOFF:
         virDomain.destroy(domain)
@@ -554,6 +579,23 @@ def _delete_domain(domain):
 
 
 def _blockpull(ucpe, vm_name, save_path, base_path):
+    '''
+    calls the following on uCPE ucpe:
+    virsh blockpull --domain vm_name --path save_path --base base_path --wait
+                    --verbose
+    pulls the backing chain from (base_path, save_path] into save_path
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to perform blockpull operation on
+    :param save_path: path to some image in backing chain
+    :param base_path: path to image in backing chain which becomes the new base
+    :return: result of above bash call
+
+    example:
+        backing chain for vm_test on ucpe U1:
+            base <-- snap1 <-- snap2
+        _blockpull(U1, vm_test, <snap2_path>, <base path>) would result in the backing chain
+        base <-- snap2, where snap2 now also contains the data of snap1
+    '''
     channel = grpc.insecure_channel(ucpe.hostname)
     stub = libvirt_pb2_grpc.LibvirtStub(channel)
     request = libvirt_pb2.BlockPullRequest(domain=vm_name, path=save_path,
@@ -566,6 +608,17 @@ def _blockpull(ucpe, vm_name, save_path, base_path):
 
 def _libvirt_domain_mutator(libvirt_domain_func, ucpe, vm_name, success_message, fail_message, verbose=True,
                             operation_name=None):
+    '''
+    call libvirt_domain_func on libvirt domain vm_name on uCPE ucpe
+    :param libvirt_domain_func: any function that accepts a virDomain object and performs a mutation on it (e.g. virDomain.destroy)
+    :param ucpe: ucpe object
+    :param vm_name: name of domain to apply libvirt_domain_func to
+    :param success_message: message to include in return_dict on success
+    :param fail_message: message to include in return_dict on fail
+    :param verbose: if true, print success messages
+    :param operation_name: name of operation that appears in error messages (defaults to name of libvirt_domain_func)
+    :return: return dict - see top of file for return_dict format
+    '''
     # todo: factor out the outer try/catch
     operation_name = libvirt_domain_func.__name__ if operation_name is None else operation_name
     return_dict = {}
@@ -591,6 +644,17 @@ def _libvirt_domain_mutator(libvirt_domain_func, ucpe, vm_name, success_message,
 
 def _libvirt_multiple_domain_mutator(libvirt_domain_func, ucpe, vm_names, success_message, fail_message, verbose=True,
                                      operation_name=None):
+    '''
+    call libvirt_domain_func on all libvirt domains on uCPE ucpe whose names appear in vm_names
+    :param libvirt_domain_func: any function that accepts a virDomain object and performs a mutation on it (e.g. virDomain.destroy)
+    :param ucpe: ucpe object
+    :param vm_names: list of names of domains to call libvirt_domain_func on
+    :param success_message: message to include in return_dict on success
+    :param fail_message: message to include in return_dict on fail
+    :param verbose: if true, print success messages
+    :param operation_name: name of operation that appears in error messages (defaults to name of libvirt_domain_func)
+    :return: return dict - see top of file for return_dict format
+    '''
     # todo: factor out the outer try/catch
     operation_name = libvirt_domain_func.__name__ if operation_name is None else operation_name
     return_dict = {}
@@ -622,6 +686,17 @@ def _libvirt_multiple_domain_mutator(libvirt_domain_func, ucpe, vm_names, succes
 
 
 def _libvirt_domain_observer(libvirt_domain_func, ucpe, vm_name):
+    '''
+   call libvirt_domain_func on domain vm_name on uCPE ucpe
+   :param libvirt_domain_func: a function that accepts a virDomain object and performs an observation (e.g. virDomain.state)
+   :param ucpe: ucpe object
+   :param vm_name: name of domain to call libvirt_domain_func on
+   :param success_message: message to include in return_dict on success
+   :param fail_message: message to include in return_dict on fail
+   :param verbose: if true, print success messages
+   :param operation_name: name of operation that appears in error messages (defaults to name of libvirt_domain_func)
+   :return: return dict - see top of file for return_dict format
+   '''
     # todo: factor out the outer try/catch
     return_dict = {}
     try:
@@ -641,6 +716,16 @@ def _libvirt_domain_observer(libvirt_domain_func, ucpe, vm_name):
 
 
 def _libvirt_all_domains_observer(libvirt_domain_func, ucpe):
+    '''
+   call libvirt_domain_func on all domains on uCPE ucpe
+   :param libvirt_domain_func: a function that accepts a virDomain object and performs an observation (e.g. virDomain.state)
+   :param ucpe: ucpe object
+   :param success_message: message to include in return_dict on success
+   :param fail_message: message to include in return_dict on fail
+   :param verbose: if true, print success messages
+   :param operation_name: name of operation that appears in error messages (defaults to name of libvirt_domain_func)
+   :return: return dict - see top of file for return_dict format
+    '''
     # todo: factor out the outer try/catch
     return_dict = {}
     try:
@@ -663,8 +748,16 @@ def _libvirt_all_domains_observer(libvirt_domain_func, ucpe):
 
 def _libvirt_connection_call(libvirt_conn_func, ucpe, success_message, fail_message, verbose=True,
                              operation_name=None):
-    # connfunc: connection --> domain
-    # todo: factor out the outer try/catch
+    '''
+   call libvirt_conn_func
+   :param libvirt_conn_func: a function that accepts a virConnect object
+   :param ucpe: ucpe object
+   :param success_message: message to include in return_dict on success
+   :param fail_message: message to include in return_dict on fail
+   :param verbose: if true, print success messages
+   :param operation_name: name of operation that appears in error messages (defaults to name of libvirt_domain_func)
+   :return: return dict - see top of file for return_dict format
+    '''
     operation_name = libvirt_conn_func.__name__ if operation_name is None else operation_name
     return_dict = {}
     try:
@@ -690,14 +783,26 @@ def _libvirt_connection_call(libvirt_conn_func, ucpe, success_message, fail_mess
 
 
 def _call_function(func, **kwargs):
+    '''
+    essentially calls func(**kwargs['body']), but allows kwargs['body'] to have additional arguments that don't appear in the signature of func
+    :param func: any function
+    :param kwargs: a dictionary, where kwargs['body'] is a dictionary mapping argument names to argument values.  Every argument of func must appear in the keyset of kwargs['body'].
+    :return: return value of func(**kwargs['body']), where extra arguments in kwargs['body'] are ignored
+
+    example:
+        def func(a, b=3):
+            return a + b
+        kwargs = {'body': {'a': 1, 'b': 2, 'c': 3}}
+    _call_function(func, **kwargs) would return 3.
+    '''
     body = kwargs["body"]  # todo: bad
     ucpe = UCPE.from_kwargs(**body)
-    params = signature(func).parameters  # get the function arguments
+    params = inspect.signature(func).parameters  # get the function arguments
     relevant_kwargs = {"ucpe": ucpe}  # todo: this is REALLY bad
     for param in params:
         if param == "ucpe":
             continue
-        if params[param].default == Parameter.empty:
+        if params[param].default == inspect.Parameter.empty:
             try:
                 relevant_kwargs[param] = body[param]
             except KeyError:
@@ -714,7 +819,8 @@ if __name__ == '__main__':
     # test:
     UBUNTU_IMAGE_PATH = "/var/third-party/ubuntu_16_1_test.qcow2"
     # print(prepare_vm_console(DEFAULT_UCPE, 'test2'))
-    define_vm_from_params(DEFAULT_UCPE,"test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr", vm_ovs_interface_count=4)
+    define_vm_from_params(DEFAULT_UCPE, "test", UBUNTU_IMAGE_PATH, vm_use_hugepages=True, vm_bridge_name="mgmtbr",
+                          vm_ovs_interface_count=4)
     # define_vm_from_xml(DEFAULT_UCPE,DEFAULT_XML)
     # start_vm(DEFAULT_UCPE, "test")
     # print(start_vms(DEFAULT_UCPE, ["test", "cloud"]))

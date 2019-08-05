@@ -129,11 +129,11 @@ def create_vm(controller_id, ucpe_sn):
     data = request.get_json()
     # TODO: database for image paths
     form = data["form"]
-    UNTAGGED_VLAN_INDICATOR = '0'
+    UNTAGGED_VLAN_INDICATOR = '0' #magic string - this is REALLLY bad - fix in grpc api
     vlans = [interface['vlan'] for interface in form['vmOVSInterfaceVLANs']]
     for i in range(len(vlans)):
         if vlans[i] == '':
-            vlans[i] = '0'  # todo: change this to a map
+            vlans[i] = UNTAGGED_VLAN_INDICATOR  # todo: change this to a map
     create_vm_ovs_interfaces(form['vmName'], int(form['vmOVSInterfaceCount']), vlans)
     image_file = IMAGE_FILES[form['vmImage']]
     image_path = os.path.join(IMAGE_ACTIVE_PATH, form['vmName'], image_file)
