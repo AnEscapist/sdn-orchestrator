@@ -304,6 +304,15 @@ def create_network():
                  "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
     return jsonify(call_ucpe_function(messagedata))
 
+@docker_routes.route('/docker/remove_network')
+def remove_network():
+    network_id = request.args.get('net_id')
+    messagedata = {"method": "docker_controller_remove_network", "params": {
+        "body": {"network_id": network_id,
+                "username": "potato", "hostname": "10.10.81.100", "vm_name": "test", "autostart": 1,
+                 "save_path": "/home/potato/save_path.test"}}, "jsonrpc": "2.0", "id": 0}
+    return jsonify(call_ucpe_function(messagedata))
+
 
 
 #===============Online behavior control VNF==============

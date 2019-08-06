@@ -8,8 +8,8 @@
           {{net_name}}
         </td>
         <td>
-          <router-link to="docker_i">
-            <button type="button" id='remove' class="btn btn-danger btn-sm">
+          <router-link to="docker_n">
+            <button type="button" id='remove' class="btn btn-danger btn-sm" @click='remove_network(net_id)'>
               <font-awesome-icon :icon="['fas', 'trash-alt']" size=sm color='rgb(255, 255, 255)' />
               Remove
             </button>
@@ -166,6 +166,17 @@ export default {
   methods: {
     showInspect() {
       this.showIns = !this.showIns
+    },
+
+    remove_network (net_id){
+        // console.log(net_id)
+        this.axios.get('/api/docker/remove_network', {
+            params: {
+                net_id: net_id
+            }
+        }).then(response => {
+            // console.log(response)
+        })
     }
 
   }

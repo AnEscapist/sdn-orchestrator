@@ -99,7 +99,7 @@ export default {
       var res = JSON.parse(response.data.result)
       var client = JSON.parse(res['return'])
       this.client = client
-      this.networks = client['Plugins']['Network'].length
+      // this.networks = client['Plugins']['Network'].length
       // this.volumes = client['Plugins']['Volume'].length
     });
 
@@ -109,6 +109,13 @@ export default {
 
       this.volumes = vols.length
 
+    });
+
+    this.axios.get('/api/docker/list_networks').then(response => {
+      var res = JSON.parse(response.data.result)['return_name']
+      var nets = res.slice(1, -1).split(',')
+
+      this.networks = nets.length
     })
     // this.axios.get("/api/docker/inspect_container", {
     //   params: {
@@ -154,8 +161,7 @@ a {
   border-radius: 4px;
 }
 
-.container-fluid:hover{
-    background: rgb(240, 240, 240);
+.container-fluid:hover {
+  background: rgb(240, 240, 240);
 }
-
 </style>
