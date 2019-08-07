@@ -1,10 +1,10 @@
 {
     "ID": "HOBW:CJN7:XJTI:CA2L:3QHY:IWKR:QYXQ:IIWJ:7OWH:IH42:R3BE:XS7V",
-    "Containers": 6,
+    "Containers": 2,
     "ContainersRunning": 2,
     "ContainersPaused": 0,
-    "ContainersStopped": 4,
-    "Images": 5,
+    "ContainersStopped": 0,
+    "Images": 6,
     "Driver": "overlay2",
     "DriverStatus": [
         [
@@ -60,11 +60,11 @@
     "NFd": 36,
     "OomKillDisable": true,
     "NGoroutines": 49,
-    "SystemTime": "2019-07-24T13:51:14.181641769Z",
+    "SystemTime": "2019-08-06T20:59:36.845457168Z",
     "LoggingDriver": "json-file",
     "CgroupDriver": "cgroupfs",
     "NEventsListener": 0,
-    "KernelVersion": "4.15.0-54-generic",
+    "KernelVersion": "4.15.0-55-generic",
     "OperatingSystem": "Ubuntu 18.04.2 LTS",
     "OSType": "linux",
     "Architecture": "x86_64",
@@ -86,7 +86,7 @@
         "Mirrors": []
     },
     "NCPU": 16,
-    "MemTotal": 67269992448,
+    "MemTotal": 67269988352,
     "GenericResources": null,
     "DockerRootDir": "/var/lib/docker",
     "HttpProxy": "",

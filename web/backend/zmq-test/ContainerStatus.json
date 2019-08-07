@@ -1,8 +1,4 @@
 {
-    "container:adklfjlsakdjf(id: 3e9a9b7635)": "[exited]",
-    "container:ubuntu_eoan(id: 387d914cee)": "[running]",
-    "container:blissful_mahavira(id: bf550425d7)": "[exited]",
-    "container:abc(id: 67588f30bc)": "[exited]",
-    "container:vigorous_galileo(id: 1414349c32)": "[running]",
-    "container:elated_hawking(id: 887449d30e)": "[exited]"
+    "container:storage(id: b4c44c7d46)": "[running]",
+    "container:registry(id: e5bfbc5a98)": "[running]"
 }
