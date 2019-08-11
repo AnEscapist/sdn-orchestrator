@@ -10,7 +10,7 @@ from threading import Thread
 import pexpect
 from pexpect import popen_spawn
 from web.backend.grpc.grpc_routes import ovs_add_port_helper, ovs_del_port_helper
-from ucpe.libvirt_controller.utils import ovs_interface_names_from_vm_name
+#from ucpe.libvirt_controller.utils import ovs_interface_names_from_vm_name
 
 vm_routes = Blueprint('vms', __name__)
 

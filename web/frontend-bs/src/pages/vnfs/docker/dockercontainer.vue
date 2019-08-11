@@ -404,11 +404,10 @@ export default {
 
     goConsole(id) {
       this.port_listening = 'yes'
-      // var url = 'http://10.10.81.9:8080/console.html'
 
-      //
       this.axios.get('/api/docker/kill_port').then(response => {
         // window.open(url, '_blank')
+        // console.log(response)
         this.axios.get('/api/docker/console_container', {
           params: {
             container_id: id

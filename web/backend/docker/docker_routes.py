@@ -4,8 +4,9 @@ from web.backend.zmq_web import call_ucpe_function
 import os
 import webbrowser
 import socket
-
+import threading
 import netifaces as ni
+import subprocess, signal
 
 
 docker_routes = Blueprint('docker_page', __name__, template_folder='templates')
@@ -223,20 +224,34 @@ def console_container():
     container_id = request.args.get('container_id')
 
     # ni.ifaddresses('wlo1')
-    ip = ni.ifaddresses('wlo1')[ni.AF_INET][0]['addr']
+    ip = ni.ifaddresses('en0')[ni.AF_INET][0]['addr']
+    #ip = '10.10.81.2'
 
     # path = 'file:///home/att-pc-7/Zhengqi/Project/sdn-orchestrator/web/docker-browser-consol/index.html'
     path = 'http://' + ip + ':8080/console.html' #ip address of the server
 
-    # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
-    # code = os.system(stop_port)
-    # print(code)
+    def openHTML(path):
+        webbrowser.open(path, new=1)
 
-    webbrowser.open(path, new=1)
-    cmd = 'sudo node ../docker-browser-console/server.js ' + container_id
-    os.system(cmd)
-    print(cmd)
-    return f'{cmd}.'
+    def runConsoleCommand():
+        print('======before execute=====')
+        cmd = 'node ../docker-browser-console/server.js ' + container_id
+        os.system(cmd)
+        print(cmd)
+
+    # webbrowser.open(path, new=1)
+    # cmd = 'sudo node ../docker-browser-console/server.js ' + container_id
+    # print(cmd)
+    # os.system(cmd)
+    # print('command executed')
+
+    thread_runConsoleCommand = threading.Thread(target=runConsoleCommand)
+    thread_openHTML= threading.Thread(target=openHTML, args=[path])
+
+    thread_runConsoleCommand.start()
+    thread_openHTML.start()
+
+    return 'Console a container'
 
 @docker_routes.route('/docker/kill_port')
 def kill_port():
@@ -245,17 +260,26 @@ def kill_port():
     # return str(result)
     if str(result) == '0':
         # return 'listening'
-        # stop_port = 'sudo kill -9 $(sudo lsof -t -i:10000)'
-        stop_port = 'sudo fuser -k 10000/tcp'
-        os.system(stop_port)
+        # stop_port = 'sudo fuser -k 10000/tcp'
+        # os.system(stop_port)
+
+        p = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        for b_line in out.splitlines():
+            line = b_line.decode('utf-8')
+            if 'node ../docker-browser-console/server.js' in line:
+                # pid = line.split(None, 1)[0]
+                # print(pid, type(pid))
+                # os.system('sudo kill -9 ' + pid)
+
+                pid = int(line.split(None, 1)[0])
+                os.kill(pid, signal.SIGKILL)
+
         return 'port 10000 stopped!'
     else:
         # return 'not listening'
 
         return 'port 1000 not listening'
-        # return '111' + str(result)
-    # sock.close()
-    # return 'port clear'
 
 
 @docker_routes.route('/docker/check_port')

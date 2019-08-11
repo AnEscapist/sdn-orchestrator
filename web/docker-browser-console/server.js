@@ -6,14 +6,16 @@ var server = new ws.Server({
     port: 10000
 });
 
-// container_id = '50c916c2c6f9';
+//if you want to console local container
+var container_id = '13a1cdf45326';
+var container_id = process.argv[2];
 // var container = docker(container_id);
+
+
 //if it is a remote container, do:
 var remote_ip = '10.10.81.100';
-var container_id = '387d914cee46';
-container_id = process.argv[2]
-
-
+// var container_id = '387d914cee46';
+// var ontainer_id = process.argv[2];
 var container = docker(container_id, {host: remote_ip});
 
 
