@@ -1,0 +1,11 @@
+Click==7.0
+Flask==1.1.1
+itsdangerous==1.1.0
+Jinja2==2.10.1
+MarkupSafe==1.1.1
+netifaces==0.10.9
+pexpect==4.7.0
+ptyprocess==0.6.0
+pyzmq==18.0.2
+Werkzeug==0.15.5
+zmq==0.0.0
